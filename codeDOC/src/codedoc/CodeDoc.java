@@ -5,8 +5,13 @@
  */
 package codedoc;
 
+import static codedoc.LoginWindow.soc;
 import java.awt.Color;
 import java.awt.Font;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -325,11 +330,26 @@ public class CodeDoc extends javax.swing.JFrame {
     
     private void customInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customInputActionPerformed
         // TODO add your handling code here:
+        PrintWriter out = null;
+        try {
+            out = new PrintWriter(LoginWindow.soc.getOutputStream(), true);
+        } catch (IOException ex) {
+            Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                out.println("300");
+        
     }//GEN-LAST:event_customInputActionPerformed
 
 // COMPILE AND RUN    
     private void compileAndRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compileAndRunActionPerformed
         // TODO add your handling code here:
+        PrintWriter out = null;
+        try {
+            out = new PrintWriter(LoginWindow.soc.getOutputStream(), true);
+        } catch (IOException ex) {
+            Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                out.println("200");
     }//GEN-LAST:event_compileAndRunActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed

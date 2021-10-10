@@ -45,7 +45,7 @@ public class HandleClient implements Runnable {
         try {
 
             String choice="";
-            while(choice!="200")
+            while(choice!="300")
             {
             
             choice = in.readLine(); // to know which button has created the client 
@@ -58,6 +58,12 @@ public class HandleClient implements Runnable {
             } else if (choice.equals("16")) {
                 System.out.println("Login Window");
                 login();
+            }
+            else if(choice.equals("200")){
+                System.out.println("200");
+            }
+            else if(choice.equals("300")){
+                System.out.println("300");
             }
             }
 
@@ -75,7 +81,7 @@ public class HandleClient implements Runnable {
             PreparedStatement pst;
             ResultSet rs;
             System.out.println("Executing Register method");
-            String sql = "INSERT INTO user_registration (name,email,password,mobile,gender,dateofbirth) VALUES (?,?,?,?,?,?) ";
+            String sql = "INSERT INTO registration (name,email,password,mobile,gender,dateofbirth) VALUES (?,?,?,?,?,?) ";
             pst = con.prepareStatement(sql);
             pst.setString(1, s[0]);
             pst.setString(2, s[1]);
@@ -111,7 +117,7 @@ public class HandleClient implements Runnable {
 
             PreparedStatement pst;
             ResultSet rs;
-            String sql = "select * from user_registration where email=? and password=? ";
+            String sql = "select * from registration where email=? and password=? ";
 
             pst = con.prepareStatement(sql);
             System.out.println("Executing Query!!");
