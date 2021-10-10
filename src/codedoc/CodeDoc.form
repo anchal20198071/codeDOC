@@ -342,6 +342,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Font Setting"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fontSettingActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -405,9 +408,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Compile &amp; Run"/>
           </Properties>
-          <AccessibilityProperties>
-            <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Compile &amp; Run"/>
-          </AccessibilityProperties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="compileAndRunActionPerformed"/>
           </Events>

@@ -5,6 +5,9 @@
  */
 package codedoc;
 
+import java.awt.Color;
+import java.awt.Font;
+
 /**
  *
  * @author Asmita Yadav
@@ -191,6 +194,11 @@ public class CodeDoc extends javax.swing.JFrame {
         reset.setText("Reset");
 
         fontSetting.setText("Font Setting");
+        fontSetting.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fontSettingActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -270,8 +278,6 @@ public class CodeDoc extends javax.swing.JFrame {
                 .addContainerGap(26, Short.MAX_VALUE))
         );
 
-        compileAndRun.getAccessibleContext().setAccessibleName("Compile & Run");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -303,6 +309,18 @@ public class CodeDoc extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
    
+    
+    /*//
+     !!!!!!!!!!!!!!!!!text area shi krna hai
+     public Color textColor;
+     public void setTextFont(Font font) {
+        textArea.setFont(font);  
+        textArea.setForeground(textColor);
+    }    
+     
+   //*/
+    
+    
 // CUSTOM INPUT
     
     private void customInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customInputActionPerformed
@@ -321,6 +339,13 @@ public class CodeDoc extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    
+    //FONT SETTING
+    private void fontSettingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontSettingActionPerformed
+        fontSettings  fS=new fontSettings(CodeDoc.this);
+        fS.show();
+    }//GEN-LAST:event_fontSettingActionPerformed
 
     /**
      * @param args the command line arguments
