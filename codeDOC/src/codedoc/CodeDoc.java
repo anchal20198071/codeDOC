@@ -8,22 +8,46 @@ package codedoc;
 import static codedoc.LoginWindow.soc;
 import java.awt.Color;
 import java.awt.Font;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Caret;
+import javax.swing.text.Document;
 
 /**
  *
  * @author Asmita Yadav
  */
 public class CodeDoc extends javax.swing.JFrame {
-
+    public String ClientIDToShare;
+    PrintWriter out;
+    BufferedReader in;
+    int k = 0;
+    int l= 1;
+    private Document model;
+    private transient Caret caret;
+    boolean sender= false;
+    boolean codeArea= false;
+    boolean chatArea= false;
     /**
      * Creates new form CodeDoc
      */
-    public CodeDoc() {
+   
+    public CodeDoc() throws IOException {
         initComponents();
+        try {
+            out = new PrintWriter(LoginWindow.soc.getOutputStream(), true);
+        } catch (IOException ex) {
+            Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        in = new BufferedReader(new InputStreamReader(LoginWindow.soc.getInputStream()));
     }
 
     /**
@@ -40,24 +64,26 @@ public class CodeDoc extends javax.swing.JFrame {
         newDoc = new javax.swing.JButton();
         editDoc = new javax.swing.JButton();
         saveDoc = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        shareButton = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTextArea4 = new javax.swing.JTextArea();
+        chatSection = new javax.swing.JTextArea();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jTextArea5 = new javax.swing.JTextArea();
+        typeMessg = new javax.swing.JTextArea();
         sendMessage = new javax.swing.JButton();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        compiletextbox = new javax.swing.JTextArea();
         jPanel3 = new javax.swing.JPanel();
         languageSelector = new javax.swing.JComboBox<>();
         autoComplete = new javax.swing.JCheckBox();
         previousCode = new javax.swing.JButton();
         reset = new javax.swing.JButton();
         fontSetting = new javax.swing.JButton();
+        press = new javax.swing.JButton();
+        release = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         customInput = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -86,7 +112,12 @@ public class CodeDoc extends javax.swing.JFrame {
 
         saveDoc.setText("Save");
 
-        jButton1.setText("Share");
+        shareButton.setText("Share");
+        shareButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shareButtonActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Chat");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -113,7 +144,7 @@ public class CodeDoc extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(saveDoc)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(shareButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -131,7 +162,7 @@ public class CodeDoc extends javax.swing.JFrame {
                     .addComponent(newDoc)
                     .addComponent(editDoc)
                     .addComponent(saveDoc)
-                    .addComponent(jButton1)
+                    .addComponent(shareButton)
                     .addComponent(jButton2)
                     .addComponent(jButton4)
                     .addComponent(jButton5))
@@ -140,33 +171,46 @@ public class CodeDoc extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane2.setViewportView(jTextArea2);
+        chatSection.setColumns(20);
+        chatSection.setRows(5);
+        jScrollPane4.setViewportView(chatSection);
 
-        jTextArea4.setColumns(20);
-        jTextArea4.setRows(5);
-        jScrollPane4.setViewportView(jTextArea4);
-
-        jTextArea5.setColumns(20);
-        jTextArea5.setRows(5);
-        jScrollPane5.setViewportView(jTextArea5);
+        typeMessg.setColumns(20);
+        typeMessg.setRows(5);
+        jScrollPane5.setViewportView(typeMessg);
 
         sendMessage.setText("Send");
+        sendMessage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendMessageActionPerformed(evt);
+            }
+        });
+
+        compiletextbox.setColumns(20);
+        compiletextbox.setRows(5);
+        compiletextbox.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                compiletextboxCaretUpdate(evt);
+            }
+        });
+        compiletextbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                compiletextboxKeyPressed(evt);
+            }
+        });
+        jScrollPane6.setViewportView(compiletextbox);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 1032, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
-                            .addComponent(jScrollPane4)))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                        .addComponent(jScrollPane4))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(64, 64, 64)
                         .addComponent(sendMessage)))
@@ -175,17 +219,17 @@ public class CodeDoc extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2)
-                        .addContainerGap())
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sendMessage))))
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 534, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sendMessage))
         );
 
         jPanel3.setBackground(new java.awt.Color(212, 239, 242));
@@ -205,6 +249,20 @@ public class CodeDoc extends javax.swing.JFrame {
             }
         });
 
+        press.setText("Press");
+        press.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pressActionPerformed(evt);
+            }
+        });
+
+        release.setText("Release");
+        release.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                releaseActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -220,7 +278,11 @@ public class CodeDoc extends javax.swing.JFrame {
                 .addComponent(reset)
                 .addGap(18, 18, 18)
                 .addComponent(fontSetting)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(press)
+                .addGap(70, 70, 70)
+                .addComponent(release)
+                .addGap(153, 153, 153))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -231,7 +293,9 @@ public class CodeDoc extends javax.swing.JFrame {
                     .addComponent(autoComplete)
                     .addComponent(previousCode)
                     .addComponent(reset)
-                    .addComponent(fontSetting))
+                    .addComponent(fontSetting)
+                    .addComponent(press)
+                    .addComponent(release))
                 .addContainerGap())
         );
 
@@ -324,32 +388,40 @@ public class CodeDoc extends javax.swing.JFrame {
     }    
      
    //*/
+    public Document getDocument() {
+        return model;
+    }
     
+    public void setCaretPosition(int position) {
+        Document doc = getDocument();
+        if (doc != null) {
+            if (position > doc.getLength() || position < 0) {
+                throw new IllegalArgumentException("bad position: " + position);
+            }
+            caret.setDot(position);
+        }
+    }
+    public void moveCaretPosition(int pos) {
+        Document doc = getDocument();
+        if (doc != null) {
+            if (pos > doc.getLength() || pos < 0) {
+                throw new IllegalArgumentException("bad position: " + pos);
+            }
+            caret.moveDot(pos);
+        }
+    }
     
 // CUSTOM INPUT
     
     private void customInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customInputActionPerformed
-        // TODO add your handling code here:
-        PrintWriter out = null;
-        try {
-            out = new PrintWriter(LoginWindow.soc.getOutputStream(), true);
-        } catch (IOException ex) {
-            Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
-        }
-                out.println("300");
+        
+        out.println("300");
         
     }//GEN-LAST:event_customInputActionPerformed
 
 // COMPILE AND RUN    
     private void compileAndRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compileAndRunActionPerformed
-        // TODO add your handling code here:
-        PrintWriter out = null;
-        try {
-            out = new PrintWriter(LoginWindow.soc.getOutputStream(), true);
-        } catch (IOException ex) {
-            Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
-        }
-                out.println("200");
+       out.println("200");
     }//GEN-LAST:event_compileAndRunActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -367,6 +439,124 @@ public class CodeDoc extends javax.swing.JFrame {
         fS.show();
     }//GEN-LAST:event_fontSettingActionPerformed
 
+    private void shareButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shareButtonActionPerformed
+        
+    }//GEN-LAST:event_shareButtonActionPerformed
+
+    
+    private void compiletextboxCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_compiletextboxCaretUpdate
+        // TODO add your handling code here:
+        
+        if(k == 1 && l== 0 && sender == false){
+              codeArea= true;
+//            chatArea= false;
+            sender= true;
+            out.println("Key Pressed");
+            String text = compiletextbox.getText();
+          
+            text = text.replaceAll("\n", "~");
+            //System.out.println("Text : "+text);
+            out.println(text);
+           
+        }
+        
+    }//GEN-LAST:event_compiletextboxCaretUpdate
+
+    
+    private void pressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pressActionPerformed
+        // TODO add your handling code here:
+//        codeArea= true;
+//        chatArea= false;
+        out.println("Share Button Clicked");
+        l= 0;
+        k = 1;
+
+            Thread th7=new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while(k == 1){
+                        String combinedText = in.readLine();
+                        System.out.println(combinedText);
+                        
+                        String text= combinedText.replaceAll("~", "\n");
+                        
+                        compiletextbox.setText(text);
+                        if(sender == true){
+                            System.out.println("Mai Senger got true ke andar aaya");
+                            int len= compiletextbox.getText().length();
+                            System.out.println("Lenght Value : "+len);
+                            compiletextbox.setCaretPosition(len);
+                            
+                            System.out.println("Cursor Position Updated");
+                            sender= false;
+                        }
+                        
+                    }
+                }
+                catch (IOException ex) {
+                    System.out.println("Exception thrown : +"+ex);
+                }
+            }
+
+            });
+            th7.start();
+        
+    }//GEN-LAST:event_pressActionPerformed
+
+    private void releaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_releaseActionPerformed
+        // TODO add your handling code here:
+        //k= 0;
+        out.println("Unshare");
+    }//GEN-LAST:event_releaseActionPerformed
+
+
+    private void compiletextboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_compiletextboxKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_compiletextboxKeyPressed
+
+    //Send Message
+    private void sendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendMessageActionPerformed
+        
+        String messg= typeMessg.getText();
+        if(messg.equals("")){
+            JOptionPane.showMessageDialog(null, "Please Type a Message");
+        }
+        else{
+            codeArea= false;
+            chatArea= true;
+            messg = messg.replaceAll("\n", "~");
+            int length = chatSection.getText().length();
+            chatSection.setCaretPosition(length);
+            
+            out.println("Send Message");
+            out.println(messg);
+            
+            Thread th6=new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while(k == 1 && chatArea){
+                        String receivedMssg = in.readLine();
+                        System.out.println("In Thread: email: "+LoginWindow.userId+ " and messsage: "+receivedMssg);
+                        
+                        String text= receivedMssg.replaceAll("~", "\n");
+                        
+                        chatSection.append(LoginWindow.userId+ " : "+text+"\n"); 
+                        typeMessg.setText("");
+                    }
+                }
+                catch (IOException ex) {
+                    System.out.println("Exception thrown : +"+ex);
+                }
+            }
+
+            });
+            th6.start();
+        }
+        
+    }//GEN-LAST:event_sendMessageActionPerformed
+    
     /**
      * @param args the command line arguments
      */
@@ -397,18 +587,23 @@ public class CodeDoc extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CodeDoc().setVisible(true);
+                try {
+                    new CodeDoc().setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox autoComplete;
+    private javax.swing.JTextArea chatSection;
     private javax.swing.JButton compileAndRun;
+    private javax.swing.JTextArea compiletextbox;
     private javax.swing.JButton customInput;
     private javax.swing.JButton editDoc;
     private javax.swing.JButton fontSetting;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
@@ -417,22 +612,23 @@ public class CodeDoc extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea jTextArea3;
-    private javax.swing.JTextArea jTextArea4;
-    private javax.swing.JTextArea jTextArea5;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JComboBox<String> languageSelector;
     private javax.swing.JButton newDoc;
+    private javax.swing.JButton press;
     private javax.swing.JButton previousCode;
+    private javax.swing.JButton release;
     private javax.swing.JButton reset;
     private javax.swing.JButton saveDoc;
     private javax.swing.JButton sendMessage;
+    private javax.swing.JButton shareButton;
+    private javax.swing.JTextArea typeMessg;
     // End of variables declaration//GEN-END:variables
 
     static class setVisible {

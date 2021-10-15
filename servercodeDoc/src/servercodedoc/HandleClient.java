@@ -18,26 +18,30 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class HandleClient implements Runnable {
-
+    private String email;
     private Socket client;
     private BufferedReader in;
     private PrintWriter out;
     PreparedStatement p;
     StringBuilder sb = new StringBuilder();
     Connection con;
-
+    private int noOfUsers = 0;
+    
     //constructor for clienthandle class
     public HandleClient(Socket clientSocket, Connection conclient) throws IOException {
         con = conclient;
         this.client = clientSocket;
         out = new PrintWriter(this.client.getOutputStream(), true);
         in = new BufferedReader(new InputStreamReader(this.client.getInputStream()));
-
+        
+        //ServercodeDoc.outArrayList.add(out);
     }
 
     @Override
@@ -48,23 +52,40 @@ public class HandleClient implements Runnable {
             while(choice!="300")
             {
             
-            choice = in.readLine(); // to know which button has created the client 
-            sb.append(choice);// converting choice received from readline to comparable string 
-            System.out.println(choice);
-            
-            if (choice.equals("15")) {
-                System.out.println("Register Window");
-                register();
-            } else if (choice.equals("16")) {
-                System.out.println("Login Window");
-                login();
-            }
-            else if(choice.equals("200")){
-                System.out.println("200");
-            }
-            else if(choice.equals("300")){
-                System.out.println("300");
-            }
+                choice = in.readLine(); // to know which button has created the client 
+                sb.append(choice);// converting choice received from readline to comparable string 
+                System.out.println(choice);
+
+                if (choice.equals("15")) {
+                    System.out.println("Register Window");
+                    register();
+                } else if (choice.equals("16")) {
+                    System.out.println("Login Window");
+                    login();
+                }
+                else if(choice.equals("200")){
+                    System.out.println("200");
+                }
+                else if(choice.equals("300")){
+                    System.out.println("300");
+                }
+                
+                else if(choice.equals("Key Pressed")){
+                    System.out.println("Key has been pressed");
+                    editTextArea();
+                }
+                else if(choice.equals("Unshare")){
+                    System.out.println("Unshare Key Pressed");
+                    unshare();
+                }
+                else if(choice.equals("Share Button Clicked")){
+                    System.out.println("share Key Pressed");
+                    share();
+                }
+                else if(choice.equals("Send Message")){
+                    System.out.println("Send Message");
+                    sendMessage();
+                }
             }
 
         } catch (IOException ex) {
@@ -129,6 +150,7 @@ public class HandleClient implements Runnable {
 
             if (rs.next()) {
                 JOptionPane.showMessageDialog(null, "Username and Password are correct..");
+                email= s[0];
                 out.println(1);
             } else {
                 JOptionPane.showMessageDialog(null, "Username and Password are Incorrect..."
@@ -140,6 +162,51 @@ public class HandleClient implements Runnable {
             System.out.println("Exception : " + ex);
         }
     }
+    
+    void editTextArea() throws IOException{
+//        ServercodeDoc.ouHashMap.put(out, 1);
+//        
+        String combinedText = in.readLine();
+        System.out.println("Combined Text: "+combinedText);
+//        
+        for (Map.Entry<String, OnlineUser > entry : ServercodeDoc.pair.entrySet()){
+           
+            if(entry.getValue().k == 1){
+                entry.getValue().out.println(combinedText);
+            }
+        }
+        
+//        for (PrintWriter sender : ServercodeDoc.outArrayList)
+//            sender.println(combinedText);
+            
+    }
+    
+    void share(){
+        ServercodeDoc.pair.put(email, new OnlineUser(out, 1));
+    }
+    
+    void unshare(){
+        //ServercodeDoc.ouHashMap.put(out, 0);
+        ServercodeDoc.pair.put(email, new OnlineUser(out, 0));
+    }
+    
+    void sendMessage(){
+        try {
+            String mssg= in.readLine();
+            System.out.println("Message Received at SErver: "+mssg);
+            
+            for (Map.Entry<String, OnlineUser > entry : ServercodeDoc.pair.entrySet()){
+           
+                if(entry.getValue().k == 1){
+                    entry.getValue().out.println(mssg);
+                }
+            }
+        } catch (IOException ex) {
+            System.out.println("Exception: "+ex);
+        }
+        
+    }
+    
     private String md5(String string) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
