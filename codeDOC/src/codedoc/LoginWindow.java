@@ -11,7 +11,10 @@ import javax.swing.JOptionPane;
  * @author lenovo
  */
 public class LoginWindow extends javax.swing.JFrame {
+    
+    
     static Socket soc;
+    public CodeDoc home ;
     /**
      * Creates new form Login_Window
      */
@@ -228,9 +231,9 @@ public class LoginWindow extends javax.swing.JFrame {
             try {
 
                 soc = new Socket("localhost", 9886); //9886
-                
+              
                 String[] s = {email, pass};
-
+                
                 PrintWriter out = new PrintWriter(soc.getOutputStream(), true);
                 out.println("16");
 
@@ -243,7 +246,7 @@ public class LoginWindow extends javax.swing.JFrame {
                 System.out.println(serverResponse);
 
                 if (serverResponse == 1) {
-                    CodeDoc home = new CodeDoc();
+                    home = new CodeDoc();
                     home.show();
                     dispose();
                 } else {

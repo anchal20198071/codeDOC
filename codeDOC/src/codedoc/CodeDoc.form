@@ -73,6 +73,8 @@
                   <Component id="editDoc" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="saveDoc" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="Open" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -98,6 +100,7 @@
                       <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jButton4" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jButton5" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="Open" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="12" max="32767" attributes="0"/>
               </Group>
@@ -126,16 +129,25 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="New"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newDocActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="editDoc">
           <Properties>
             <Property name="text" type="java.lang.String" value="Edit"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="editDocActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="saveDoc">
           <Properties>
             <Property name="text" type="java.lang.String" value="Save"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveDocActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButton1">
           <Properties>
@@ -159,6 +171,14 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Video Call"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="Open">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Open"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="OpenActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -281,13 +301,11 @@
                   <Component id="languageSelector" min="-2" pref="107" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="autoComplete" min="-2" pref="124" max="-2" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="previousCode" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="133" max="-2" attributes="0"/>
                   <Component id="reset" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="fontSetting" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="716" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -298,7 +316,6 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="languageSelector" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="autoComplete" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="previousCode" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="reset" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="fontSetting" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -328,15 +345,13 @@
             <Property name="text" type="java.lang.String" value="Autocomplete"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="previousCode">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Previous Code"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JButton" name="reset">
           <Properties>
             <Property name="text" type="java.lang.String" value="Reset"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="resetActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="fontSetting">
           <Properties>

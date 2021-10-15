@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  * @author Arya Pandey
  */
 public class ServercodeDoc {
-    Mysqlconnect myc=new Mysqlconnect();
+Mysqlconnect myc=new Mysqlconnect();
 ServerSocket ss;
 Socket soc;
 PrintWriter out;
@@ -30,7 +30,7 @@ private ExecutorService pool= Executors.newFixedThreadPool(20);
 Connection con =myc.getConn();
 
         public static void main(String[] args) // made executor method because static variables cannot be reffered from main.
- {
+  {
            new ServercodeDoc().executor();
   }
         
@@ -44,8 +44,7 @@ Connection con =myc.getConn();
         {
             soc= ss.accept(); //jaise hi yaha accept hota hai handle client ki taraf jata h iski jagah in.realine hojae eveytime button is pused
             //soc hai , con hai in = new BufferedReader(new InputStreamReader(soc.getInputStream())); in.readline karke ek msg lelo;
-System.out.println("connection established");
-
+            System.out.println("connection established");
             HandleClient clientThread= new HandleClient(soc,con);
             clients.add(clientThread);
             pool.execute(clientThread); // yaha se humne thread class ka run method chalaya 
