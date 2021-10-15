@@ -9,19 +9,39 @@ import static codedoc.LoginWindow.soc;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.BufferedReader;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import static java.util.stream.DoubleStream.builder;
 import static java.util.stream.IntStream.builder;
+
+import javax.swing.Box;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 /**
  *
@@ -32,6 +52,7 @@ public class CodeDoc extends javax.swing.JFrame {
     /**
      * Creates new form CodeDoc
      */
+
     int exit=0;
     int sec=0;
     public static String path=null;
@@ -43,10 +64,19 @@ public class CodeDoc extends javax.swing.JFrame {
      Socket soc;
      PrintWriter out;
      private BufferedReader in;
-    public CodeDoc() throws IOException {
-        soc=LoginWindow.soc;
-        out = new PrintWriter(soc.getOutputStream(), true);
-        in=new BufferedReader(new InputStreamReader(soc.getInputStream()));
+   
+    static RSyntaxTextArea textArea = new RSyntaxTextArea(25, 80);
+    static String s="abc";
+    JFrame f;
+   
+    public CodeDoc() {
+        try
+        { out=new PrintWriter(soc.getOutputStream(),true);
+          in = new BufferedReader(new InputStreamReader(soc.getInputStream()));
+        }
+         catch (Exception ex)
+        {System.out.println("Exception : " + ex);}
+
         initComponents();
         
     }
@@ -69,6 +99,7 @@ public class CodeDoc extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        Open = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         compiletextbox = new javax.swing.JTextArea();
@@ -80,7 +111,6 @@ public class CodeDoc extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         languageSelector = new javax.swing.JComboBox<>();
         autoComplete = new javax.swing.JCheckBox();
-        previousCode = new javax.swing.JButton();
         reset = new javax.swing.JButton();
         fontSetting = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
@@ -107,10 +137,25 @@ public class CodeDoc extends javax.swing.JFrame {
         });
 
         newDoc.setText("New");
+        newDoc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newDocActionPerformed(evt);
+            }
+        });
 
         editDoc.setText("Edit");
+        editDoc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editDocActionPerformed(evt);
+            }
+        });
 
         saveDoc.setText("Save");
+        saveDoc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveDocActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Share");
 
@@ -125,6 +170,13 @@ public class CodeDoc extends javax.swing.JFrame {
 
         jButton5.setText("Video Call");
 
+        Open.setText("Open");
+        Open.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OpenActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -138,6 +190,8 @@ public class CodeDoc extends javax.swing.JFrame {
                 .addComponent(editDoc)
                 .addGap(18, 18, 18)
                 .addComponent(saveDoc)
+                .addGap(18, 18, 18)
+                .addComponent(Open)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -160,7 +214,8 @@ public class CodeDoc extends javax.swing.JFrame {
                     .addComponent(jButton1)
                     .addComponent(jButton2)
                     .addComponent(jButton4)
-                    .addComponent(jButton5))
+                    .addComponent(jButton5)
+                    .addComponent(Open))
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
@@ -225,9 +280,12 @@ public class CodeDoc extends javax.swing.JFrame {
 
         autoComplete.setText("Autocomplete");
 
-        previousCode.setText("Previous Code");
-
         reset.setText("Reset");
+        reset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetActionPerformed(evt);
+            }
+        });
 
         fontSetting.setText("Font Setting");
         fontSetting.addActionListener(new java.awt.event.ActionListener() {
@@ -245,13 +303,11 @@ public class CodeDoc extends javax.swing.JFrame {
                 .addComponent(languageSelector, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(autoComplete, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(previousCode)
-                .addGap(18, 18, 18)
+                .addGap(133, 133, 133)
                 .addComponent(reset)
                 .addGap(18, 18, 18)
                 .addComponent(fontSetting)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(716, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -260,7 +316,6 @@ public class CodeDoc extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(languageSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(autoComplete)
-                    .addComponent(previousCode)
                     .addComponent(reset)
                     .addComponent(fontSetting))
                 .addContainerGap())
@@ -366,16 +421,40 @@ public class CodeDoc extends javax.swing.JFrame {
      
    //*/
     
+//Get files from open dialog box 
+    String data1;
+    static String data="";
+   
+    public void showContent(String path)
+    {   
+        data="";
+        try
+        {
+            File myObj=new File(path);
+            Scanner myReader = new Scanner(myObj);
+            
+            while(myReader.hasNextLine())
+            {
+                data+=myReader.nextLine()+"\n";
+            }
+            
+            compiletextbox.setText(data);
+        }
+        catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+ 
     
 // CUSTOM INPUT
     
     private void customInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customInputActionPerformed
-        // TODO add your handling code here:
-       
+
     }//GEN-LAST:event_customInputActionPerformed
 
 // COMPILE AND RUN    
     private void compileAndRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compileAndRunActionPerformed
+
                                       
         
         exit=0;
@@ -717,6 +796,7 @@ public class CodeDoc extends javax.swing.JFrame {
                 exit=1;
               
         }
+
     }//GEN-LAST:event_compileAndRunActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -738,6 +818,60 @@ public class CodeDoc extends javax.swing.JFrame {
         // TODO add your handling code here:
         
     }//GEN-LAST:event_compiletextboxCaretUpdate
+
+    //SAVING FILE
+    private void saveDocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveDocActionPerformed
+        
+        
+        String fileName=JOptionPane.showInputDialog("File name");
+        try
+        {
+                out.println("Save_fileName");
+                System.out.println("Sending Data to the server side");
+                out.println(fileName);  
+                try {
+                     String path="D:\\"+fileName; 
+                    FileWriter fileWriter=new FileWriter(path);
+                    fileWriter.write(compiletextbox.getText());
+                    fileWriter.close();
+                  
+                    
+                } catch (Exception ex)
+                  {System.out.println("Exception : " + ex);} 
+                System.out.println(compiletextbox.getText());
+        }
+        catch(Exception et)
+        {
+            JOptionPane.showMessageDialog(f, et.getMessage());
+        }
+        
+        
+                        
+    }//GEN-LAST:event_saveDocActionPerformed
+    
+    // OPENING FILE    
+    private void OpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpenActionPerformed
+        
+        
+        OpenDialogBox  db=new OpenDialogBox(this);
+        db.show();
+        compiletextbox.setEditable(false);
+            
+       
+    }//GEN-LAST:event_OpenActionPerformed
+
+    private void newDocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newDocActionPerformed
+        compiletextbox.setText("");
+    }//GEN-LAST:event_newDocActionPerformed
+
+    private void editDocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDocActionPerformed
+       compiletextbox.setEditable(true);
+    }//GEN-LAST:event_editDocActionPerformed
+
+    private void resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetActionPerformed
+       compiletextbox.setText("");
+    }//GEN-LAST:event_resetActionPerformed
+
 
     /**
      * @param args the command line arguments
@@ -769,16 +903,13 @@ public class CodeDoc extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                try {
-                    new CodeDoc().setVisible(true);
-                } catch (IOException ex) {
-                    Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                new CodeDoc().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Open;
     private javax.swing.JCheckBox autoComplete;
     private javax.swing.JButton compileAndRun;
     private javax.swing.JTextArea compiletextbox;
@@ -805,7 +936,6 @@ public class CodeDoc extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JComboBox<String> languageSelector;
     private javax.swing.JButton newDoc;
-    private javax.swing.JButton previousCode;
     private javax.swing.JButton reset;
     private javax.swing.JButton saveDoc;
     private javax.swing.JButton sendMessage;

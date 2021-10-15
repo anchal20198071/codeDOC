@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  * @author Arya Pandey
  */
 public class ServercodeDoc {
-    Mysqlconnect myc=new Mysqlconnect();
+Mysqlconnect myc=new Mysqlconnect();
 ServerSocket ss;
 Socket soc;
 PrintWriter out;
@@ -33,7 +33,7 @@ Connection con =myc.getConn();
 //public static map of pairs key email , value :out,bool logout and release k samay off
 //create method in in server side to add 
         public static void main(String[] args) // made executor method because static variables cannot be reffered from main.
- {
+  {
            new ServercodeDoc().executor();
   }
         
@@ -47,8 +47,7 @@ Connection con =myc.getConn();
         {
             soc= ss.accept(); //jaise hi yaha accept hota hai handle client ki taraf jata h iski jagah in.realine hojae eveytime button is pused
             //soc hai , con hai in = new BufferedReader(new InputStreamReader(soc.getInputStream())); in.readline karke ek msg lelo;
-System.out.println("connection established");
-
+            System.out.println("connection established");
             HandleClient clientThread= new HandleClient(soc,con);
             //run method of current handle client is started and we move ahead
             clients.add(clientThread);

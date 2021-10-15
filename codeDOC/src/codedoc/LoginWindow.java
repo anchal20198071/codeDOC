@@ -12,13 +12,18 @@ import javax.swing.JOptionPane;
  */
 public class LoginWindow extends javax.swing.JFrame {
 
+    
+    
+    static Socket soc;
+    public CodeDoc home ;
+
     /**
      * Creates new form Login_Window
      */
     public LoginWindow() {
         initComponents();
     }
-    static Socket soc;
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -228,9 +233,9 @@ public class LoginWindow extends javax.swing.JFrame {
             try {
 
                 soc = new Socket("localhost", 9886); //9886
-                
+              
                 String[] s = {email, pass};
-
+                
                 PrintWriter out = new PrintWriter(soc.getOutputStream(), true);
                 out.println("16");
 
@@ -243,7 +248,7 @@ public class LoginWindow extends javax.swing.JFrame {
                 System.out.println(serverResponse);
 
                 if (serverResponse == 1) {
-                    CodeDoc home = new CodeDoc();
+                    home = new CodeDoc();
                     home.show();
                     dispose();
                 } else {

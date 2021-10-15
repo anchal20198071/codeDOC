@@ -5,6 +5,8 @@
  */
 package servercodedoc;
 import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -30,7 +32,8 @@ public class HandleClient implements Runnable {
     PreparedStatement p;
     StringBuilder sb = new StringBuilder();
     Connection con;
-
+    static String userEmail="";
+    
     //constructor for clienthandle class
     public HandleClient(Socket clientSocket, Connection conclient) throws IOException {
         con = conclient;
@@ -66,6 +69,28 @@ public class HandleClient implements Runnable {
             else if(choice.equals("300")){
                 System.out.println("300");
             }
+            else if(choice.equals("PreviousCode"))
+            {
+                previousCode();
+            }
+            else if(choice.equals("FetchPreviousCode"))
+            {
+                fetchPreviousCode();
+            }
+            else if(choice.equals("Save_fileName"))
+            {
+                SaveAction();
+            }
+            else if(choice.equals("Open_files"))
+            {
+                OpenFiles();
+            }
+            else if(choice.equals("Fetch_files"))
+            {
+                FetchFiles();
+            }
+           
+            
             }
 
         } catch (IOException ex) {
@@ -122,7 +147,7 @@ public class HandleClient implements Runnable {
 
             pst = con.prepareStatement(sql);
             System.out.println("Executing Query!!");
-
+            userEmail=s[0];    
             pst.setString(1, s[0]);
             pst.setString(2, md5(s[1]));
 
@@ -141,6 +166,173 @@ public class HandleClient implements Runnable {
             System.out.println("Exception : " + ex);
         }
     }
+    
+    void previousCode()
+    {
+        try
+        {
+            try {
+                
+            String st;
+            System.out.println(st= in.readLine());           
+            
+            PreparedStatement pst;
+            ResultSet rs;
+            
+            
+            System.out.println("Saving previous code"+userEmail);
+            String sql = "UPDATE registration SET previouscode = ? WHERE email= ?";
+           
+            pst = con.prepareStatement(sql);
+            pst.setString(1, st);
+            pst.setString(2, userEmail);
+            int j = pst.executeUpdate();
+            if (j >= 1) {
+               System.out.println("Saved document");
+            } else {
+                System.out.println("Unable to save document");
+            }
+
+            } catch (Exception e) {
+              ;
+           }
+
+            
+        }
+        catch (Exception ex) {
+            System.out.println("Exception : " + ex);
+        }
+    }
+    
+    void fetchPreviousCode()
+    {
+        try
+        {
+            PreparedStatement pst;
+            ResultSet rs;
+            String sql = "SELECT previouscode FROM registration WHERE email=?";
+            pst = con.prepareStatement(sql);
+            pst.setString(1, userEmail);            
+            rs = pst.executeQuery();
+            if(rs.next())
+            {
+            String path = rs.getString("previouscode");
+            out.println(path);
+            }rs.close();            
+        }
+        catch (Exception ex)
+        {System.out.println("Exception : " + ex);}
+    }
+    
+    void SaveAction() {
+       try
+       {
+            String st;
+            System.out.println(st= in.readLine());           
+            String s2, s1="";
+           
+            PreparedStatement pst;
+            
+            String path="D:\\"+st;
+                        
+            System.out.println("Saving file"+userEmail);
+            String sql = "Insert into files values(?,?,?)";
+            
+            pst = con.prepareStatement(sql);
+            pst.setString(1, userEmail);
+            pst.setString(2, st);
+            pst.setString(3, path);
+            
+            int j = pst.executeUpdate();
+            if (j >= 1) {
+               System.out.println("Saved document");
+            } else {
+                System.out.println("Unable to save document");
+            }
+           
+            
+            previousCode();
+             /*try {
+                   
+                    FileWriter fileWriter=new FileWriter(path);
+                    fileWriter.write(s1);
+                    fileWriter.close();
+                  
+                    
+                } catch (Exception ex)
+                  {System.out.println("Exception : " + ex);}*/
+       }
+       catch (Exception ex)
+       {System.out.println("Exception : " + ex);}
+    }
+    
+    
+    void OpenFiles() {
+       try
+        {
+            PreparedStatement pst;
+            ResultSet rs;
+            String sql = "SELECT previouscode FROM registration WHERE email=?";
+            pst = con.prepareStatement(sql);
+            pst.setString(1, userEmail);            
+            rs = pst.executeQuery();
+            if(rs.next())
+            {
+            String path = rs.getString("previouscode");
+            out.println(path);
+            }rs.close();            
+        }
+        catch (Exception ex)
+        {System.out.println("Exception : " + ex);}
+    }
+    
+    private void FetchFiles() {
+            
+        System.out.println("Connection..established UpdateTable");
+        ResultSet rs;
+        try {
+
+            String sql = "SELECT fileName,filePath FROM files where email=?";
+            p = con.prepareStatement(sql);
+            p.setString(1, userEmail);  
+            rs = p.executeQuery();
+
+            int i = 0;
+
+            String[] fileName = new String[100];
+            String[] filePath = new String[100];
+            
+
+            while (rs.next()) {
+
+                fileName[i] = rs.getString("fileName");
+                filePath[i] = rs.getString("filePath");
+                i++;
+
+            }
+
+            rs.close();
+
+            out.println(i);
+
+            int k;
+
+            for (k = 0; k < i; k++) {
+
+                out.println(fileName[k]);
+                out.println(filePath[k]);
+            }
+
+            p.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        
+    }
+
+   
+    
     private String md5(String string) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
@@ -156,4 +348,11 @@ public class HandleClient implements Runnable {
         }
         return "";
     }
+
+   
+
+  
+   
+
+   
 }
