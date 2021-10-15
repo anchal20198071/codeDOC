@@ -36,6 +36,7 @@ public class HandleClient implements Runnable {
         con = conclient;
         this.client = clientSocket;
         out = new PrintWriter(this.client.getOutputStream(), true);
+        //out should get stored in an static array
         in = new BufferedReader(new InputStreamReader(this.client.getInputStream()));
 
     }

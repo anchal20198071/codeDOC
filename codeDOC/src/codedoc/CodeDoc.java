@@ -8,10 +8,20 @@ package codedoc;
 import static codedoc.LoginWindow.soc;
 import java.awt.Color;
 import java.awt.Font;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static java.util.stream.DoubleStream.builder;
+import static java.util.stream.IntStream.builder;
 
 /**
  *
@@ -22,8 +32,23 @@ public class CodeDoc extends javax.swing.JFrame {
     /**
      * Creates new form CodeDoc
      */
-    public CodeDoc() {
+    int exit=0;
+    int sec=0;
+    public static String path=null;
+    private static final String FILE_LOCATION1 ="Desktop\\winners\\codeDOC\\codeDOC\\arya.c";    
+     private static final String FILE_LOCATION2 ="Desktop\\winners\\codeDOC\\codeDOC\\arya.py";
+     private static final String FILE_LOCATION3 ="Desktop\\winners\\codeDOC\\codeDOC\\arya.cpp";
+     
+     private static final String FILE_LOCATION4 ="Desktop\\winners\\codeDOC\\codeDOC\\arya.java";
+     Socket soc;
+     PrintWriter out;
+     private BufferedReader in;
+    public CodeDoc() throws IOException {
+        soc=LoginWindow.soc;
+        out = new PrintWriter(soc.getOutputStream(), true);
+        in=new BufferedReader(new InputStreamReader(soc.getInputStream()));
         initComponents();
+        
     }
 
     /**
@@ -46,7 +71,7 @@ public class CodeDoc extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        compiletextbox = new javax.swing.JTextArea();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTextArea4 = new javax.swing.JTextArea();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -61,10 +86,11 @@ public class CodeDoc extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         customInput = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        getinput = new javax.swing.JTextArea();
         compileAndRun = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea3 = new javax.swing.JTextArea();
+        getoutput = new javax.swing.JTextArea();
+        timer = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -140,9 +166,14 @@ public class CodeDoc extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane2.setViewportView(jTextArea2);
+        compiletextbox.setColumns(20);
+        compiletextbox.setRows(5);
+        compiletextbox.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                compiletextboxCaretUpdate(evt);
+            }
+        });
+        jScrollPane2.setViewportView(compiletextbox);
 
         jTextArea4.setColumns(20);
         jTextArea4.setRows(5);
@@ -242,9 +273,9 @@ public class CodeDoc extends javax.swing.JFrame {
             }
         });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        getinput.setColumns(20);
+        getinput.setRows(5);
+        jScrollPane1.setViewportView(getinput);
 
         compileAndRun.setText("Compile & Run");
         compileAndRun.addActionListener(new java.awt.event.ActionListener() {
@@ -253,9 +284,11 @@ public class CodeDoc extends javax.swing.JFrame {
             }
         });
 
-        jTextArea3.setColumns(20);
-        jTextArea3.setRows(5);
-        jScrollPane3.setViewportView(jTextArea3);
+        getoutput.setColumns(20);
+        getoutput.setRows(5);
+        jScrollPane3.setViewportView(getoutput);
+
+        timer.setText("Seconds");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -268,16 +301,24 @@ public class CodeDoc extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(compileAndRun)
-                .addContainerGap(144, Short.MAX_VALUE))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(compileAndRun))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(timer, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(146, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(compileAndRun)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(compileAndRun)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(timer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(customInput))
                 .addContainerGap(26, Short.MAX_VALUE))
@@ -295,7 +336,7 @@ public class CodeDoc extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 281, Short.MAX_VALUE)))
+                        .addGap(0, 279, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -330,26 +371,352 @@ public class CodeDoc extends javax.swing.JFrame {
     
     private void customInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customInputActionPerformed
         // TODO add your handling code here:
-        PrintWriter out = null;
-        try {
-            out = new PrintWriter(LoginWindow.soc.getOutputStream(), true);
-        } catch (IOException ex) {
-            Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
-        }
-                out.println("300");
-        
+       
     }//GEN-LAST:event_customInputActionPerformed
 
 // COMPILE AND RUN    
     private void compileAndRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compileAndRunActionPerformed
-        // TODO add your handling code here:
-        PrintWriter out = null;
-        try {
-            out = new PrintWriter(LoginWindow.soc.getOutputStream(), true);
-        } catch (IOException ex) {
-            Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
+                                      
+        
+        exit=0;
+            String a = languageSelector.getSelectedItem().toString();
+            //get the preffered language from user
+            int gotsec=Integer.valueOf(timer.getText());
+            
+            Thread th7=new Thread(new Runnable() {
+               @Override
+               public void run() {
+                  
+                  sec=0;
+                   while(sec<gotsec && exit==0)
+        {
+            try {
+                Thread.sleep(1000);
+                sec++;
+                timer.setText(Integer.toString(sec));
+            } catch (InterruptedException ex) {
+                Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-                out.println("200");
+                   if(gotsec<=sec)
+                   {
+                       getoutput.setText("TLE");
+                       return;
+                   }
+                          
+               }
+       });
+             th7.start();
+            if(a.equalsIgnoreCase("C")){
+            try {
+            String filename = "arya.c";
+            FileWriter fileWriter=new FileWriter(filename);
+            fileWriter.write(compiletextbox.getText());
+            setTitle(filename);
+            fileWriter.close();
+            } catch (IOException e) {
+                exit=1;
+            System.out.println("file not found");
+            }
+            //created a file successfully in the folder where project is cloned
+            boolean isWindows = System.getProperty("os.name")
+  .toLowerCase().startsWith("windows");
+            
+             ProcessBuilder processBuilder = new ProcessBuilder();
+             Process process=null;
+           if (isWindows) {
+                   processBuilder.command("cmd.exe", "/c", "gcc",FILE_LOCATION1);
+               } else {
+                   processBuilder.command("sh", "-c", "ls");
+               }
+               processBuilder.directory(new File(System.getProperty("user.home")));
+
+
+                try {
+                    process = processBuilder.start();
+                    BufferedReader br=new BufferedReader(new InputStreamReader(process.getInputStream()));//getting the output
+                    String coutput;
+                    while((coutput=br.readLine())!=null)
+                    {
+                        System.out.println(coutput);
+                    }
+                    
+                } catch (IOException ex) {
+                    Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                try {
+                    if( process.getErrorStream().read() != -1 )
+                    {
+                        exit=1;
+                        getoutput.setText("file cant be compiled " +process.getErrorStream());
+  
+                        return;
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                 
+                 
+            if (isWindows) {
+                   processBuilder.command("cmd.exe", "/c", "a");
+               } else {
+                   processBuilder.command("sh", "-c", "ls");
+               }
+                try {
+                    process = processBuilder.start();
+                    OutputStream os=process.getOutputStream();
+                    PrintStream ps = new PrintStream(os);//if we want to send some input
+                    ps.println(getinput.getText());
+                    ps.flush();
+                    BufferedReader br=new BufferedReader(new InputStreamReader(process.getInputStream()));//getting the output
+                    String coutput;
+                    while((coutput=br.readLine())!=null)
+                    {
+                        if(sec>=gotsec)
+                        {
+                            getoutput.setText("TLE");
+                            return;
+                        }
+                        getoutput.setText(coutput);
+                        System.out.println(coutput);
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                 exit=1;
+            
+        }
+            if(a.equalsIgnoreCase("C++")){
+            try {
+            String filename = "arya.cpp";
+            FileWriter fileWriter=new FileWriter(filename);
+            fileWriter.write(compiletextbox.getText());
+            setTitle(filename);
+            fileWriter.close();
+            } catch (IOException e) {
+            System.out.println("file not found");
+            }
+            //created a file successfully in the folder where project is cloned
+            boolean isWindows = System.getProperty("os.name")
+  .toLowerCase().startsWith("windows");
+            
+             ProcessBuilder processBuilder = new ProcessBuilder();
+             Process process=null;
+           if (isWindows) {
+                   processBuilder.command("cmd.exe", "/c", "g++",FILE_LOCATION3);
+               } else {
+                   processBuilder.command("sh", "-c", "ls");
+               }
+               processBuilder.directory(new File(System.getProperty("user.home")));
+
+
+                try {
+                    process = processBuilder.start();
+                    BufferedReader br=new BufferedReader(new InputStreamReader(process.getInputStream()));//getting the output
+                    String coutput;
+                    while((coutput=br.readLine())!=null)
+                    {
+                        System.out.println(coutput);
+                    }
+                    
+                } catch (IOException ex) {
+                    Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                try {
+                    if( process.getErrorStream().read() != -1 )
+                    {
+                        exit=1;
+                        getoutput.setText("file cant be compiled " +process.getErrorStream());
+                        return;
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                 
+                 
+            if (isWindows) {
+                   processBuilder.command("cmd.exe", "/c", "a");
+               } else {
+                   processBuilder.command("sh", "-c", "ls");
+               }
+                try {
+                    process = processBuilder.start();
+                    OutputStream os=process.getOutputStream();
+                    PrintStream ps = new PrintStream(os);//if we want to send some input
+                    BufferedReader br=new BufferedReader(new InputStreamReader(process.getInputStream()));//getting the output
+                    String coutput;
+                    while((coutput=br.readLine())!=null)
+                    {
+                        getoutput.setText(coutput);
+                        System.out.println(coutput);
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                 
+            exit=1;
+        }
+            if(a.equalsIgnoreCase("java")){
+            try {
+            String filename = "arya.java";
+            FileWriter fileWriter=new FileWriter(filename);
+            fileWriter.write(compiletextbox.getText());
+            setTitle(filename);
+            fileWriter.close();
+            } catch (IOException e) {
+                exit=1;
+                
+            getoutput.setText("file not found");
+            return;
+            }
+            //created a file successfully in the folder where project is cloned
+            boolean isWindows = System.getProperty("os.name")
+  .toLowerCase().startsWith("windows");
+            
+             ProcessBuilder processBuilder = new ProcessBuilder();
+             Process process=null;
+           if (isWindows) {
+                   processBuilder.command("cmd.exe", "/c", "javac",FILE_LOCATION4);
+               } else {
+                   processBuilder.command("sh", "-c", "ls");
+               }
+               processBuilder.directory(new File(System.getProperty("user.home")));
+
+
+                try {
+                    process = processBuilder.start();
+                    BufferedReader br=new BufferedReader(new InputStreamReader(process.getInputStream()));//getting the output
+                    String coutput;
+                    while((coutput=br.readLine())!=null)
+                    {
+                        
+                        System.out.println(coutput);
+                    }
+                    
+                } catch (IOException ex) {
+                    Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                try {
+                    if( process.getErrorStream().read() != -1 )
+                    {
+                        exit=1;
+                        getoutput.setText("file cant be compiled " +process.getErrorStream());
+                        return;
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                 
+                 
+            if (isWindows) {
+                   processBuilder.command("cmd.exe", "/c", "java","-cp",FILE_LOCATION4);
+               } else {
+                   processBuilder.command("sh", "-c", "ls");
+               }
+                try {
+                    process = processBuilder.start();
+                    OutputStream os=process.getOutputStream();
+                    PrintStream ps = new PrintStream(os);//if we want to send some input
+                    ps.println(getinput.getText());
+                    ps.flush();
+                    System.out.println("here");
+                    
+                    BufferedReader br=new BufferedReader(new InputStreamReader(process.getInputStream()));//getting the output
+                    String coutput;
+                    while((coutput=br.readLine())!=null)
+                    {
+                        if(sec>=gotsec)
+                        {
+                            getoutput.setText("TLE");
+                         
+                            return;
+                        }
+                        getoutput.setText(coutput);
+                        System.out.println(coutput);
+                        
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                 
+            exit=1;
+        } 
+    if(a.equalsIgnoreCase("python")){
+            try {
+            String filename = "arya.py";
+            FileWriter fileWriter=new FileWriter(filename);
+            fileWriter.write(compiletextbox.getText());
+            setTitle(filename);
+            fileWriter.close();
+            } catch (IOException e) {
+                exit=1;
+            System.out.println("file not found");
+            }
+            //created a file successfully in the folder where project is cloned
+            boolean isWindows = System.getProperty("os.name")
+  .toLowerCase().startsWith("windows");
+            
+             ProcessBuilder processBuilder = new ProcessBuilder();
+             Process process=null;
+           if (isWindows) {
+                   processBuilder.command("cmd.exe", "/c", "py",FILE_LOCATION2);
+               } else {
+                   processBuilder.command("sh", "-c", "ls");
+               }
+               processBuilder.directory(new File(System.getProperty("user.home")));
+
+
+                try {
+                    process = processBuilder.start();
+                    OutputStream os=process.getOutputStream();
+                     PrintStream ps = new PrintStream(os);//if we want to send some input
+        
+                    ps.println(getinput.getText());
+                    ps.flush();
+                    
+                    System.out.println("here");
+                    
+                    BufferedReader br=new BufferedReader(new InputStreamReader(process.getInputStream()));//getting the output
+                    String coutput;
+                    if(sec>=gotsec)
+                        {
+                            getoutput.setText("TLE");
+                         
+                            return;
+                        }
+                    while((coutput=br.readLine())!=null)
+                    {
+                        if(sec>=gotsec)
+                        {
+                            getoutput.setText("TLE");
+                         
+                            return;
+                        }
+                        getoutput.setText(coutput);
+                        System.out.println(coutput);
+                    }
+                    
+                } catch (IOException ex) {
+                    Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                try {
+                    if( process.getErrorStream().read() != -1 )
+                    {
+                        exit=1;
+                        getoutput.setText("file cant be compiled " +process.getErrorStream());
+                        return;
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                 //file is compile and runnable a file is created
+                exit=1;
+              
+        }
     }//GEN-LAST:event_compileAndRunActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -366,6 +733,11 @@ public class CodeDoc extends javax.swing.JFrame {
         fontSettings  fS=new fontSettings(CodeDoc.this);
         fS.show();
     }//GEN-LAST:event_fontSettingActionPerformed
+
+    private void compiletextboxCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_compiletextboxCaretUpdate
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_compiletextboxCaretUpdate
 
     /**
      * @param args the command line arguments
@@ -397,7 +769,11 @@ public class CodeDoc extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CodeDoc().setVisible(true);
+                try {
+                    new CodeDoc().setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -405,9 +781,12 @@ public class CodeDoc extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox autoComplete;
     private javax.swing.JButton compileAndRun;
+    private javax.swing.JTextArea compiletextbox;
     private javax.swing.JButton customInput;
     private javax.swing.JButton editDoc;
     private javax.swing.JButton fontSetting;
+    private javax.swing.JTextArea getinput;
+    private javax.swing.JTextArea getoutput;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
@@ -421,9 +800,6 @@ public class CodeDoc extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JTextArea jTextArea3;
     private javax.swing.JTextArea jTextArea4;
     private javax.swing.JTextArea jTextArea5;
     private javax.swing.JTextField jTextField1;
@@ -433,6 +809,7 @@ public class CodeDoc extends javax.swing.JFrame {
     private javax.swing.JButton reset;
     private javax.swing.JButton saveDoc;
     private javax.swing.JButton sendMessage;
+    private javax.swing.JTextField timer;
     // End of variables declaration//GEN-END:variables
 
     static class setVisible {

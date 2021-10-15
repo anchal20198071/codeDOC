@@ -25,10 +25,13 @@ ServerSocket ss;
 Socket soc;
 PrintWriter out;
 BufferedReader in;
+//create string email gets at the time of login
 public static ArrayList <HandleClient> clients = new ArrayList<>();
 private ExecutorService pool= Executors.newFixedThreadPool(20);
 Connection con =myc.getConn();
-
+//create onlineuser class constructor  has bool , out, string
+//public static map of pairs key email , value :out,bool logout and release k samay off
+//create method in in server side to add 
         public static void main(String[] args) // made executor method because static variables cannot be reffered from main.
  {
            new ServercodeDoc().executor();
@@ -47,6 +50,7 @@ Connection con =myc.getConn();
 System.out.println("connection established");
 
             HandleClient clientThread= new HandleClient(soc,con);
+            //run method of current handle client is started and we move ahead
             clients.add(clientThread);
             pool.execute(clientThread); // yaha se humne thread class ka run method chalaya 
         }  

@@ -11,14 +11,14 @@ import javax.swing.JOptionPane;
  * @author lenovo
  */
 public class LoginWindow extends javax.swing.JFrame {
-    static Socket soc;
+
     /**
      * Creates new form Login_Window
      */
     public LoginWindow() {
         initComponents();
     }
-
+    static Socket soc;
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
