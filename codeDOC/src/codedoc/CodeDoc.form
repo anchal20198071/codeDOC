@@ -288,13 +288,11 @@
                   <Component id="languageSelector" min="-2" pref="107" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="autoComplete" min="-2" pref="124" max="-2" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="previousCode" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="133" max="-2" attributes="0"/>
                   <Component id="reset" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="fontSetting" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="367" max="32767" attributes="0"/>
                   <Component id="press" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="70" max="-2" attributes="0"/>
                   <Component id="release" min="-2" max="-2" attributes="0"/>
@@ -309,7 +307,6 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="languageSelector" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="autoComplete" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="previousCode" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="reset" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="fontSetting" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="press" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -339,11 +336,6 @@
         <Component class="javax.swing.JCheckBox" name="autoComplete">
           <Properties>
             <Property name="text" type="java.lang.String" value="Autocomplete"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="previousCode">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Previous Code"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="reset">
@@ -425,7 +417,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JTextArea" name="jTextArea1">
+            <Component class="javax.swing.JTextArea" name="getinput">
               <Properties>
                 <Property name="columns" type="int" value="20"/>
                 <Property name="rows" type="int" value="5"/>
@@ -448,7 +440,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JTextArea" name="jTextArea3">
+            <Component class="javax.swing.JTextArea" name="getoutput">
               <Properties>
                 <Property name="columns" type="int" value="20"/>
                 <Property name="rows" type="int" value="5"/>

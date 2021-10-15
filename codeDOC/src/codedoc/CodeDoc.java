@@ -79,7 +79,6 @@ public class CodeDoc extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         languageSelector = new javax.swing.JComboBox<>();
         autoComplete = new javax.swing.JCheckBox();
-        previousCode = new javax.swing.JButton();
         reset = new javax.swing.JButton();
         fontSetting = new javax.swing.JButton();
         press = new javax.swing.JButton();
@@ -87,10 +86,10 @@ public class CodeDoc extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         customInput = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        getinput = new javax.swing.JTextArea();
         compileAndRun = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea3 = new javax.swing.JTextArea();
+        getoutput = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -238,8 +237,6 @@ public class CodeDoc extends javax.swing.JFrame {
 
         autoComplete.setText("Autocomplete");
 
-        previousCode.setText("Previous Code");
-
         reset.setText("Reset");
 
         fontSetting.setText("Font Setting");
@@ -272,13 +269,11 @@ public class CodeDoc extends javax.swing.JFrame {
                 .addComponent(languageSelector, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(autoComplete, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(previousCode)
-                .addGap(18, 18, 18)
+                .addGap(133, 133, 133)
                 .addComponent(reset)
                 .addGap(18, 18, 18)
                 .addComponent(fontSetting)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 367, Short.MAX_VALUE)
                 .addComponent(press)
                 .addGap(70, 70, 70)
                 .addComponent(release)
@@ -291,7 +286,6 @@ public class CodeDoc extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(languageSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(autoComplete)
-                    .addComponent(previousCode)
                     .addComponent(reset)
                     .addComponent(fontSetting)
                     .addComponent(press)
@@ -306,9 +300,9 @@ public class CodeDoc extends javax.swing.JFrame {
             }
         });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        getinput.setColumns(20);
+        getinput.setRows(5);
+        jScrollPane1.setViewportView(getinput);
 
         compileAndRun.setText("Compile & Run");
         compileAndRun.addActionListener(new java.awt.event.ActionListener() {
@@ -317,9 +311,9 @@ public class CodeDoc extends javax.swing.JFrame {
             }
         });
 
-        jTextArea3.setColumns(20);
-        jTextArea3.setRows(5);
-        jScrollPane3.setViewportView(jTextArea3);
+        getoutput.setColumns(20);
+        getoutput.setRows(5);
+        jScrollPane3.setViewportView(getoutput);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -604,6 +598,8 @@ public class CodeDoc extends javax.swing.JFrame {
     private javax.swing.JButton customInput;
     private javax.swing.JButton editDoc;
     private javax.swing.JButton fontSetting;
+    private javax.swing.JTextArea getinput;
+    private javax.swing.JTextArea getoutput;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
@@ -616,13 +612,10 @@ public class CodeDoc extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea3;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JComboBox<String> languageSelector;
     private javax.swing.JButton newDoc;
     private javax.swing.JButton press;
-    private javax.swing.JButton previousCode;
     private javax.swing.JButton release;
     private javax.swing.JButton reset;
     private javax.swing.JButton saveDoc;
