@@ -92,16 +92,16 @@ public class CodeDoc extends javax.swing.JFrame {
         newDoc = new javax.swing.JButton();
         editDoc = new javax.swing.JButton();
         saveDoc = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        shareButton = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         Open = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTextArea4 = new javax.swing.JTextArea();
+        chatSection = new javax.swing.JTextArea();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jTextArea5 = new javax.swing.JTextArea();
+        typeMessg = new javax.swing.JTextArea();
         sendMessage = new javax.swing.JButton();
         jScrollPane6 = new javax.swing.JScrollPane();
         compiletextbox = new javax.swing.JTextArea();
@@ -154,7 +154,7 @@ public class CodeDoc extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Share");
+        shareButton.setText("Share");
 
         jButton2.setText("Chat");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -190,7 +190,7 @@ public class CodeDoc extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(Open)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(shareButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -208,7 +208,7 @@ public class CodeDoc extends javax.swing.JFrame {
                     .addComponent(newDoc)
                     .addComponent(editDoc)
                     .addComponent(saveDoc)
-                    .addComponent(jButton1)
+                    .addComponent(shareButton)
                     .addComponent(jButton2)
                     .addComponent(jButton4)
                     .addComponent(jButton5)
@@ -218,13 +218,13 @@ public class CodeDoc extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));
 
-        jTextArea4.setColumns(20);
-        jTextArea4.setRows(5);
-        jScrollPane4.setViewportView(jTextArea4);
+        chatSection.setColumns(20);
+        chatSection.setRows(5);
+        jScrollPane4.setViewportView(chatSection);
 
-        jTextArea5.setColumns(20);
-        jTextArea5.setRows(5);
-        jScrollPane5.setViewportView(jTextArea5);
+        typeMessg.setColumns(20);
+        typeMessg.setRows(5);
+        jScrollPane5.setViewportView(typeMessg);
 
         sendMessage.setText("Send");
 
@@ -239,7 +239,6 @@ public class CodeDoc extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane6)
-                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -900,6 +899,7 @@ public class CodeDoc extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Open;
     private javax.swing.JCheckBox autoComplete;
+    private javax.swing.JTextArea chatSection;
     private javax.swing.JButton compileAndRun;
     private javax.swing.JTextArea compiletextbox;
     private javax.swing.JButton customInput;
@@ -907,7 +907,6 @@ public class CodeDoc extends javax.swing.JFrame {
     private javax.swing.JButton fontSetting;
     private javax.swing.JTextArea getinput;
     private javax.swing.JTextArea getoutput;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
@@ -920,15 +919,15 @@ public class CodeDoc extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JTextArea jTextArea4;
-    private javax.swing.JTextArea jTextArea5;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JComboBox<String> languageSelector;
     private javax.swing.JButton newDoc;
     private javax.swing.JButton reset;
     private javax.swing.JButton saveDoc;
     private javax.swing.JButton sendMessage;
+    private javax.swing.JButton shareButton;
     private javax.swing.JTextField timer;
+    private javax.swing.JTextArea typeMessg;
     // End of variables declaration//GEN-END:variables
 
     static class setVisible {
