@@ -244,7 +244,7 @@ public class LoginWindow extends javax.swing.JFrame {
                 System.out.println(serverResponse);
 
                 if (serverResponse == 1) {
-                    CodeDoc home = new CodeDoc();
+                    CodeDoc1 home = new CodeDoc1();
                     userId= email;
                     home.setTitle(userId);
                     home.show();

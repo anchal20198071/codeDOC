@@ -17,7 +17,7 @@ public class fontSettings extends javax.swing.JFrame {
      * Creates new form FontSelect
      * @param parent
      */
-    public fontSettings(CodeDoc parent) {
+    public fontSettings(CodeDoc1 parent) {
         initComponents();
          setTitle("Font");
         this.parent=parent;
@@ -293,7 +293,7 @@ public class fontSettings extends javax.swing.JFrame {
       //  parent.setTextFont(font);
     }
     
-    private CodeDoc parent;
+    private CodeDoc1 parent;
     private Color textColor;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
