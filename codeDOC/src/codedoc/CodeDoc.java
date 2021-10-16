@@ -25,7 +25,7 @@ import javax.swing.text.Document;
  *
  * @author Asmita Yadav
  */
-public class CodeDoc1 extends javax.swing.JFrame {
+public class CodeDoc extends javax.swing.JFrame {
     public String ClientIDToShare;
     PrintWriter out;
     BufferedReader in;
@@ -40,12 +40,12 @@ public class CodeDoc1 extends javax.swing.JFrame {
      * Creates new form CodeDoc
      */
    
-    public CodeDoc1() throws IOException {
+    public CodeDoc() throws IOException {
         initComponents();
         try {
             out = new PrintWriter(LoginWindow.soc.getOutputStream(), true);
         } catch (IOException ex) {
-            Logger.getLogger(CodeDoc1.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
         }
         in = new BufferedReader(new InputStreamReader(LoginWindow.soc.getInputStream()));
     }
@@ -429,7 +429,7 @@ public class CodeDoc1 extends javax.swing.JFrame {
     
     //FONT SETTING
     private void fontSettingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontSettingActionPerformed
-        fontSettings  fS=new fontSettings(CodeDoc1.this);
+        fontSettings  fS=new fontSettings(CodeDoc.this);
         fS.show();
     }//GEN-LAST:event_fontSettingActionPerformed
 
@@ -568,14 +568,16 @@ public class CodeDoc1 extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CodeDoc1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CodeDoc.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CodeDoc1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CodeDoc.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CodeDoc1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CodeDoc.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CodeDoc1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CodeDoc.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
@@ -583,9 +585,9 @@ public class CodeDoc1 extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new CodeDoc1().setVisible(true);
+                    new CodeDoc().setVisible(true);
                 } catch (IOException ex) {
-                    Logger.getLogger(CodeDoc1.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
