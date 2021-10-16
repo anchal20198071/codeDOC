@@ -153,6 +153,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Share"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="shareButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButton2">
           <Properties>
@@ -196,12 +199,9 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jScrollPane6" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jScrollPane5" pref="178" max="32767" attributes="0"/>
-                              <Component id="jScrollPane4" max="32767" attributes="0"/>
-                          </Group>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="jScrollPane5" pref="178" max="32767" attributes="0"/>
+                          <Component id="jScrollPane4" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
@@ -269,6 +269,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Send"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sendMessageActionPerformed"/>
+          </Events>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane6">
           <AuxValues>
@@ -282,6 +285,10 @@
                 <Property name="columns" type="int" value="20"/>
                 <Property name="rows" type="int" value="5"/>
               </Properties>
+              <Events>
+                <EventHandler event="caretUpdate" listener="javax.swing.event.CaretListener" parameters="javax.swing.event.CaretEvent" handler="compiletextboxCaretUpdate"/>
+                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="compiletextboxKeyPressed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -306,7 +313,11 @@
                   <Component id="reset" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="fontSetting" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="716" max="32767" attributes="0"/>
+                  <EmptySpace pref="367" max="32767" attributes="0"/>
+                  <Component id="press" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="70" max="-2" attributes="0"/>
+                  <Component id="release" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="153" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -319,6 +330,8 @@
                       <Component id="autoComplete" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="reset" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="fontSetting" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="press" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="release" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -360,6 +373,22 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fontSettingActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="press">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Press"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pressActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="release">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Release"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="releaseActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

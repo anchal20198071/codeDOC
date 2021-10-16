@@ -15,7 +15,11 @@ public class LoginWindow extends javax.swing.JFrame {
     
     
     static Socket soc;
+
     public CodeDoc home ;
+
+
+    static String userId;
 
     /**
      * Creates new form Login_Window
@@ -248,7 +252,12 @@ public class LoginWindow extends javax.swing.JFrame {
                 System.out.println(serverResponse);
 
                 if (serverResponse == 1) {
+
                     home = new CodeDoc();
+
+                    userId= email;
+                    home.setTitle(userId);
+
                     home.show();
                     dispose();
                 } else {
@@ -259,6 +268,7 @@ public class LoginWindow extends javax.swing.JFrame {
             } catch (Exception e) {
 
                 JOptionPane.showMessageDialog(null, "Error: " + e);
+                
             }
         }
     }//GEN-LAST:event_jButton1ActionPerformed

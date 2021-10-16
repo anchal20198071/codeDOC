@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.BufferedReader;
 
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -25,11 +26,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Caret;
+import javax.swing.text.Document;
 
 import static java.util.stream.DoubleStream.builder;
 import static java.util.stream.IntStream.builder;
@@ -47,10 +55,20 @@ import javax.swing.JTextField;
  * @author Asmita Yadav
  */
 public class CodeDoc extends javax.swing.JFrame {
-
+    public String ClientIDToShare;
+    PrintWriter out;
+    BufferedReader in;
+    int k = 0;
+    int l= 1;
+    private Document model;
+    private transient Caret caret;
+    boolean sender= false;
+    boolean codeArea= false;
+    boolean chatArea= false;
     /**
      * Creates new form CodeDoc
      */
+
 
     int exit=0;
     int sec=0;
@@ -60,9 +78,7 @@ public class CodeDoc extends javax.swing.JFrame {
      private static final String FILE_LOCATION3 ="Desktop\\winners\\codeDOC\\codeDOC\\arya.cpp";
      
      private static final String FILE_LOCATION4 ="Desktop\\winners\\codeDOC\\codeDOC\\arya.java";
-     Socket soc;
-     PrintWriter out;
-     private BufferedReader in;
+     
    
     
    
@@ -110,6 +126,8 @@ public class CodeDoc extends javax.swing.JFrame {
         autoComplete = new javax.swing.JCheckBox();
         reset = new javax.swing.JButton();
         fontSetting = new javax.swing.JButton();
+        press = new javax.swing.JButton();
+        release = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         customInput = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -117,7 +135,9 @@ public class CodeDoc extends javax.swing.JFrame {
         compileAndRun = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         getoutput = new javax.swing.JTextArea();
+
         timer = new javax.swing.JTextField();
+
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -155,6 +175,13 @@ public class CodeDoc extends javax.swing.JFrame {
         });
 
         shareButton.setText("Share");
+
+        shareButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shareButtonActionPerformed(evt);
+            }
+        });
+
 
         jButton2.setText("Chat");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -227,6 +254,25 @@ public class CodeDoc extends javax.swing.JFrame {
         jScrollPane5.setViewportView(typeMessg);
 
         sendMessage.setText("Send");
+        sendMessage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendMessageActionPerformed(evt);
+            }
+        });
+
+        compiletextbox.setColumns(20);
+        compiletextbox.setRows(5);
+        compiletextbox.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                compiletextboxCaretUpdate(evt);
+            }
+        });
+        compiletextbox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                compiletextboxKeyPressed(evt);
+            }
+        });
+        jScrollPane6.setViewportView(compiletextbox);
 
         compiletextbox.setColumns(20);
         compiletextbox.setRows(5);
@@ -237,14 +283,16 @@ public class CodeDoc extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
+
                 .addContainerGap()
-                .addComponent(jScrollPane6)
+
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 1032, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
-                            .addComponent(jScrollPane4)))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                        .addComponent(jScrollPane4))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(64, 64, 64)
                         .addComponent(sendMessage)))
@@ -258,12 +306,14 @@ public class CodeDoc extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+
                         .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(22, 22, 22)
                         .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+
                 .addComponent(sendMessage))
         );
 
@@ -287,6 +337,20 @@ public class CodeDoc extends javax.swing.JFrame {
             }
         });
 
+        press.setText("Press");
+        press.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pressActionPerformed(evt);
+            }
+        });
+
+        release.setText("Release");
+        release.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                releaseActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -300,7 +364,13 @@ public class CodeDoc extends javax.swing.JFrame {
                 .addComponent(reset)
                 .addGap(18, 18, 18)
                 .addComponent(fontSetting)
-                .addContainerGap(716, Short.MAX_VALUE))
+
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 367, Short.MAX_VALUE)
+                .addComponent(press)
+                .addGap(70, 70, 70)
+                .addComponent(release)
+                .addGap(153, 153, 153))
+
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -310,7 +380,9 @@ public class CodeDoc extends javax.swing.JFrame {
                     .addComponent(languageSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(autoComplete)
                     .addComponent(reset)
-                    .addComponent(fontSetting))
+                    .addComponent(fontSetting)
+                    .addComponent(press)
+                    .addComponent(release))
                 .addContainerGap())
         );
 
@@ -336,7 +408,9 @@ public class CodeDoc extends javax.swing.JFrame {
         getoutput.setRows(5);
         jScrollPane3.setViewportView(getoutput);
 
+
         timer.setText("Seconds");
+
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -413,7 +487,11 @@ public class CodeDoc extends javax.swing.JFrame {
     }    
      
    //*/
+    public Document getDocument() {
+        return model;
+    }
     
+
 //Get files from open dialog box 
     String data1;
     static String data="";
@@ -438,6 +516,26 @@ public class CodeDoc extends javax.swing.JFrame {
         }
     }
  
+
+    public void setCaretPosition(int position) {
+        Document doc = getDocument();
+        if (doc != null) {
+            if (position > doc.getLength() || position < 0) {
+                throw new IllegalArgumentException("bad position: " + position);
+            }
+            caret.setDot(position);
+        }
+    }
+    public void moveCaretPosition(int pos) {
+        Document doc = getDocument();
+        if (doc != null) {
+            if (pos > doc.getLength() || pos < 0) {
+                throw new IllegalArgumentException("bad position: " + pos);
+            }
+            caret.moveDot(pos);
+        }
+    }
+
     
 // CUSTOM INPUT
     
@@ -447,6 +545,7 @@ public class CodeDoc extends javax.swing.JFrame {
 
 // COMPILE AND RUN    
     private void compileAndRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compileAndRunActionPerformed
+
 
                                       
         
@@ -790,6 +889,7 @@ public class CodeDoc extends javax.swing.JFrame {
               
         }
 
+
     }//GEN-LAST:event_compileAndRunActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -806,6 +906,7 @@ public class CodeDoc extends javax.swing.JFrame {
         fontSettings  fS=new fontSettings(CodeDoc.this);
         fS.show();
     }//GEN-LAST:event_fontSettingActionPerformed
+
 
     //SAVING FILE
     private void saveDocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveDocActionPerformed
@@ -861,6 +962,126 @@ public class CodeDoc extends javax.swing.JFrame {
     }//GEN-LAST:event_resetActionPerformed
 
 
+
+    private void shareButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shareButtonActionPerformed
+        
+    }//GEN-LAST:event_shareButtonActionPerformed
+
+    
+    private void compiletextboxCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_compiletextboxCaretUpdate
+        // TODO add your handling code here:
+        
+        if(k == 1 && l== 0 && sender == false){
+              codeArea= true;
+//            chatArea= false;
+            sender= true;
+            out.println("Key Pressed");
+            String text = compiletextbox.getText();
+          
+            text = text.replaceAll("\n", "~");
+            //System.out.println("Text : "+text);
+            out.println(text);
+           
+        }
+        
+    }//GEN-LAST:event_compiletextboxCaretUpdate
+
+    
+    private void pressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pressActionPerformed
+        // TODO add your handling code here:
+//        codeArea= true;
+//        chatArea= false;
+        out.println("Share Button Clicked");
+        l= 0;
+        k = 1;
+
+            Thread th7=new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while(k == 1){
+                        String combinedText = in.readLine();
+                        System.out.println(combinedText);
+                        
+                        String text= combinedText.replaceAll("~", "\n");
+                        
+                        compiletextbox.setText(text);
+                        if(sender == true){
+                            System.out.println("Mai Senger got true ke andar aaya");
+                            int len= compiletextbox.getText().length();
+                            System.out.println("Lenght Value : "+len);
+                            compiletextbox.setCaretPosition(len);
+                            
+                            System.out.println("Cursor Position Updated");
+                            sender= false;
+                        }
+                        
+                    }
+                }
+                catch (IOException ex) {
+                    System.out.println("Exception thrown : +"+ex);
+                }
+            }
+
+            });
+            th7.start();
+        
+    }//GEN-LAST:event_pressActionPerformed
+
+    private void releaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_releaseActionPerformed
+        // TODO add your handling code here:
+        //k= 0;
+        out.println("Unshare");
+    }//GEN-LAST:event_releaseActionPerformed
+
+
+    private void compiletextboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_compiletextboxKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_compiletextboxKeyPressed
+
+    //Send Message
+    private void sendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendMessageActionPerformed
+        
+        String messg= typeMessg.getText();
+        if(messg.equals("")){
+            JOptionPane.showMessageDialog(null, "Please Type a Message");
+        }
+        else{
+            codeArea= false;
+            chatArea= true;
+            messg = messg.replaceAll("\n", "~");
+            int length = chatSection.getText().length();
+            chatSection.setCaretPosition(length);
+            
+            out.println("Send Message");
+            out.println(messg);
+            
+            Thread th6=new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while(k == 1 && chatArea){
+                        String receivedMssg = in.readLine();
+                        System.out.println("In Thread: email: "+LoginWindow.userId+ " and messsage: "+receivedMssg);
+                        
+                        String text= receivedMssg.replaceAll("~", "\n");
+                        
+                        chatSection.append(LoginWindow.userId+ " : "+text+"\n"); 
+                        typeMessg.setText("");
+                    }
+                }
+                catch (IOException ex) {
+                    System.out.println("Exception thrown : +"+ex);
+                }
+            }
+
+            });
+            th6.start();
+        }
+        
+    }//GEN-LAST:event_sendMessageActionPerformed
+    
+
     /**
      * @param args the command line arguments
      */
@@ -887,11 +1108,15 @@ public class CodeDoc extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(CodeDoc.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new CodeDoc().setVisible(true);
+                
             }
         });
     }
@@ -922,11 +1147,17 @@ public class CodeDoc extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JComboBox<String> languageSelector;
     private javax.swing.JButton newDoc;
+
+    private javax.swing.JButton press;
+    private javax.swing.JButton release;
+
     private javax.swing.JButton reset;
     private javax.swing.JButton saveDoc;
     private javax.swing.JButton sendMessage;
     private javax.swing.JButton shareButton;
+
     private javax.swing.JTextField timer;
+
     private javax.swing.JTextArea typeMessg;
     // End of variables declaration//GEN-END:variables
 
