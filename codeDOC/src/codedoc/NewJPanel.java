@@ -5,6 +5,7 @@
  */
 package codedoc;
 
+import java.awt.Color;
 import java.awt.Window;
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,6 +15,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import static java.lang.String.valueOf;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.net.Socket;
@@ -23,8 +25,12 @@ import java.util.Scanner;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.Caret;
+import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Document;
+import javax.swing.text.Highlighter;
+import javax.swing.text.JTextComponent;
 
 /**
  *
@@ -113,6 +119,44 @@ public class NewJPanel extends javax.swing.JPanel {
             });
             serverResponse.start();
     }
+    
+    //Highlighter Class
+    class MyHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter {
+        public MyHighlightPainter(Color color) {
+            super(color);
+        }
+    }
+
+    Highlighter.HighlightPainter myHighlightPainter =  new MyHighlightPainter(Color.yellow);
+    
+    //Method for removing highlight
+    public void removeHighlight(JTextComponent textComp) {
+        Highlighter hilite = textComp.getHighlighter();
+        Highlighter.Highlight[] hilites = hilite.getHighlights();
+        for (int i=0;i<hilites.length;i++) {
+            if (hilites[i].getPainter() instanceof MyHighlightPainter) {
+                hilite.removeHighlight(hilites[i]);
+            }
+        }
+    }
+    
+    //Method for highlighting the word
+     public void highlight(JTextComponent textComp,String pattern) {
+        removeHighlight(textComp);
+        try {
+            Highlighter hilite = textComp.getHighlighter();
+            Document doc = textComp.getDocument();
+            String text=doc.getText(0,doc.getLength());
+            int pos=0;
+            while ((pos=text.toUpperCase().indexOf(pattern.toUpperCase(),pos))>=0) {
+                hilite.addHighlight(pos,pos+pattern.length(),myHighlightPainter);
+                pos+=pattern.length();
+            } 
+        } catch (Exception e) {
+            
+        }
+    }
+     
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -131,8 +175,6 @@ public class NewJPanel extends javax.swing.JPanel {
         release = new javax.swing.JButton();
         logout = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        chatSection = new javax.swing.JTextArea();
         jScrollPane6 = new javax.swing.JScrollPane();
         compiletextbox = new javax.swing.JTextArea();
         jPanel1 = new javax.swing.JPanel();
@@ -158,6 +200,12 @@ public class NewJPanel extends javax.swing.JPanel {
         sendMessage = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         output = new javax.swing.JTextArea();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        chatSection = new javax.swing.JTextArea();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        lineTable = new javax.swing.JTable();
+        searchTextField = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(102, 102, 0));
 
@@ -230,10 +278,6 @@ public class NewJPanel extends javax.swing.JPanel {
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));
 
-        chatSection.setColumns(20);
-        chatSection.setRows(5);
-        jScrollPane4.setViewportView(chatSection);
-
         compiletextbox.setColumns(20);
         compiletextbox.setRows(5);
         compiletextbox.addCaretListener(new javax.swing.event.CaretListener() {
@@ -252,19 +296,11 @@ public class NewJPanel extends javax.swing.JPanel {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 882, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 1055, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 468, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(51, Short.MAX_VALUE))
+            .addComponent(jScrollPane6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
         );
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 204));
@@ -340,7 +376,7 @@ public class NewJPanel extends javax.swing.JPanel {
                 .addComponent(saveDoc)
                 .addGap(18, 18, 18)
                 .addComponent(Open)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 230, Short.MAX_VALUE)
                 .addComponent(shareButton)
                 .addGap(18, 18, 18)
                 .addComponent(jButton2)
@@ -382,7 +418,11 @@ public class NewJPanel extends javax.swing.JPanel {
         getoutput.setRows(5);
         jScrollPane7.setViewportView(getoutput);
 
-        timer.setText("Seconds");
+        timer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                timerActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -400,7 +440,7 @@ public class NewJPanel extends javax.swing.JPanel {
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGap(45, 45, 45)
                         .addComponent(timer, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -442,63 +482,147 @@ public class NewJPanel extends javax.swing.JPanel {
         output.setRows(5);
         jScrollPane1.setViewportView(output);
 
+        chatSection.setColumns(20);
+        chatSection.setRows(5);
+        jScrollPane4.setViewportView(chatSection);
+
+        lineTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null},
+                {null},
+                {null},
+                {null}
+            },
+            new String [] {
+                "."
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane3.setViewportView(lineTable);
+
+        searchTextField.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                searchTextFieldCaretUpdate(evt);
+            }
+        });
+        searchTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchTextFieldActionPerformed(evt);
+            }
+        });
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/search-icon.jpg"))); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(36, 36, 36))
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(sendMessage)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(privateChat)
-                        .addGap(53, 53, 53))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap())
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(20, 20, 20)))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(privateChat))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(48, 48, 48))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createSequentialGroup()
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(58, 58, 58)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(323, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(sendMessage)
-                    .addComponent(privateChat))
-                .addGap(27, 27, 27)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(47, 47, 47)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(82, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 426, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(99, 99, 99))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(sendMessage)
+                            .addComponent(privateChat))
+                        .addGap(12, 12, 12)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(168, 168, 168))))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGap(37, 37, 37)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(103, Short.MAX_VALUE)))
+                    .addContainerGap(213, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
     
     public Document getDocument() {
         return model;
     }
+    
+       public void emptyLineTable()
+    {
+         DefaultTableModel tablerow = (DefaultTableModel) lineTable.getModel();
+        int rowCount = tablerow.getRowCount();
+        for (int i = rowCount - 1; i >= 0; i--) {
+            tablerow.removeRow(i);
+        }
+    }
+    //For line number feature
+    public void displayLine(int n)
+    {   
+        emptyLineTable();
+        int i;
+        
+        for (i = 0; i < n; i++) {
+               
+                String[] s = {valueOf(i+1)};                
+                DefaultTableModel tblModel = (DefaultTableModel) lineTable.getModel();
+                tblModel.addRow(s);
+            }
+    }
+    
+    
     
 //Get files from open dialog box 
     String data1;
@@ -987,13 +1111,79 @@ public class NewJPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_privateChatActionPerformed
 
+    public void highLightingFeature(String lastWord,int startIndex,int endIndex)
+    {
+        //if(m.get(lastWord)==1)
+       // compiletextbox.setForeground(Color.red);
+        compiletextbox.select(startIndex, startIndex);       
+    }
+    
+//    public void setPrentComponent(){
+//        Object o = getParent();
+//        MainClass mc;
+//        if(o != null && o instanceof MainClass)
+//            mc = (MainClass)o;
+//
+//        mc.setTitle(lbl.getText());            
+//    }
+    private void sendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendMessageActionPerformed
+
+        String messg= typeMessg.getText();
+        if(messg.equals("")){
+            JOptionPane.showMessageDialog(null, "Please Type a Message");
+        }
+        else{
+            messg = messg.replaceAll("\n", "~");
+            int length = chatSection.getText().length();
+            chatSection.setCaretPosition(length);
+
+            out.println("Send Message");
+            try {
+                
+                out.println(EncryptDecrypt.encrypt(LoginWindow.userId +" : "+messg));
+                //out.println(messg);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Exception in Encryption: "+ex);
+            }
+
+        }
+    }//GEN-LAST:event_sendMessageActionPerformed
+
+    private void searchTextFieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_searchTextFieldCaretUpdate
+
+    }//GEN-LAST:event_searchTextFieldCaretUpdate
+
+    private void searchTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_searchTextFieldActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        highlight(compiletextbox,searchTextField.getText());
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void timerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_timerActionPerformed
+
     private void compiletextboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_compiletextboxKeyPressed
         // TODO add your handling code here:
     }//GEN-LAST:event_compiletextboxKeyPressed
 
     private void compiletextboxCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_compiletextboxCaretUpdate
+
         // TODO add your handling code here:
-if(k == 1 && l== 0 && sender == false){
+        removeHighlight(compiletextbox);
+
+        // prevLastWord=lastWord;
+        // lastWord = compiletextbox.getText().substring(compiletextbox.getText().lastIndexOf(" ")+1);
+
+        // int startIndex=compiletextbox.getText().lastIndexOf(" ");
+        //  int endIndex=compiletextbox.getText().length();
+        //  highLightingFeature(lastWord,startIndex,endIndex);
+        displayLine(compiletextbox.getLineCount()); //For displaying line count
+
+        // TODO add your handling code here:
+        if(k == 1 && l== 0 && sender == false){
             sender= true;
             out.println("Key Pressed");
             String text = compiletextbox.getText();
@@ -1028,92 +1218,58 @@ if(k == 1 && l== 0 && sender == false){
         if(l!=0)
         ch=s.charAt(l-1);
         else
-            return;
-        
+        return;
+
         if(((ch>='a' && ch<='z' )|| (ch>='A'&&ch<='Z')) &&flag==0 )
         {
             x=x+ch;
-        Map <String , Integer> arr=new HashMap<>();
-        
-        arr=trieobj.searcher(ch);
-        if(arr==null)
+            Map <String , Integer> arr=new HashMap<>();
+
+            arr=trieobj.searcher(ch);
+            if(arr==null)
             return;
-        output.setText("");
-        for (Map.Entry mapElement : arr.entrySet())
-        {
-          
-            output.setText(output.getText()+(String)mapElement.getKey() +" ");
-        }
-        
+            output.setText("");
+            for (Map.Entry mapElement : arr.entrySet())
+            {
+
+                output.setText(output.getText()+(String)mapElement.getKey() +" ");
+            }
+
         }
         else if(flag==1 )//backspace is pushed
         {
             System.out.println("here");
             Map <String , Integer> arr = new HashMap <>();
-            
+
             if(x.length()>0)
             x=x.substring(0, x.length() - 1);
-            
+
             if(MyTrie.currnode!=null && MyTrie.currnode.parent!=null)
             {
-            MyTrie.currnode=MyTrie.currnode.parent.parent;
-            
-            arr =trieobj.searcher(ch);
-                    output.setText("");
+                MyTrie.currnode=MyTrie.currnode.parent.parent;
+
+                arr =trieobj.searcher(ch);
+                output.setText("");
             }
             if(arr==null)
-                return;
-        for (Map.Entry mapElement : arr.entrySet())
-        {
-          
-            output.setText(output.getText()+(String)mapElement.getKey() +" ");
+            return;
+            for (Map.Entry mapElement : arr.entrySet())
+            {
+
+                output.setText(output.getText()+(String)mapElement.getKey() +" ");
+            }
         }
-        }
-        else //if we took the word from table it shouldnt be inserted only currnode should be 
-            //made equal to trie obj
+        else //if we took the word from table it shouldnt be inserted only currnode should be
+        //made equal to trie obj
         {
             if(!(x==""))
             trieobj.inserter(x);
-                
+
             x="";
-            
+
             MyTrie.currnode=trieobj;
         }
-        
-       
-        
     }//GEN-LAST:event_compiletextboxCaretUpdate
-
-//    public void setPrentComponent(){
-//        Object o = getParent();
-//        MainClass mc;
-//        if(o != null && o instanceof MainClass)
-//            mc = (MainClass)o;
-//
-//        mc.setTitle(lbl.getText());            
-//    }
-    private void sendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendMessageActionPerformed
-
-        String messg= typeMessg.getText();
-        if(messg.equals("")){
-            JOptionPane.showMessageDialog(null, "Please Type a Message");
-        }
-        else{
-            messg = messg.replaceAll("\n", "~");
-            int length = chatSection.getText().length();
-            chatSection.setCaretPosition(length);
-
-            out.println("Send Message");
-            try {
-                
-                out.println(EncryptDecrypt.encrypt(LoginWindow.userId +" : "+messg));
-                //out.println(messg);
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Exception in Encryption: "+ex);
-            }
-
-        }
-    }//GEN-LAST:event_sendMessageActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1125,6 +1281,7 @@ if(k == 1 && l== 0 && sender == false){
     private javax.swing.JButton editDoc;
     private javax.swing.JTextArea getinput;
     private javax.swing.JTextArea getoutput;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
@@ -1134,12 +1291,14 @@ if(k == 1 && l== 0 && sender == false){
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JComboBox<String> languageSelector;
+    private javax.swing.JTable lineTable;
     private javax.swing.JButton logout;
     private javax.swing.JButton newDoc;
     private javax.swing.JTextArea output;
@@ -1148,6 +1307,7 @@ if(k == 1 && l== 0 && sender == false){
     private javax.swing.JButton release;
     private javax.swing.JButton reset;
     private javax.swing.JButton saveDoc;
+    private javax.swing.JTextField searchTextField;
     private javax.swing.JButton sendMessage;
     private javax.swing.JButton shareButton;
     private javax.swing.JTextField timer;

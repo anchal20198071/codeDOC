@@ -143,7 +143,7 @@ public class CodeDoc extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jtp)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(1080, Short.MAX_VALUE)
+                .addContainerGap(1406, Short.MAX_VALUE)
                 .addComponent(button)
                 .addGap(26, 26, 26))
         );
@@ -152,7 +152,7 @@ public class CodeDoc extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(button)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jtp, javax.swing.GroupLayout.DEFAULT_SIZE, 731, Short.MAX_VALUE))
+                .addComponent(jtp, javax.swing.GroupLayout.DEFAULT_SIZE, 803, Short.MAX_VALUE))
         );
 
         pack();
