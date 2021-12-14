@@ -33,11 +33,9 @@ private ExecutorService pool= Executors.newFixedThreadPool(20);
 Connection con =myc.getConn();
 public static HashMap<PrintWriter, Integer > pair= new HashMap<>();
 public static HashMap<String, OnlineUser > userStatus= new HashMap<>();
-//create onlineuser class constructor  has bool , out, string
-//public static map of pairs key email , value :out,bool logout and release k samay off
-//create method in in server side to add 
 
-  public static void main(String[] args) // made executor method because static variables cannot be reffered from main.
+
+  public static void main(String[] args) 
  {
     new ServercodeDoc().executor();
  }
@@ -46,18 +44,17 @@ public static HashMap<String, OnlineUser > userStatus= new HashMap<>();
  {
     try 
     {
-        ss = new ServerSocket(9886); // ek baar connection ban gya untangled wale project
+        ss = new ServerSocket(9886); 
         
         while(true)
         {
-            soc= ss.accept(); //jaise hi yaha accept hota hai handle client ki taraf jata h iski jagah in.realine hojae eveytime button is pused
-            //soc hai , con hai in = new BufferedReader(new InputStreamReader(soc.getInputStream())); in.readline karke ek msg lelo;
+            soc= ss.accept(); 
             System.out.println("connection established");
 
             HandleClient clientThread= new HandleClient(soc,con);
-            //run method of current handle client is started and we move ahead
+         
             clients.add(clientThread);
-            pool.execute(clientThread); // yaha se humne thread class ka run method chalaya 
+            pool.execute(clientThread); 
         }  
     } catch (Exception ex)
     {
