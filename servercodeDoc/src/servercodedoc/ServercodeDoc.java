@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package servercodedoc;
-import com.mysql.cj.conf.ConnectionUrlParser.Pair;
+//import con.mysql.cj.conf.ConnectionUrlParser.Pair;
 import java.sql.Connection;
 import java.io.BufferedReader;
 import java.io.IOException;

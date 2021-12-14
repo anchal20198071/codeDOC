@@ -17,6 +17,8 @@ import java.io.PrintWriter;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -48,16 +50,20 @@ public class NewJPanel extends javax.swing.JPanel {
     int exit=0;
     int sec=0;
     public static String path=null;
-    private static final String FILE_LOCATION1 ="Desktop\\winners\\codeDOC\\codeDOC\\arya.c";    
-     private static final String FILE_LOCATION2 ="Desktop\\winners\\codeDOC\\codeDOC\\arya.py";
-     private static final String FILE_LOCATION3 ="Desktop\\winners\\codeDOC\\codeDOC\\arya.cpp";
+    private static final String FILE_LOCATION1 ="Desktop\\december\\codeDOC\\codeDOC\\arya.c";    
+     private static final String FILE_LOCATION2 ="Desktop\\december\\codeDOC\\codeDOC\\arya.py";
+     private static final String FILE_LOCATION3 ="Desktop\\december\\codeDOC\\codeDOC\\arya.cpp";
      
-     private static final String FILE_LOCATION4 ="Desktop\\winners\\codeDOC\\codeDOC\\arya.java";
+     private static final String FILE_LOCATION4 ="Desktop\\december\\codeDOC\\codeDOC\\arya.java";
      
     /**
      * Creates new form NewJPanel
-     */
+     */int currpos=0 ,prevpos=0,flag=0;
+    MyTrie trieobj=new MyTrie();
+    String x="";
+    
     public NewJPanel() {
+        trieobj.initialwords();
         try
         { 
             soc = new Socket("localhost", 9886);
@@ -121,19 +127,14 @@ public class NewJPanel extends javax.swing.JPanel {
         languageSelector = new javax.swing.JComboBox<>();
         autoComplete = new javax.swing.JCheckBox();
         reset = new javax.swing.JButton();
-        fontSetting = new javax.swing.JButton();
         press = new javax.swing.JButton();
         release = new javax.swing.JButton();
         logout = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         chatSection = new javax.swing.JTextArea();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        typeMessg = new javax.swing.JTextArea();
-        sendMessage = new javax.swing.JButton();
         jScrollPane6 = new javax.swing.JScrollPane();
         compiletextbox = new javax.swing.JTextArea();
-        privateChat = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jTextField1 = new javax.swing.JTextField();
         newDoc = new javax.swing.JButton();
@@ -145,13 +146,18 @@ public class NewJPanel extends javax.swing.JPanel {
         jButton5 = new javax.swing.JButton();
         Open = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
-        customInput1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         getinput = new javax.swing.JTextArea();
         compileAndRun1 = new javax.swing.JButton();
         jScrollPane7 = new javax.swing.JScrollPane();
         getoutput = new javax.swing.JTextArea();
         timer = new javax.swing.JTextField();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        typeMessg = new javax.swing.JTextArea();
+        privateChat = new javax.swing.JButton();
+        sendMessage = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        output = new javax.swing.JTextArea();
 
         setBackground(new java.awt.Color(102, 102, 0));
 
@@ -165,13 +171,6 @@ public class NewJPanel extends javax.swing.JPanel {
         reset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 resetActionPerformed(evt);
-            }
-        });
-
-        fontSetting.setText("Font Setting");
-        fontSetting.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fontSettingActionPerformed(evt);
             }
         });
 
@@ -207,9 +206,7 @@ public class NewJPanel extends javax.swing.JPanel {
                 .addComponent(autoComplete, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(133, 133, 133)
                 .addComponent(reset)
-                .addGap(18, 18, 18)
-                .addComponent(fontSetting)
-                .addGap(293, 293, 293)
+                .addGap(404, 404, 404)
                 .addComponent(press)
                 .addGap(18, 18, 18)
                 .addComponent(release)
@@ -225,7 +222,6 @@ public class NewJPanel extends javax.swing.JPanel {
                     .addComponent(languageSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(autoComplete)
                     .addComponent(reset)
-                    .addComponent(fontSetting)
                     .addComponent(press)
                     .addComponent(release)
                     .addComponent(logout))
@@ -237,17 +233,6 @@ public class NewJPanel extends javax.swing.JPanel {
         chatSection.setColumns(20);
         chatSection.setRows(5);
         jScrollPane4.setViewportView(chatSection);
-
-        typeMessg.setColumns(20);
-        typeMessg.setRows(5);
-        jScrollPane5.setViewportView(typeMessg);
-
-        sendMessage.setText("Send");
-        sendMessage.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sendMessageActionPerformed(evt);
-            }
-        });
 
         compiletextbox.setColumns(20);
         compiletextbox.setRows(5);
@@ -263,45 +248,21 @@ public class NewJPanel extends javax.swing.JPanel {
         });
         jScrollPane6.setViewportView(compiletextbox);
 
-        privateChat.setText("Send Privately");
-        privateChat.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                privateChatActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 882, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(sendMessage)
-                        .addGap(31, 31, 31)
-                        .addComponent(privateChat)
-                        .addContainerGap())
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                .addGap(40, 40, 40)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(privateChat)
-                            .addComponent(sendMessage)))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 468, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(51, Short.MAX_VALUE))
         );
@@ -406,13 +367,6 @@ public class NewJPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        customInput1.setText("Custom Input");
-        customInput1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                customInput1ActionPerformed(evt);
-            }
-        });
-
         getinput.setColumns(20);
         getinput.setRows(5);
         jScrollPane2.setViewportView(getinput);
@@ -435,9 +389,7 @@ public class NewJPanel extends javax.swing.JPanel {
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(customInput1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(117, 117, 117)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(38, 38, 38)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -463,17 +415,53 @@ public class NewJPanel extends javax.swing.JPanel {
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(customInput1)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        typeMessg.setColumns(20);
+        typeMessg.setRows(5);
+        jScrollPane5.setViewportView(typeMessg);
+
+        privateChat.setText("Send Privately");
+        privateChat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                privateChatActionPerformed(evt);
+            }
+        });
+
+        sendMessage.setText("Send");
+        sendMessage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendMessageActionPerformed(evt);
+            }
+        });
+
+        output.setColumns(20);
+        output.setRows(5);
+        jScrollPane1.setViewportView(output);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(sendMessage)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(privateChat)
+                        .addGap(53, 53, 53))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap())
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(20, 20, 20)))))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -487,7 +475,15 @@ public class NewJPanel extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 616, Short.MAX_VALUE)
+                .addContainerGap(323, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sendMessage)
+                    .addComponent(privateChat))
+                .addGap(27, 27, 27)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(47, 47, 47)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -551,11 +547,6 @@ public class NewJPanel extends javax.swing.JPanel {
     private void resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetActionPerformed
         compiletextbox.setText("");
     }//GEN-LAST:event_resetActionPerformed
-
-    private void fontSettingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontSettingActionPerformed
-        //fontSettings  fS=new fontSettings(CodeDoc.this);
-        //fS.show();
-    }//GEN-LAST:event_fontSettingActionPerformed
 
     private void pressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pressActionPerformed
 
@@ -633,10 +624,6 @@ public class NewJPanel extends javax.swing.JPanel {
         compiletextbox.setEditable(false);
 
     }//GEN-LAST:event_OpenActionPerformed
-
-    private void customInput1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customInput1ActionPerformed
-
-    }//GEN-LAST:event_customInput1ActionPerformed
 
     private void compileAndRun1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compileAndRun1ActionPerformed
 
@@ -1006,8 +993,7 @@ public class NewJPanel extends javax.swing.JPanel {
 
     private void compiletextboxCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_compiletextboxCaretUpdate
         // TODO add your handling code here:
-
-        if(k == 1 && l== 0 && sender == false){
+if(k == 1 && l== 0 && sender == false){
             sender= true;
             out.println("Key Pressed");
             String text = compiletextbox.getText();
@@ -1020,6 +1006,82 @@ public class NewJPanel extends javax.swing.JPanel {
             }
 
         }
+        currpos=compiletextbox.getCaretPosition();
+        System.out.println("it is"+currpos +prevpos);
+        if(prevpos-currpos==1)
+        {
+            flag=1;
+            prevpos=prevpos-1;
+        }
+        else if(prevpos-currpos>1)
+        {
+            MyTrie.currnode=trieobj;
+        }
+        else
+        {
+            prevpos=currpos;
+            flag=0;
+        }
+        String s=compiletextbox.getText();
+        int l=s.length();
+        char ch='a';
+        if(l!=0)
+        ch=s.charAt(l-1);
+        else
+            return;
+        
+        if(((ch>='a' && ch<='z' )|| (ch>='A'&&ch<='Z')) &&flag==0 )
+        {
+            x=x+ch;
+        Map <String , Integer> arr=new HashMap<>();
+        
+        arr=trieobj.searcher(ch);
+        if(arr==null)
+            return;
+        output.setText("");
+        for (Map.Entry mapElement : arr.entrySet())
+        {
+          
+            output.setText(output.getText()+(String)mapElement.getKey() +" ");
+        }
+        
+        }
+        else if(flag==1 )//backspace is pushed
+        {
+            System.out.println("here");
+            Map <String , Integer> arr = new HashMap <>();
+            
+            if(x.length()>0)
+            x=x.substring(0, x.length() - 1);
+            
+            if(MyTrie.currnode!=null && MyTrie.currnode.parent!=null)
+            {
+            MyTrie.currnode=MyTrie.currnode.parent.parent;
+            
+            arr =trieobj.searcher(ch);
+                    output.setText("");
+            }
+            if(arr==null)
+                return;
+        for (Map.Entry mapElement : arr.entrySet())
+        {
+          
+            output.setText(output.getText()+(String)mapElement.getKey() +" ");
+        }
+        }
+        else //if we took the word from table it shouldnt be inserted only currnode should be 
+            //made equal to trie obj
+        {
+            if(!(x==""))
+            trieobj.inserter(x);
+                
+            x="";
+            
+            MyTrie.currnode=trieobj;
+        }
+        
+       
+        
     }//GEN-LAST:event_compiletextboxCaretUpdate
 
 //    public void setPrentComponent(){
@@ -1060,9 +1122,7 @@ public class NewJPanel extends javax.swing.JPanel {
     private javax.swing.JTextArea chatSection;
     private javax.swing.JButton compileAndRun1;
     private javax.swing.JTextArea compiletextbox;
-    private javax.swing.JButton customInput1;
     private javax.swing.JButton editDoc;
-    private javax.swing.JButton fontSetting;
     private javax.swing.JTextArea getinput;
     private javax.swing.JTextArea getoutput;
     private javax.swing.JButton jButton2;
@@ -1072,6 +1132,7 @@ public class NewJPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
@@ -1081,6 +1142,7 @@ public class NewJPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> languageSelector;
     private javax.swing.JButton logout;
     private javax.swing.JButton newDoc;
+    private javax.swing.JTextArea output;
     private javax.swing.JButton press;
     private javax.swing.JButton privateChat;
     private javax.swing.JButton release;

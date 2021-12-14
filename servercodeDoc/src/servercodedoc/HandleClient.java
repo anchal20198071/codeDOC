@@ -340,9 +340,10 @@ public class HandleClient implements Runnable {
         ResultSet rs;
         try {
 
+            String useremail=in.readLine();
             String sql = "SELECT fileName,filePath FROM files where email=?";
             p = con.prepareStatement(sql);
-            p.setString(1, userEmail);  
+            p.setString(1, useremail);  
             rs = p.executeQuery();
 
             int i = 0;
@@ -350,7 +351,6 @@ public class HandleClient implements Runnable {
             String[] fileName = new String[100];
             String[] filePath = new String[100];
             
-
             while (rs.next()) {
 
                 fileName[i] = rs.getString("fileName");

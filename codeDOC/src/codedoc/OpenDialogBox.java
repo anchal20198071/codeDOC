@@ -45,6 +45,7 @@ public class OpenDialogBox extends javax.swing.JFrame {
             
             
             out.println("Fetch_files");
+            out.println(LoginWindow.userId);
             int i, size = Integer.parseInt(in.readLine());
 
             for (i = 0; i < size; i++) {
