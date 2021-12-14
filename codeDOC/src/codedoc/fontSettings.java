@@ -7,10 +7,7 @@ package codedoc;
 
 import java.awt.Color;
 import java.awt.Font;
-/**
- *
- * @author ajendrasaxena
- */
+
 public class fontSettings extends javax.swing.JFrame {
 
     /**

@@ -14,7 +14,7 @@ public class LoginWindow extends javax.swing.JFrame {
 
     
     
-    static Socket soc;
+    public static Socket soc;
 
     public CodeDoc home ;
 
@@ -27,6 +27,7 @@ public class LoginWindow extends javax.swing.JFrame {
     public LoginWindow() {
         initComponents();
     }
+
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -252,12 +253,10 @@ public class LoginWindow extends javax.swing.JFrame {
                 System.out.println(serverResponse);
 
                 if (serverResponse == 1) {
-
-                    home = new CodeDoc();
-
+                    
+                    home= new CodeDoc();
                     userId= email;
                     home.setTitle(userId);
-
                     home.show();
                     dispose();
                 } else {

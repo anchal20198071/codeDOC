@@ -70,6 +70,7 @@ public class HandleClient implements Runnable {
             } else if (choice.equals("16")) {
                 System.out.println("Login Window");
                 login();
+                
             }
             else if(choice.equals("200")){
                 System.out.println("200");
@@ -112,9 +113,24 @@ public class HandleClient implements Runnable {
             }
             else if(choice.equals("Send Message")){
                 System.out.println("Send Message");
-                sendMessage();
+                try {
+                    sendMessage();
+                } catch (Exception ex) {
+                    System.out.println("Server side exception in sending Message: "+ex);
+                }
             }
-
+            else if(choice.equals("logout")){
+                System.out.println("User logout");
+                logout();
+            }
+            else if(choice.equals("Private Chat")){
+                System.out.println("Private Chat");
+                try {
+                    privateChat();
+                } catch (Exception ex) {
+                    System.out.println("Server side exception in sending Private Message: "+ex);
+                }
+            }
             }
 
         } catch (IOException ex) {
@@ -170,7 +186,6 @@ public class HandleClient implements Runnable {
             String sql = "select * from registration where email=? and password=? ";
 
             pst = con.prepareStatement(sql);
-            System.out.println("Executing Query!!");
             userEmail=s[0];    
             pst.setString(1, s[0]);
             pst.setString(2, md5(s[1]));
@@ -180,6 +195,7 @@ public class HandleClient implements Runnable {
             if (rs.next()) {
                 JOptionPane.showMessageDialog(null, "Username and Password are correct..");
                 email= s[0];
+                ServercodeDoc.userStatus.put(email, new OnlineUser(out, 1));
                 out.println(1);
             } else {
                 JOptionPane.showMessageDialog(null, "Username and Password are Incorrect..."
@@ -192,6 +208,9 @@ public class HandleClient implements Runnable {
         }
     }
     
+    void logout(){
+        ServercodeDoc.userStatus.put(email, new OnlineUser(out, 0));
+    }
 
     void previousCode()
     {
@@ -251,21 +270,24 @@ public class HandleClient implements Runnable {
     }
     
     void SaveAction() {
+        System.out.println("Entered inside Save Action");
        try
-       {
-            String st;
-            System.out.println(st= in.readLine());           
+       {    
+           String useremail= in.readLine();
+            System.out.println("useremail "+useremail);
+            String st = in.readLine();
+            System.out.println("FName: " +st);           
             String s2, s1="";
            
             PreparedStatement pst;
             
             String path="D:\\"+st;
                         
-            System.out.println("Saving file"+userEmail);
+            System.out.println("Saving file"+useremail);
             String sql = "Insert into files values(?,?,?)";
             
             pst = con.prepareStatement(sql);
-            pst.setString(1, userEmail);
+            pst.setString(1, useremail);
             pst.setString(2, st);
             pst.setString(3, path);
             
@@ -360,41 +382,37 @@ public class HandleClient implements Runnable {
    
 
     void editTextArea() throws IOException{
-//        ServercodeDoc.ouHashMap.put(out, 1);
-//        
         String combinedText = in.readLine();
-        System.out.println("Combined Text: "+combinedText);
-//        
-        for (Map.Entry<String, OnlineUser > entry : ServercodeDoc.pair.entrySet()){
+        
+        for (Map.Entry<PrintWriter, Integer > entry : ServercodeDoc.pair.entrySet()){
            
-            if(entry.getValue().k == 1){
-                entry.getValue().out.println(combinedText);
+            if(entry.getValue() == 1){
+                entry.getKey().println(combinedText);
             }
         }
-        
-//        for (PrintWriter sender : ServercodeDoc.outArrayList)
-//            sender.println(combinedText);
             
     }
     
     void share(){
-        ServercodeDoc.pair.put(email, new OnlineUser(out, 1));
+        
+        ServercodeDoc.pair.put(out, 1);
     }
     
     void unshare(){
-        //ServercodeDoc.ouHashMap.put(out, 0);
-        ServercodeDoc.pair.put(email, new OnlineUser(out, 0));
+        ServercodeDoc.pair.put(out, 0);
     }
     
-    void sendMessage(){
+    void sendMessage() throws Exception{
         try {
-            String mssg= in.readLine();
-            System.out.println("Message Received at SErver: "+mssg);
+            String mssg; 
+            mssg= in.readLine();
             
-            for (Map.Entry<String, OnlineUser > entry : ServercodeDoc.pair.entrySet()){
+            for (Map.Entry<PrintWriter, Integer > entry : ServercodeDoc.pair.entrySet()){
            
-                if(entry.getValue().k == 1){
-                    entry.getValue().out.println(mssg);
+                if(entry.getValue() == 1){
+                    String codedMessage = "*chatArea*"+EncryptDecrypt.decrypt(mssg);
+                    codedMessage= EncryptDecrypt.encrypt(codedMessage);
+                    entry.getKey().println(codedMessage);
                 }
             }
         } catch (IOException ex) {
@@ -402,7 +420,32 @@ public class HandleClient implements Runnable {
         }
         
     }
+    
+    void privateChat() throws IOException, Exception{
+        String arr[] = new String[2];
+        for(int i=0; i< 2; i++){
+            arr[i]= in.readLine();
+        }
+        
+        if(!ServercodeDoc.userStatus.containsKey(arr[0])){
+            JOptionPane.showMessageDialog(null, "User is currently OFFLINE!!");
+        }
+        else{
+            for (Map.Entry<String, OnlineUser > entry : ServercodeDoc.userStatus.entrySet()){
 
+                    if(entry.getKey().equals(arr[0]) && entry.getValue().k == 0){
+                        JOptionPane.showMessageDialog(null, "User is currently OFFLINE!!");
+                        break;
+                    }
+                    else if(entry.getKey().equals(arr[0]) && entry.getValue().k == 1){
+                        entry.getValue().out.println(arr[1]);
+                        out.println(arr[1]);
+                        JOptionPane.showMessageDialog(null, "Message Sent!");
+                    }
+            }
+        }
+        
+    }
     
     private String md5(String string) {
         try {

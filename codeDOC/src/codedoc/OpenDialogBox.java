@@ -5,7 +5,6 @@
  */
 package codedoc;
 
-import static codedoc.LoginWindow.soc;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -17,11 +16,21 @@ import javax.swing.table.DefaultTableModel;
  * @author Asmita Yadav
  */
 public class OpenDialogBox extends javax.swing.JFrame {
-
+    public Socket soc;
+    PrintWriter out;
+    BufferedReader in;
     /**
      * Creates new form OpenDialogBox
      */
-    public OpenDialogBox(CodeDoc parent) {
+    public OpenDialogBox(NewJPanel parent) {
+        try
+        { 
+            soc = new Socket("localhost", 9886);
+            out=new PrintWriter(soc.getOutputStream(),true);
+            in = new BufferedReader(new InputStreamReader(soc.getInputStream()));
+        }
+         catch (Exception ex)
+        {System.out.println("Exception : " + ex);}
         initComponents();
         GetTable();
         setTitle("Open");
@@ -34,9 +43,7 @@ public class OpenDialogBox extends javax.swing.JFrame {
         EmptyTable();
         try {
             
-            BufferedReader in = new BufferedReader(new InputStreamReader(soc.getInputStream()));
-
-            PrintWriter out = new PrintWriter(soc.getOutputStream(), true);
+            
             out.println("Fetch_files");
             int i, size = Integer.parseInt(in.readLine());
 
@@ -64,7 +71,7 @@ public class OpenDialogBox extends javax.swing.JFrame {
     }
     
     
-    public CodeDoc parent;
+    public NewJPanel parent;
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

@@ -31,7 +31,8 @@ BufferedReader in;
 public static ArrayList <HandleClient> clients = new ArrayList<>();
 private ExecutorService pool= Executors.newFixedThreadPool(20);
 Connection con =myc.getConn();
-public static HashMap<String, OnlineUser > pair= new HashMap<>();
+public static HashMap<PrintWriter, Integer > pair= new HashMap<>();
+public static HashMap<String, OnlineUser > userStatus= new HashMap<>();
 //create onlineuser class constructor  has bool , out, string
 //public static map of pairs key email , value :out,bool logout and release k samay off
 //create method in in server side to add 
