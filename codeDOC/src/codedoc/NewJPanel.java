@@ -67,7 +67,7 @@ public class NewJPanel extends javax.swing.JPanel {
      */int currpos=0 ,prevpos=0,flag=0;
     MyTrie trieobj=new MyTrie();
     String x="";
-    
+    //constructor intialising socket ,in, out objects and running thread for accepting input for group chat and collaboratory
     public NewJPanel() {
         trieobj.initialwords();
       
@@ -172,7 +172,6 @@ public class NewJPanel extends javax.swing.JPanel {
         jPanel3 = new javax.swing.JPanel();
         languageSelector = new javax.swing.JComboBox<>();
         autoComplete = new javax.swing.JCheckBox();
-        reset = new javax.swing.JButton();
         press = new javax.swing.JButton();
         release = new javax.swing.JButton();
         logout = new javax.swing.JButton();
@@ -217,13 +216,6 @@ public class NewJPanel extends javax.swing.JPanel {
 
         autoComplete.setText("Autocomplete");
 
-        reset.setText("Reset");
-        reset.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                resetActionPerformed(evt);
-            }
-        });
-
         press.setText("Press");
         press.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -254,9 +246,7 @@ public class NewJPanel extends javax.swing.JPanel {
                 .addComponent(languageSelector, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(autoComplete, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(133, 133, 133)
-                .addComponent(reset)
-                .addGap(404, 404, 404)
+                .addGap(596, 596, 596)
                 .addComponent(press)
                 .addGap(18, 18, 18)
                 .addComponent(release)
@@ -271,7 +261,6 @@ public class NewJPanel extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(languageSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(autoComplete)
-                    .addComponent(reset)
                     .addComponent(press)
                     .addComponent(release)
                     .addComponent(logout))
@@ -598,10 +587,12 @@ public class NewJPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
     
+    //for caret update
     public Document getDocument() {
         return model;
     }
     
+    //for initialising line numer to 1
        public void emptyLineTable()
     {
          DefaultTableModel tablerow = (DefaultTableModel) lineTable.getModel();
@@ -650,7 +641,7 @@ public class NewJPanel extends javax.swing.JPanel {
         }
     }
  
-
+//overridding the default method of caret update
     public void setCaretPosition(int position) {
         Document doc = getDocument();
         if (doc != null) {
@@ -669,11 +660,7 @@ public class NewJPanel extends javax.swing.JPanel {
             caret.moveDot(pos);
         }
     }
-    
-    private void resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetActionPerformed
-        compiletextbox.setText("");
-    }//GEN-LAST:event_resetActionPerformed
-
+    // to start collaborating 
     private void pressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pressActionPerformed
 
         out.println("Share Button Clicked");
@@ -681,7 +668,7 @@ public class NewJPanel extends javax.swing.JPanel {
         k = 1;
 
     }//GEN-LAST:event_pressActionPerformed
-
+//to end collaborating
     private void releaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_releaseActionPerformed
         // TODO add your handling code here:
         k= 0;
@@ -705,7 +692,7 @@ public class NewJPanel extends javax.swing.JPanel {
     private void editDocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDocActionPerformed
         compiletextbox.setEditable(true);
     }//GEN-LAST:event_editDocActionPerformed
-
+// saving file in d drive and sending path to server side
     private void saveDocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveDocActionPerformed
 
         String fileName=JOptionPane.showInputDialog("File name");
@@ -714,7 +701,7 @@ public class NewJPanel extends javax.swing.JPanel {
             out.println("Save_fileName");
             out.println(LoginWindow.userId);
             System.out.println("User Id: "+ LoginWindow.userId);
-            System.out.println("Arya Sending Data to the server side");
+            //System.out.println("Arya Sending Data to the server side");
             out.println(fileName);
             System.out.println("File Name Sent");
             try {
@@ -742,7 +729,7 @@ public class NewJPanel extends javax.swing.JPanel {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
-
+// opens dialogue box to see saved files
     private void OpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpenActionPerformed
 
         OpenDialogBox db= new OpenDialogBox(this);
@@ -750,7 +737,7 @@ public class NewJPanel extends javax.swing.JPanel {
         compiletextbox.setEditable(false);
 
     }//GEN-LAST:event_OpenActionPerformed
-
+// compiles and runs codes on basis of selected lang and assigned time
     private void compileAndRun1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compileAndRun1ActionPerformed
 
         exit=0;
@@ -1090,7 +1077,7 @@ public class NewJPanel extends javax.swing.JPanel {
         }
 
     }//GEN-LAST:event_compileAndRun1ActionPerformed
-
+//send a message to another user on the basis of email enetered
     private void privateChatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_privateChatActionPerformed
         out.println("Private Chat");
         String messg= typeMessg.getText();
@@ -1128,6 +1115,8 @@ public class NewJPanel extends javax.swing.JPanel {
 //
 //        mc.setTitle(lbl.getText());            
 //    }
+    
+    // send a message to a group in collaboration
     private void sendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendMessageActionPerformed
 
         String messg= typeMessg.getText();
@@ -1170,18 +1159,12 @@ public class NewJPanel extends javax.swing.JPanel {
     private void compiletextboxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_compiletextboxKeyPressed
         // TODO add your handling code here:
     }//GEN-LAST:event_compiletextboxKeyPressed
-
+// collaboration ,highlight and recommender 
     private void compiletextboxCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_compiletextboxCaretUpdate
 
         // TODO add your handling code here:
         removeHighlight(compiletextbox);
 
-        // prevLastWord=lastWord;
-        // lastWord = compiletextbox.getText().substring(compiletextbox.getText().lastIndexOf(" ")+1);
-
-        // int startIndex=compiletextbox.getText().lastIndexOf(" ");
-        //  int endIndex=compiletextbox.getText().length();
-        //  highLightingFeature(lastWord,startIndex,endIndex);
         displayLine(compiletextbox.getLineCount()); //For displaying line count
 
         // TODO add your handling code here:
@@ -1198,6 +1181,7 @@ public class NewJPanel extends javax.swing.JPanel {
             }
 
         }
+        output.setText("");
         currpos=compiletextbox.getCaretPosition();
         System.out.println("it is"+currpos +prevpos);
         if(prevpos-currpos==1)
@@ -1307,7 +1291,6 @@ public class NewJPanel extends javax.swing.JPanel {
     private javax.swing.JButton press;
     private javax.swing.JButton privateChat;
     private javax.swing.JButton release;
-    private javax.swing.JButton reset;
     private javax.swing.JButton saveDoc;
     private javax.swing.JTextField searchTextField;
     private javax.swing.JButton sendMessage;

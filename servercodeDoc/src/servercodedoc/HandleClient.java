@@ -52,11 +52,12 @@ public class HandleClient implements Runnable {
     }
 
     @Override
+    //taking request from clients 
     public void run() {
         try {
 
             String choice="";
-            while(choice!="300")
+            while(true)
             {
             
 
@@ -178,7 +179,8 @@ public class HandleClient implements Runnable {
         int i;
         try {
             for (i = 0; i < 2; i++) {
-                System.out.println(s[i] = in.readLine());
+                s[i] = in.readLine();
+                //System.out.println();
             }
 
             PreparedStatement pst;
@@ -193,7 +195,7 @@ public class HandleClient implements Runnable {
             rs = pst.executeQuery();
 
             if (rs.next()) {
-                JOptionPane.showMessageDialog(null, "Username and Password are correct..");
+                //JOptionPane.showMessageDialog(null, "Username and Password are correct..");
                 email= s[0];
                 ServercodeDoc.userStatus.put(email, new OnlineUser(out, 1));
                 out.println(1);

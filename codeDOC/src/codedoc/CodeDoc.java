@@ -159,11 +159,11 @@ public class CodeDoc extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonActionPerformed
-        String tabName= JOptionPane.showInputDialog("Enter Tab Name :");
-        if(tabName != null){
-            jtp.addTab(tabName, new NewJPanel());
+        //String tabName= JOptionPane.showInputDialog("Enter Tab Name :");
+        //if(tabName != null){
+            jtp.addTab("New Tab", new NewJPanel());
             this.add(jtp);
-        }
+        //}
     }//GEN-LAST:event_buttonActionPerformed
 
     private void jtpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtpMouseClicked

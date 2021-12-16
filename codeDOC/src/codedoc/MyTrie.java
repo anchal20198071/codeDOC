@@ -66,7 +66,11 @@ public class MyTrie
     }
     void initialwords()
     {
-        String word[]={"int" , "include" ,"import"};
+        String word[]={"int" , "include" ,"import" , "" ,"" , " " ,"auto","break" ,"case","char","const","continue","default",
+            "do","double","else" ,"enum","extern","int","long","register","return","short","signed","sizeof","static","struct",	"switch" ,"typedef" ,"union","unsigned","void" ,"volatile","while"};
+        
+
+
         for(int i=0 ;i<word.length;i++)
         {
             inserter(word[i]);

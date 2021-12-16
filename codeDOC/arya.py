@@ -1,4 +1,4 @@
-# Store input numbers
+# python Store input numbers
 num1 = input('')
 num2 = input('')
 

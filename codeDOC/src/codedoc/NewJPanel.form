@@ -119,9 +119,7 @@
                   <Component id="languageSelector" min="-2" pref="107" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="autoComplete" min="-2" pref="124" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="133" max="-2" attributes="0"/>
-                  <Component id="reset" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="404" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="596" max="-2" attributes="0"/>
                   <Component id="press" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="release" min="-2" max="-2" attributes="0"/>
@@ -138,7 +136,6 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="languageSelector" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="autoComplete" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="reset" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="press" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="release" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="logout" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -168,14 +165,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Autocomplete"/>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="reset">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Reset"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="resetActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="press">
           <Properties>
