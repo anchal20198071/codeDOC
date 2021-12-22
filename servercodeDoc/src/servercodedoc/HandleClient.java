@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -110,7 +111,15 @@ public class HandleClient implements Runnable {
             }
             else if(choice.equals("Share Button Clicked")){
                 System.out.println("share Key Pressed");
-                share();
+                try {
+                    share();
+                } catch (Exception ex) {
+                    Logger.getLogger(HandleClient.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            else if(choice.equals("Join Collaboration")){
+                System.out.println("Join Collaboration");
+                joinCollaboration();
             }
             else if(choice.equals("Send Message")){
                 System.out.println("Send Message");
@@ -195,7 +204,7 @@ public class HandleClient implements Runnable {
             rs = pst.executeQuery();
 
             if (rs.next()) {
-                //JOptionPane.showMessageDialog(null, "Username and Password are correct..");
+//                JOptionPane.showMessageDialog(null, "Username and Password are correct..");
                 email= s[0];
                 ServercodeDoc.userStatus.put(email, new OnlineUser(out, 1));
                 out.println(1);
@@ -384,38 +393,82 @@ public class HandleClient implements Runnable {
    
 
     void editTextArea() throws IOException{
+        String collabCode= in.readLine();
         String combinedText = in.readLine();
         
-        for (Map.Entry<PrintWriter, Integer > entry : ServercodeDoc.pair.entrySet()){
-           
-            if(entry.getValue() == 1){
-                entry.getKey().println(combinedText);
-            }
+        for (PrintWriter entry : ServercodeDoc.pair.get(collabCode)){
+            System.out.println("Sending m");
+            entry.println(combinedText);
         }
             
     }
     
-    void share(){
+    void share() throws IOException, Exception{
+        String adminEmail= in.readLine();
+        String newCode = adminEmail + getAlphaNumericString(5);
+        System.out.println("Admin code generated: "+newCode);
+        ServercodeDoc.pair.put(newCode, new HashSet<>());
+        ServercodeDoc.pair.get(newCode).add(out);
         
-        ServercodeDoc.pair.put(out, 1);
+        //server sends this code to the user to collaborate with others
+        out.println(EncryptDecrypt.encrypt(newCode));
+        System.out.println("Sent the code to the admin client");
     }
     
-    void unshare(){
-        ServercodeDoc.pair.put(out, 0);
+    void unshare() throws IOException{
+        String code= in.readLine();
+        ServercodeDoc.pair.get(code).remove(out);
+        if(ServercodeDoc.pair.get(code).size() == 1 || ServercodeDoc.pair.get(code).size() == 0){
+            ServercodeDoc.pair.remove(code);
+        }
+    }
+    
+    void joinCollaboration() throws IOException{
+        String code= in.readLine();
+        System.out.println("Join collab code received at server: "+code);
+        ServercodeDoc.pair.get(code).add(out);
+    }
+    
+    static String getAlphaNumericString(int n)
+    {
+  
+        // chose a Character random from this String
+        String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                                    + "0123456789"
+                                    + "abcdefghijklmnopqrstuvxyz";
+  
+        // create StringBuffer size of AlphaNumericString
+        StringBuilder sb = new StringBuilder(n);
+  
+        for (int i = 0; i < n; i++) {
+  
+            // generate a random number between
+            // 0 to AlphaNumericString variable length
+            int index
+                = (int)(AlphaNumericString.length()
+                        * Math.random());
+  
+            // add Character one by one in end of sb
+            sb.append(AlphaNumericString
+                          .charAt(index));
+        }
+  
+        return sb.toString();
     }
     
     void sendMessage() throws Exception{
         try {
+            String collabCode= in.readLine();
             String mssg; 
             mssg= in.readLine();
             
-            for (Map.Entry<PrintWriter, Integer > entry : ServercodeDoc.pair.entrySet()){
+            for (PrintWriter entry : ServercodeDoc.pair.get(collabCode)){
            
-                if(entry.getValue() == 1){
+                //if(entry.getValue() == 1){
                     String codedMessage = "*chatArea*"+EncryptDecrypt.decrypt(mssg);
                     codedMessage= EncryptDecrypt.encrypt(codedMessage);
-                    entry.getKey().println(codedMessage);
-                }
+                    entry.println(codedMessage);
+                //}
             }
         } catch (IOException ex) {
             System.out.println("Exception: "+ex);
@@ -426,7 +479,7 @@ public class HandleClient implements Runnable {
     void privateChat() throws IOException, Exception{
         String arr[] = new String[2];
         for(int i=0; i< 2; i++){
-            arr[i]= in.readLine();
+            arr[i]= in.readLine(); //apne jPanel in se receive krega
         }
         
         if(!ServercodeDoc.userStatus.containsKey(arr[0])){
@@ -440,8 +493,8 @@ public class HandleClient implements Runnable {
                         break;
                     }
                     else if(entry.getKey().equals(arr[0]) && entry.getValue().k == 1){
-                        entry.getValue().out.println(arr[1]);
-                        out.println(arr[1]);
+                        entry.getValue().out.println(arr[1]); //but yaha apne out se nhi send krega, it will use login ka out
+                        //out.println(arr[1]);
                         JOptionPane.showMessageDialog(null, "Message Sent!");
                     }
             }

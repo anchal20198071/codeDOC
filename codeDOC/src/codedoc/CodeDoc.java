@@ -30,6 +30,7 @@ public class CodeDoc extends javax.swing.JFrame {
     BufferedReader in;
     private Document model;
     private transient Caret caret;
+    PrivateChatPanel pc;
     /**
      * Creates new form CodeDoc
      */
@@ -46,7 +47,7 @@ public class CodeDoc extends javax.swing.JFrame {
         button.setText("+");
         jtp.addTab("", null);
         jtp.setTabComponentAt(0, button);
-        PrivateChatPanel pc= new PrivateChatPanel();
+        pc= new PrivateChatPanel();
         jtp.addTab("Chat", pc);
         jtp.addTab("CodeDoc", new NewJPanel());
         this.add(jtp);
@@ -59,7 +60,7 @@ public class CodeDoc extends javax.swing.JFrame {
                         String combinedText = in.readLine();
                         System.out.println("Received");
                         try {
-                            combinedText= EncryptDecrypt.decrypt(combinedText);
+                            combinedText= EncryptDecrypt.decrypt(combinedText)+"\n";
                         } catch (Exception ex) {
                             JOptionPane.showMessageDialog(null, "Exception in Decryption: "+ex);
                         }

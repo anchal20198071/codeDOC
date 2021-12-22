@@ -253,10 +253,13 @@ public class LoginWindow extends javax.swing.JFrame {
                 System.out.println(serverResponse);
 
                 if (serverResponse == 1) {
-                    
+                    System.out.println("Hii");
                     home= new CodeDoc();
+                    System.out.println("Hello");
                     userId= email;
+                    System.out.println("hh");
                     home.setTitle(userId);
+                    System.out.println("oo");
                     home.show();
                     dispose();
                 } else {

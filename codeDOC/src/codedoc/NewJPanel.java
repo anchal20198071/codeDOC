@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Scanner;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.Caret;
@@ -48,6 +49,8 @@ public class NewJPanel extends javax.swing.JPanel {
     boolean codeArea= false;
     boolean chatArea= false;
     public Socket soc;
+    public String code="";
+    boolean startCollab= false;
     /**
      * Creates new form CodeDoc
      */
@@ -103,13 +106,21 @@ public class NewJPanel extends javax.swing.JPanel {
                             typeMessg.setText("");
                             
                         }
-                        else if(k == 1){
+                        else if(k == 1 && startCollab == true){
+                            
                             compiletextbox.setText(text);
+                            
                             if(sender == true){
                                 int len= compiletextbox.getText().length();
                                 compiletextbox.setCaretPosition(len);
                                 sender= false;
                             }
+                        }
+                        else{
+                            code= text;
+                            startCollab = true;
+                            System.out.println("Code aa gya idhar, and Code : "+code);
+                            JOptionPane.showMessageDialog(null, "Your Collaboration Key is: "+code);
                         }
                             
                         }
@@ -207,6 +218,7 @@ public class NewJPanel extends javax.swing.JPanel {
         lineTable = new javax.swing.JTable();
         searchTextField = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        joinCollab = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(102, 102, 0));
 
@@ -216,7 +228,7 @@ public class NewJPanel extends javax.swing.JPanel {
 
         autoComplete.setText("Autocomplete");
 
-        press.setText("Press");
+        press.setText("Start Collaboration");
         press.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 pressActionPerformed(evt);
@@ -224,6 +236,7 @@ public class NewJPanel extends javax.swing.JPanel {
         });
 
         release.setText("Release");
+        release.setEnabled(false);
         release.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 releaseActionPerformed(evt);
@@ -246,13 +259,13 @@ public class NewJPanel extends javax.swing.JPanel {
                 .addComponent(languageSelector, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(autoComplete, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(596, 596, 596)
+                .addGap(324, 324, 324)
                 .addComponent(press)
-                .addGap(18, 18, 18)
+                .addGap(290, 290, 290)
                 .addComponent(release)
                 .addGap(18, 18, 18)
                 .addComponent(logout)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(314, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -518,6 +531,13 @@ public class NewJPanel extends javax.swing.JPanel {
             }
         });
 
+        joinCollab.setText("Join Collab");
+        joinCollab.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                joinCollabActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -525,14 +545,17 @@ public class NewJPanel extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36))
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(joinCollab)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(36, 36, 36)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -546,17 +569,17 @@ public class NewJPanel extends javax.swing.JPanel {
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createSequentialGroup()
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE))
-                .addGroup(layout.createSequentialGroup()
                     .addGap(58, 58, 58)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(94, Short.MAX_VALUE)
+                .addContainerGap(55, Short.MAX_VALUE)
+                .addComponent(joinCollab)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -660,19 +683,31 @@ public class NewJPanel extends javax.swing.JPanel {
             caret.moveDot(pos);
         }
     }
+    
     // to start collaborating 
     private void pressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pressActionPerformed
 
         out.println("Share Button Clicked");
+        out.println(LoginWindow.userId);
         l= 0;
         k = 1;
-
+        
+        press.setEnabled(false);
+        joinCollab.setEnabled(false);
+        release.setEnabled(true);
     }//GEN-LAST:event_pressActionPerformed
 //to end collaborating
     private void releaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_releaseActionPerformed
         // TODO add your handling code here:
         k= 0;
+        startCollab= false;
+        System.out.println("Unshare key button pressed");
         out.println("Unshare");
+        out.println(code);
+        
+        release.setEnabled(false);
+        press.setEnabled(true);
+        joinCollab.setEnabled(true);
     }//GEN-LAST:event_releaseActionPerformed
 
     private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
@@ -1129,6 +1164,7 @@ public class NewJPanel extends javax.swing.JPanel {
             chatSection.setCaretPosition(length);
 
             out.println("Send Message");
+            out.println(code);
             try {
                 
                 out.println(EncryptDecrypt.encrypt(LoginWindow.userId +" : "+messg));
@@ -1163,14 +1199,10 @@ public class NewJPanel extends javax.swing.JPanel {
     private void compiletextboxCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_compiletextboxCaretUpdate
 
         // TODO add your handling code here:
-        removeHighlight(compiletextbox);
-
-        displayLine(compiletextbox.getLineCount()); //For displaying line count
-
-        // TODO add your handling code here:
         if(k == 1 && l== 0 && sender == false){
             sender= true;
             out.println("Key Pressed");
+            out.println(code);
             String text = compiletextbox.getText();
 
             text = text.replaceAll("\n", "~");
@@ -1181,9 +1213,14 @@ public class NewJPanel extends javax.swing.JPanel {
             }
 
         }
+        
+        removeHighlight(compiletextbox);
+
+        displayLine(compiletextbox.getLineCount()); //For displaying line count
+
         output.setText("");
         currpos=compiletextbox.getCaretPosition();
-        System.out.println("it is"+currpos +prevpos);
+        System.out.println("it is "+currpos +" "+prevpos);
         if(prevpos-currpos==1)
         {
             flag=1;
@@ -1224,7 +1261,7 @@ public class NewJPanel extends javax.swing.JPanel {
         }
         else if(flag==1 )//backspace is pushed
         {
-            System.out.println("here");
+            //System.out.println("here");
             Map <String , Integer> arr = new HashMap <>();
 
             if(x.length()>0)
@@ -1257,6 +1294,19 @@ public class NewJPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_compiletextboxCaretUpdate
 
+    private void joinCollabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinCollabActionPerformed
+        k= 1;
+        l= 0;
+        startCollab= true;
+        code = JOptionPane.showInputDialog("Please Enter Collaboration Key:");
+        out.println("Join Collaboration");
+        out.println(code);
+        
+        joinCollab.setEnabled(false);
+        press.setEnabled(false);
+        release.setEnabled(true);
+    }//GEN-LAST:event_joinCollabActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Open;
@@ -1283,6 +1333,7 @@ public class NewJPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JButton joinCollab;
     private javax.swing.JComboBox<String> languageSelector;
     private javax.swing.JTable lineTable;
     private javax.swing.JButton logout;
