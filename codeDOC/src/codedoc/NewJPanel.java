@@ -52,7 +52,7 @@ public class NewJPanel extends javax.swing.JPanel {
      * Creates new form CodeDoc
      */
 
-
+static Boolean firstword=true;
     int exit=0;
     int sec=0;
     public static String path=null;
@@ -64,7 +64,8 @@ public class NewJPanel extends javax.swing.JPanel {
      
     /**
      * Creates new form NewJPanel
-     */int currpos=0 ,prevpos=0,flag=0;
+     */static int currpos=0;
+     int prevpos=0,flag=0;
     MyTrie trieobj=new MyTrie();
     String x="";
     //constructor intialising socket ,in, out objects and running thread for accepting input for group chat and collaboratory
@@ -77,6 +78,7 @@ public class NewJPanel extends javax.swing.JPanel {
             soc = new Socket("localhost", 9886);
             out=new PrintWriter(soc.getOutputStream(),true);
             in = new BufferedReader(new InputStreamReader(soc.getInputStream()));
+            
         }
          catch (Exception ex)
         {System.out.println("Exception : " + ex);}
@@ -760,15 +762,16 @@ public class NewJPanel extends javax.swing.JPanel {
                     } catch (InterruptedException ex) {
                         System.out.println("Exception : "+ex);
                     }
-                }
+                } 
                 if(gotsec<=sec)
                 {
                     getoutput.setText("TLE");
                     return;
-                }
+                } 
 
             }
-        });
+        }
+        );
         th7.start();
         if(a.equalsIgnoreCase("C")){
             try {
@@ -796,12 +799,12 @@ public class NewJPanel extends javax.swing.JPanel {
 
             try {
                 process = processBuilder.start();
-                BufferedReader br=new BufferedReader(new InputStreamReader(process.getInputStream()));//getting the output
+                /*BufferedReader br=new BufferedReader(new InputStreamReader(process.getInputStream()));//getting the output
                 String coutput;
                 while((coutput=br.readLine())!=null)
                 {
                     System.out.println(coutput);
-                }
+                }*/
 
             } catch (IOException ex) {
                 System.out.println("file not found");
@@ -927,7 +930,7 @@ public class NewJPanel extends javax.swing.JPanel {
             } catch (IOException e) {
                 exit=1;
 
-                getoutput.setText("file not found");
+                //getoutput.setText("file not found");
                 return;
             }
             //created a file successfully in the folder where project is cloned
@@ -945,13 +948,13 @@ public class NewJPanel extends javax.swing.JPanel {
 
             try {
                 process = processBuilder.start();
-                BufferedReader br=new BufferedReader(new InputStreamReader(process.getInputStream()));//getting the output
+                /*BufferedReader br=new BufferedReader(new InputStreamReader(process.getInputStream()));//getting the output
                 String coutput;
                 while((coutput=br.readLine())!=null)
                 {
 
                     System.out.println(coutput);
-                }
+                }*/
 
             } catch (IOException ex) {
                 System.out.println("file not found");
@@ -969,7 +972,7 @@ public class NewJPanel extends javax.swing.JPanel {
             }
 
             if (isWindows) {
-                processBuilder.command("cmd.exe", "/c", "java","-cp",FILE_LOCATION4);
+                processBuilder.command("cmd.exe", "/c", "java",FILE_LOCATION4);
             } else {
                 processBuilder.command("sh", "-c", "ls");
             }
@@ -1181,9 +1184,10 @@ public class NewJPanel extends javax.swing.JPanel {
             }
 
         }
+        
         output.setText("");
         currpos=compiletextbox.getCaretPosition();
-        System.out.println("it is"+currpos +prevpos);
+        //System.out.println("it is"+currpos +prevpos);
         if(prevpos-currpos==1)
         {
             flag=1;
@@ -1201,6 +1205,7 @@ public class NewJPanel extends javax.swing.JPanel {
         String s=compiletextbox.getText();
         int l=s.length();
         char ch='a';
+        
         if(l!=0)
         ch=s.charAt(l-1);
         else
@@ -1208,12 +1213,15 @@ public class NewJPanel extends javax.swing.JPanel {
 
         if(((ch>='a' && ch<='z' )|| (ch>='A'&&ch<='Z')) &&flag==0 )
         {
+            
             x=x+ch;
             Map <String , Integer> arr=new HashMap<>();
 
-            arr=trieobj.searcher(ch);
+            arr=trieobj.searcher(ch ,trieobj);
+            firstword=false;
             if(arr==null)
             return;
+            
             output.setText("");
             for (Map.Entry mapElement : arr.entrySet())
             {
@@ -1224,7 +1232,7 @@ public class NewJPanel extends javax.swing.JPanel {
         }
         else if(flag==1 )//backspace is pushed
         {
-            System.out.println("here");
+           // System.out.println("here");
             Map <String , Integer> arr = new HashMap <>();
 
             if(x.length()>0)
@@ -1234,7 +1242,7 @@ public class NewJPanel extends javax.swing.JPanel {
             {
                 MyTrie.currnode=MyTrie.currnode.parent.parent;
 
-                arr =trieobj.searcher(ch);
+                arr =trieobj.searcher(ch,trieobj);
                 output.setText("");
             }
             if(arr==null)
@@ -1246,13 +1254,15 @@ public class NewJPanel extends javax.swing.JPanel {
             }
         }
         else //if we took the word from table it shouldnt be inserted only currnode should be
-        //made equal to trie obj
+        //made equal to trie obj,its is a newqord if it is after a digit enter or first word
         {
             if(!(x==""))
+            {
+                //System.out.println("called");
             trieobj.inserter(x);
-
+            }
             x="";
-
+            firstword=true;
             MyTrie.currnode=trieobj;
         }
     }//GEN-LAST:event_compiletextboxCaretUpdate

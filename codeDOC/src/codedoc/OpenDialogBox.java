@@ -51,7 +51,6 @@ public class OpenDialogBox extends javax.swing.JFrame {
             for (i = 0; i < size; i++) {
                 fileName[i] = in.readLine();
                 filePath[i] = in.readLine();
-                
                 String[] S = {fileName[i]};
                 DefaultTableModel tblModel = (DefaultTableModel) jTable1.getModel();
                 tblModel.addRow(S);
