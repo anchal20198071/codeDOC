@@ -16,22 +16,23 @@ public class MyTrie
                 currentwords=new HashMap<>();
                 map = new HashMap<>();
             }
-     Map <String , Integer> searcher(char ch)
+     Map <String , Integer> searcher(char ch, MyTrie trieobj)
     {
         
       String s1[]={};
-        if(currnode==null)
-            currnode=this;
+      
+        if((currnode==null && NewJPanel.firstword==true) || (NewJPanel.currpos==1))
+            currnode=trieobj;
+        else if(currnode==null)
+            return null;
         
         Map<Character, MyTrie> mp=currnode.getMap();
+        currnode=mp.get(ch);
         if(mp.get(ch)==null)
         {
-            currnode=this;
             return null;
         }
-         
         
-        currnode=mp.get(ch);
         
        return  mp.get(ch).currentwords;
         
@@ -58,7 +59,7 @@ public class MyTrie
             l.currentwords.put(word, i);
             
             l.currentstrength++;
-            System.out.println( l.currentstrength);
+            //System.out.println( l.currentstrength);
            currentparent=l;
             temp = temp.get(ch).getMap();
         }
@@ -66,7 +67,7 @@ public class MyTrie
     }
     void initialwords()
     {
-        String word[]={"int" , "include" ,"import" , "" ,"" , " " ,"auto","break" ,"case","char","const","continue","default",
+        String word[]={"int","float" , "include" ,"import" ,"auto","break" ,"case","char","const","continue","default",
             "do","double","else" ,"enum","extern","int","long","register","return","short","signed","sizeof","static","struct",	"switch" ,"typedef" ,"union","unsigned","void" ,"volatile","while"};
         
 
@@ -75,6 +76,8 @@ public class MyTrie
         {
             inserter(word[i]);
         }
+        
+        
     }
     Map<Character, MyTrie> getMap() {
         return map;
