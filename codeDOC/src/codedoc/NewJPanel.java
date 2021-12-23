@@ -119,8 +119,9 @@ public class NewJPanel extends javax.swing.JPanel {
                         else{
                             code= text;
                             startCollab = true;
-                            System.out.println("Code aa gya idhar, and Code : "+code);
-                            JOptionPane.showMessageDialog(null, "Your Collaboration Key is: "+code);
+                            new displayCollabCode(code).show();
+                            //System.out.println("Code aa gya idhar, and Code : "+code);
+                            //JOptionPane.showMessageDialog(null, "Your Collaboration Key is: "+code);
                         }
                             
                         }
