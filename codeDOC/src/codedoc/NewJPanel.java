@@ -25,6 +25,7 @@ import java.util.Scanner;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
+import static javax.swing.JOptionPane.YES_OPTION;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.Caret;
@@ -100,8 +101,38 @@ static Boolean firstword=true;
                         }
                         
                         String text= combinedText.replaceAll("~", "\n");
-
-                        if(text.length() > 10 && text.substring(0, 10).equals("*chatArea*")){
+                        if(text.length() > 25 && text.substring(0, 25).equals("COLLAB VERIFICATION ALERT")){
+                            System.out.println("Verfication Received");
+                            text= text.substring(25);
+                            if(text.equals("1")){
+                                JOptionPane.showMessageDialog(null, "Collaboratory Joined!");
+                            }
+                            else{
+                                JOptionPane.showMessageDialog(null, "Admin Rejected Your request");
+                                press.setEnabled(true);
+                                joinCollab.setEnabled(true);
+                                release.setEnabled(false);
+                            }
+                        }
+                        else if(text.length() > 23 && text.substring(0, 23).equals("COLLAB PERMISSION ALERT")){
+                            System.out.println("Asking for permission");
+                            
+                            text= text.substring(23);
+                            int res= JOptionPane.showConfirmDialog(null, "text");
+        
+                            out.println("Request Verification");
+                            if(res == YES_OPTION){                              
+                                out.println("1");
+                                System.out.println("yes pressed");
+                            }
+                            else{                               
+                                out.println("0");
+                                System.out.println("No pressed");
+                            }
+                            out.println(code);
+                        }
+                        
+                        else if(text.length() > 10 && text.substring(0, 10).equals("*chatArea*")){
                             String code= text.substring(0, 10);
                             text= text.substring(10);
                             chatSection.append(text+"\n");
@@ -1315,16 +1346,20 @@ static Boolean firstword=true;
     }//GEN-LAST:event_compiletextboxCaretUpdate
 
     private void joinCollabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinCollabActionPerformed
-        k= 1;
-        l= 0;
-        startCollab= true;
-        code = JOptionPane.showInputDialog("Please Enter Collaboration Key:");
-        out.println("Join Collaboration");
-        out.println(code);
         
-        joinCollab.setEnabled(false);
-        press.setEnabled(false);
-        release.setEnabled(true);
+        code = JOptionPane.showInputDialog("Please Enter Collaboration Key:");
+        if(code != null){
+            k= 1;
+            l= 0;
+            startCollab= true;
+            out.println("Join Collaboration");
+            out.println(code);
+            out.println(LoginWindow.userId);
+
+            joinCollab.setEnabled(false);
+            press.setEnabled(false);
+            release.setEnabled(true);
+        }
     }//GEN-LAST:event_joinCollabActionPerformed
 
 

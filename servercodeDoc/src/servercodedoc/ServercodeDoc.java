@@ -34,6 +34,8 @@ private ExecutorService pool= Executors.newFixedThreadPool(20);
 Connection con =myc.getConn();
 public static HashMap<String, HashSet<PrintWriter> > pair= new HashMap<>();
 public static HashMap<String, OnlineUser > userStatus= new HashMap<>();
+public static HashMap<String, PrintWriter> collabAdmin= new HashMap<>();
+public static HashMap<PrintWriter, String> requestList= new HashMap<>();
 
 
   public static void main(String[] args) 

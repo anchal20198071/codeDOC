@@ -110,7 +110,7 @@ public class HandleClient implements Runnable {
                 unshare();
             }
             else if(choice.equals("Share Button Clicked")){
-                System.out.println("share Key Pressed");
+                System.out.println("share button clicked");
                 try {
                     share();
                 } catch (Exception ex) {
@@ -119,7 +119,15 @@ public class HandleClient implements Runnable {
             }
             else if(choice.equals("Join Collaboration")){
                 System.out.println("Join Collaboration");
-                joinCollaboration();
+                try {
+                    joinCollaboration();
+                } catch (Exception ex) {
+                    Logger.getLogger(HandleClient.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            else if(choice.equals("Request Verification")){
+                System.out.println("Request Verification");
+                verifyRequest();
             }
             else if(choice.equals("Send Message")){
                 System.out.println("Send Message");
@@ -144,6 +152,8 @@ public class HandleClient implements Runnable {
             }
 
         } catch (IOException ex) {
+            Logger.getLogger(HandleClient.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(HandleClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -410,6 +420,8 @@ public class HandleClient implements Runnable {
         ServercodeDoc.pair.put(newCode, new HashSet<>());
         ServercodeDoc.pair.get(newCode).add(out);
         
+        ServercodeDoc.collabAdmin.put(newCode, out);
+        
         //server sends this code to the user to collaborate with others
         out.println(EncryptDecrypt.encrypt(newCode));
         System.out.println("Sent the code to the admin client");
@@ -423,10 +435,40 @@ public class HandleClient implements Runnable {
         }
     }
     
-    void joinCollaboration() throws IOException{
+    void joinCollaboration() throws IOException, Exception{
         String code= in.readLine();
-        System.out.println("Join collab code received at server: "+code);
-        ServercodeDoc.pair.get(code).add(out);
+        
+        //PERMISSION ALERT
+        String requestEmail = in.readLine();
+        String message= "COLLAB PERMISSION ALERT"+"User "+requestEmail+" wants to Join Your Collaboratory!";
+        message= EncryptDecrypt.encrypt(message);
+        ServercodeDoc.requestList.put(out, code);
+        ServercodeDoc.collabAdmin.get(code).println(message); //send request to the collab admin
+        
+//        System.out.println("Join collab code received at server: "+code);
+//        ServercodeDoc.pair.get(code).add(out);
+    }
+    
+    void verifyRequest() throws Exception{
+        String status= in.readLine();
+        String code= in.readLine();
+        
+        for (Map.Entry<PrintWriter,String> entry : ServercodeDoc.requestList.entrySet()){
+            if(entry.getValue().equals(code)){
+                if(status.equals("1")){
+                    entry.getKey().println(EncryptDecrypt.encrypt("COLLAB VERIFICATION ALERT1"));
+                    System.out.println("Join collab code received at server: "+code);
+                    ServercodeDoc.pair.get(code).add(entry.getKey());
+                }
+                else{
+                     entry.getKey().println(EncryptDecrypt.encrypt("COLLAB VERIFICATION ALERT0"));
+                }
+                
+                ServercodeDoc.requestList.remove(entry.getKey());
+            }
+        }
+        
+        
     }
     
     static String getAlphaNumericString(int n)
