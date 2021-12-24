@@ -476,9 +476,10 @@ public class HandleClient implements Runnable {
         
     }
     
+    //code quality improve by removing k
     void privateChat() throws IOException, Exception{
         String arr[] = new String[2];
-        for(int i=0; i< 2; i++){
+        for(int i=0; i< 2; i++){ //arr[0]= receiver mail id
             arr[i]= in.readLine(); //apne jPanel in se receive krega
         }
         
