@@ -56,6 +56,7 @@ public class NewJPanel extends javax.swing.JPanel {
     public String code="";
     boolean startCollab= false;
     private DefaultListModel mod;
+    boolean update= true;
     /**
      * Creates new form CodeDoc
      */
@@ -207,7 +208,6 @@ static Boolean firstword=true;
         autoComplete = new javax.swing.JCheckBox();
         press = new javax.swing.JButton();
         release = new javax.swing.JButton();
-        logout = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
         compiletextbox = new javax.swing.JTextArea();
@@ -285,13 +285,6 @@ static Boolean firstword=true;
             }
         });
 
-        logout.setText("Logout");
-        logout.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                logoutActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -305,9 +298,7 @@ static Boolean firstword=true;
                 .addComponent(press)
                 .addGap(290, 290, 290)
                 .addComponent(release)
-                .addGap(18, 18, 18)
-                .addComponent(logout)
-                .addContainerGap(314, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -317,8 +308,7 @@ static Boolean firstword=true;
                     .addComponent(languageSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(autoComplete)
                     .addComponent(press)
-                    .addComponent(release)
-                    .addComponent(logout))
+                    .addComponent(release))
                 .addContainerGap())
         );
 
@@ -755,12 +745,6 @@ static Boolean firstword=true;
         joinCollab.setEnabled(true);
     }//GEN-LAST:event_releaseActionPerformed
 
-    private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
-        // TODO add your handling code here:
-        out.println("logout");
-        this.setVisible(false);
-    }//GEN-LAST:event_logoutActionPerformed
-
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
@@ -1165,7 +1149,7 @@ static Boolean firstword=true;
         if(messg.equals("")){
             JOptionPane.showMessageDialog(null, "Please Type a Message");
         }
-        else{
+        else if(messg!= null){
             String mailId= JOptionPane.showInputDialog("Type email ID of person:");
             out.println(mailId);
 
@@ -1243,14 +1227,14 @@ static Boolean firstword=true;
     }//GEN-LAST:event_compiletextboxKeyPressed
 // collaboration ,highlight and recommender 
     private void compiletextboxCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_compiletextboxCaretUpdate
-
+        System.out.println("Inside compiletextboxCaretUpdate");
         // TODO add your handling code here:
-        if(k == 1 && l== 0 && sender == false){
+        if(k == 1 && l== 0 && sender == false && update== true){
             sender= true;
             out.println("Key Pressed");
             out.println(code);
             String text = compiletextbox.getText();
-
+            System.out.println("text sending to server : "+text);
             text = text.replaceAll("\n", "~");
             try {
                 out.println(EncryptDecrypt.encrypt(text));
@@ -1263,7 +1247,7 @@ static Boolean firstword=true;
 
         removeHighlight(compiletextbox);
 
-        displayLine(compiletextbox.getLineCount()); //For displaying line count
+//        displayLine(compiletextbox.getLineCount()); //For displaying line count
 
 //        output.setText("");
 //        currpos=compiletextbox.getCaretPosition();
@@ -1440,8 +1424,11 @@ static Boolean firstword=true;
         data= left+valSelected+right;
         //System.out.println("data: "+data);
         data= data.replaceAll("~", "\n");
+        System.out.println("data is "+data);
         
+        update= false;
         compiletextbox.setText(data);
+        update= true;
         
             //System.out.println("moving caret position");
           compiletextbox.setCaretPosition(compiletextbox.getText().length());
@@ -1449,7 +1436,9 @@ static Boolean firstword=true;
         
     }//GEN-LAST:event_listMouseClicked
 
+    
     private void compiletextboxKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_compiletextboxKeyReleased
+       
         //if(evt.getKeyCode() != VK_SPACE) {
         mod.removeAllElements();
         menu.setVisible(false);
@@ -1565,6 +1554,7 @@ static Boolean firstword=true;
         }
         
         //}
+        
     }//GEN-LAST:event_compiletextboxKeyReleased
 
 
@@ -1598,7 +1588,6 @@ static Boolean firstword=true;
     private javax.swing.JComboBox<String> languageSelector;
     private javax.swing.JTable lineTable;
     private javax.swing.JList<String> list;
-    private javax.swing.JButton logout;
     private javax.swing.JPopupMenu menu;
     private javax.swing.JButton newDoc;
     private javax.swing.JTextArea output;

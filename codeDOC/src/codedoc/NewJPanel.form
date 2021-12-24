@@ -177,9 +177,7 @@
                   <Component id="press" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="290" max="-2" attributes="0"/>
                   <Component id="release" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="logout" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="314" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -192,7 +190,6 @@
                       <Component id="autoComplete" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="press" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="release" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="logout" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -235,14 +232,6 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="releaseActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="logout">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Logout"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="logoutActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
