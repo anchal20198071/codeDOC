@@ -1,12 +1,9 @@
-#include <stdio.h>
-int main() {    
+# python Store input numbers
+num1 = input('')
+num2 = input('')
 
-    int number1, number2, sum;
-    
-    scanf("%d %d", &number1, &number2);
+# Add two numbers
+sum = float(num1) + float(num2)
 
-    sum = number1 + number2;      
-    
-    printf("%d + %d = %d", number1, number2, sum);
-    return 0;
-}
+# Display the sum
+print('The sum of {0} and {1} is {2}'.format(num1, num2, sum))

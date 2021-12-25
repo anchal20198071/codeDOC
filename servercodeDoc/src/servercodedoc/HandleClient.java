@@ -5,10 +5,13 @@
  */
 package servercodedoc;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.net.Socket;
@@ -34,7 +37,11 @@ public class HandleClient implements Runnable {
     PreparedStatement p;
     StringBuilder sb = new StringBuilder();
     Connection con;
-
+private static final String FILE_LOCATION1 ="Desktop\\december\\codeDOC\\codeDOC\\arya.c";    
+     private static final String FILE_LOCATION2 ="Desktop\\december\\codeDOC\\codeDOC\\arya.py";
+     private static final String FILE_LOCATION3 ="Desktop\\december\\codeDOC\\codeDOC\\arya.cpp";
+     
+     private static final String FILE_LOCATION4 ="Desktop\\december\\codeDOC\\codeDOC\\arya.java";
     static String userEmail="";
 
     private int noOfUsers = 0;
@@ -72,6 +79,14 @@ public class HandleClient implements Runnable {
                 System.out.println("Login Window");
                 login();
                 
+            }
+            else if(choice.equals("global compile"))
+            {
+            globalcompile();
+            }
+            else if(choice.equals("download"))
+            {
+            download();
             }
             else if(choice.equals("200")){
                 System.out.println("200");
@@ -138,6 +153,487 @@ public class HandleClient implements Runnable {
             Logger.getLogger(HandleClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    void globalcompile()
+    {
+        int exit=0;
+        try {
+            String a=in.readLine();
+            System.out.println(a);
+            if(a.equalsIgnoreCase("C")){
+                String code=in.readLine();
+                code=code.replaceAll("~","\n");
+                System.out.println(code);
+                String getinput=in.readLine();
+                getinput=getinput.replaceAll("~","\n");
+                System.out.println(getinput);
+                try {
+                    String filename = "arya.c";
+                    FileWriter fileWriter=new FileWriter(filename);
+                   // String code=in.readLine();
+                    fileWriter.write(code);
+//                setTitle(filename);
+                    fileWriter.close();
+                } catch (IOException e) {
+                    exit=1;
+                    System.out.println("file not found");
+                }
+                System.out.println("reached here 3");
+                //created a file successfully in the folder where project is cloned
+                boolean isWindows = System.getProperty("os.name")
+                        .toLowerCase().startsWith("windows");
+                System.out.println("reached here 2");
+                ProcessBuilder processBuilder = new ProcessBuilder();
+                Process process=null;
+                System.out.println("reached here 1");
+                if (isWindows) {
+                    processBuilder.command("cmd.exe","/c", "gcc",FILE_LOCATION1);
+                    System.out.println("reached here");
+                } else {
+                    processBuilder.command("sh", "-c", "ls");
+                }
+                processBuilder.directory(new File(System.getProperty("user.home")));
+                
+                try {
+                    process = processBuilder.start();
+                 } catch (IOException ex) {
+                    System.out.println("file not found");
+                }
+                
+                try {
+                    if( process.getErrorStream().read() != -1 )
+                    {
+                        exit=1;
+                        System.out.println("file cant be compiled " +process.getErrorStream());
+                        //getoutput.setText("file cant be compiled " +process.getErrorStream());
+                         return;
+                    }
+                } catch (IOException ex) {
+                    System.out.println("file not found");
+                }
+                System.out.println("compiled");
+                if (isWindows) {
+                    processBuilder.command("cmd.exe", "/c","a");
+                } else {
+                    processBuilder.command("sh", "-c", "ls");
+                }
+                try {
+                    process = processBuilder.start();
+                    OutputStream os=process.getOutputStream();
+                    if(!getinput.equals("")){
+                    PrintStream ps = new PrintStream(os);//if we want to send some input
+                    
+                    ps.println(getinput);
+                    ps.flush();}
+                    BufferedReader br=new BufferedReader(new InputStreamReader(process.getInputStream()));//getting the output
+                    String coutput1,coutput="";
+                    while((coutput1=br.readLine())!=null)
+                    {
+                        /*if(sec>=gotsec)
+                        {
+                            getoutput.setText("TLE");
+                            return;
+                        }*/
+                        coutput=coutput+coutput1;
+                    }
+                    coutput.replaceAll("\n","~");
+                        out.println(coutput);
+                        System.out.println(coutput);
+                } catch (IOException ex) {
+                    System.out.println("file not found");
+                }
+                exit=1;
+                
+            }
+            
+            if(a.equalsIgnoreCase("C++")){
+                
+            String code=in.readLine();
+                code=code.replaceAll("~","\n");
+                System.out.println(code);
+                String getinput=in.readLine();
+                getinput=getinput.replaceAll("~","\n");
+                System.out.println(getinput);
+                            
+                
+                try {
+                    String filename = "arya.cpp";
+                    FileWriter fileWriter=new FileWriter(filename);
+                   // String code=in.readLine();
+                    fileWriter.write(code);
+//                setTitle(filename);
+                    fileWriter.close();
+                } catch (IOException e) {
+                    exit=1;
+                    System.out.println("file not found");
+                }
+                System.out.println("reached here 3");
+                //created a file successfully in the folder where project is cloned
+                boolean isWindows = System.getProperty("os.name")
+                        .toLowerCase().startsWith("windows");
+                System.out.println("reached here 2");
+                ProcessBuilder processBuilder = new ProcessBuilder();
+                Process process=null;
+                System.out.println("reached here 1");
+                if (isWindows) {
+                    processBuilder.command("cmd.exe","/c", "g++",FILE_LOCATION3);
+                    System.out.println("reached here");
+                } else {
+                    processBuilder.command("sh", "-c", "ls");
+                }
+                processBuilder.directory(new File(System.getProperty("user.home")));
+                
+                try {
+                    process = processBuilder.start();
+                 } catch (IOException ex) {
+                    System.out.println("file not found");
+                }
+                
+                try {
+                    if( process.getErrorStream().read() != -1 )
+                    {
+                        exit=1;
+                        System.out.println("file cant be compiled " +process.getErrorStream());
+                        //getoutput.setText("file cant be compiled " +process.getErrorStream());
+                         return;
+                    }
+                } catch (IOException ex) {
+                    System.out.println("file not found");
+                }
+                System.out.println("compiled");
+                
+                if (isWindows) {
+                    processBuilder.command("cmd.exe", "/c","a");
+                } else {
+                    processBuilder.command("sh", "-c", "ls");
+                }
+                System.out.println("compiled2");
+                
+                try {
+                    process = processBuilder.start();
+                    
+                    if(!getinput.equals("")){
+                        OutputStream os=process.getOutputStream();
+                    PrintStream ps = new PrintStream(os);//if we want to send some input
+                    
+                    ps.println(getinput);
+                    ps.flush();}
+                    System.out.println("compiled3");
+                
+                    BufferedReader br=new BufferedReader(new InputStreamReader(process.getInputStream()));//getting the output
+                    System.out.println("compiled4");
+                    String coutput1,coutput="";
+                    while((coutput1=br.readLine())!=null)
+                    {
+                        System.out.println("compiled5");
+                
+                        /*if(sec>=gotsec)
+                        {
+                            getoutput.setText("TLE");
+                            return;
+                        }*/
+                        coutput=coutput+coutput1;
+                    }
+                    coutput=coutput.replaceAll("\n","~");
+                        out.println(coutput);
+                        System.out.println(coutput);
+                } catch (IOException ex) {
+                    System.out.println("file not found");
+                }
+                exit=1;
+                
+            }
+        
+        
+        if(a.equalsIgnoreCase("Java")){
+                
+            String code=in.readLine();
+                code=code.replaceAll("~","\n");
+                System.out.println(code);
+                String getinput=in.readLine();
+                getinput=getinput.replaceAll("~","\n");
+                System.out.println(getinput);
+                            
+                
+                try {
+                    String filename = "arya.java";
+                    FileWriter fileWriter=new FileWriter(filename);
+                   // String code=in.readLine();
+                    fileWriter.write(code);
+//                setTitle(filename);
+                    fileWriter.close();
+                } catch (IOException e) {
+                    exit=1;
+                    System.out.println("file not found");
+                }
+                System.out.println("reached here 3");
+                //created a file successfully in the folder where project is cloned
+                boolean isWindows = System.getProperty("os.name")
+                        .toLowerCase().startsWith("windows");
+                System.out.println("reached here 2");
+                ProcessBuilder processBuilder = new ProcessBuilder();
+                Process process=null;
+                System.out.println("reached here 1");
+                if (isWindows) {
+                    processBuilder.command("cmd.exe","/c", "javac",FILE_LOCATION4);
+                    System.out.println("reached here");
+                } else {
+                    processBuilder.command("sh", "-c", "ls");
+                }
+                processBuilder.directory(new File(System.getProperty("user.home")));
+                
+                try {
+                    process = processBuilder.start();
+                 } catch (IOException ex) {
+                    System.out.println("file not found");
+                }
+                
+                try {
+                    if( process.getErrorStream().read() != -1 )
+                    {
+                        exit=1;
+                        System.out.println("file cant be compiled " +process.getErrorStream());
+                        //getoutput.setText("file cant be compiled " +process.getErrorStream());
+                         return;
+                    }
+                } catch (IOException ex) {
+                    System.out.println("file not found");
+                }
+                System.out.println("compiled");
+                
+                if (isWindows) {
+                    processBuilder.command("cmd.exe", "/c","java",FILE_LOCATION4);
+                } else {
+                    processBuilder.command("sh", "-c", "ls");
+                }
+                System.out.println("compiled2");
+                
+                try {
+                    process = processBuilder.start();
+                    
+                    if(!getinput.equals("")){
+                        OutputStream os=process.getOutputStream();
+                    PrintStream ps = new PrintStream(os);//if we want to send some input
+                    
+                    ps.println(getinput);
+                    ps.flush();}
+                    System.out.println("compiled3");
+                
+                    BufferedReader br=new BufferedReader(new InputStreamReader(process.getInputStream()));//getting the output
+                    System.out.println("compiled4");
+                    String coutput1,coutput="";
+                    while((coutput1=br.readLine())!=null)
+                    {
+                        System.out.println("compiled5");
+                
+                        /*if(sec>=gotsec)
+                        {
+                            getoutput.setText("TLE");
+                            return;
+                        }*/
+                        coutput=coutput+coutput1;
+                    }
+                    coutput=coutput.replaceAll("\n","~");
+                        out.println(coutput);
+                        System.out.println(coutput);
+                } catch (IOException ex) {
+                    System.out.println("file not found");
+                }
+                exit=1;
+                
+            
+        }
+    
+        
+        if(a.equalsIgnoreCase("Python")){
+                
+            String code=in.readLine();
+                code=code.replaceAll("~","\n");
+                System.out.println(code);
+                String getinput=in.readLine();
+                getinput=getinput.replaceAll("~","\n");
+                System.out.println(getinput);
+                            
+                
+                try {
+                    String filename = "arya.py";
+                    FileWriter fileWriter=new FileWriter(filename);
+                   // String code=in.readLine();
+                    fileWriter.write(code);
+//                setTitle(filename);
+                    fileWriter.close();
+                } catch (IOException e) {
+                    exit=1;
+                    System.out.println("file not found");
+                }
+                System.out.println("reached here 3");
+                //created a file successfully in the folder where project is cloned
+                boolean isWindows = System.getProperty("os.name")
+                        .toLowerCase().startsWith("windows");
+                System.out.println("reached here 2");
+                ProcessBuilder processBuilder = new ProcessBuilder();
+                Process process=null;
+                System.out.println("reached here 1");
+                
+                if (isWindows) {
+                    processBuilder.command("cmd.exe", "/c","py",FILE_LOCATION2);
+                } else {
+                    processBuilder.command("sh", "-c", "ls");
+                }
+                System.out.println("compiled2");
+                
+                try {
+                    process = processBuilder.start();
+                OutputStream os=process.getOutputStream();
+                PrintStream ps = new PrintStream(os);//if we want to send some input
+
+                ps.println(getinput);
+                ps.flush();
+
+                System.out.println("here");
+
+                BufferedReader br=new BufferedReader(new InputStreamReader(process.getInputStream()));//getting the output
+                    System.out.println("compiled4");
+                    String coutput1,coutput="";
+                    while((coutput1=br.readLine())!=null)
+                    {
+                        System.out.println("compiled5");
+                
+                        /*if(sec>=gotsec)
+                        {
+                            getoutput.setText("TLE");
+                            return;
+                        }*/
+                        
+                        coutput=coutput+coutput1;
+                        
+                    }
+                coutput=coutput.replaceAll("\n","~");
+                out.println(coutput);
+                System.out.println(coutput);
+                } catch (IOException ex) {
+                    System.out.println("file not found");
+                }
+                exit=1;
+        }   
+            
+        }
+    
+            catch (IOException ex) {
+            Logger.getLogger(HandleClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        
+            /*if(a.equalsIgnoreCase("python")){
+                try {
+                    String filename = "arya.py";
+                    FileWriter fileWriter=new FileWriter(filename);
+                    fileWriter.write(compiletextbox.getText());
+//                setTitle(filename);
+fileWriter.close();
+                } catch (IOException e) {
+                    exit=1;
+                    System.out.println("file not found");
+                }
+                //created a file successfully in the folder where project is cloned
+                boolean isWindows = System.getProperty("os.name")
+                        .toLowerCase().startsWith("windows");
+                
+                ProcessBuilder processBuilder = new ProcessBuilder();
+                Process process=null;
+                if (isWindows) {
+                    processBuilder.command("cmd.exe", "/c", "py",FILE_LOCATION2);
+                } else {
+                    processBuilder.command("sh", "-c", "ls");
+                }
+                processBuilder.directory(new File(System.getProperty("user.home")));
+                
+                try {
+                    process = processBuilder.start();
+                    OutputStream os=process.getOutputStream();
+                    PrintStream ps = new PrintStream(os);//if we want to send some input
+                    
+                    ps.println(getinput.getText());
+                    ps.flush();
+                    
+                    System.out.println("here");
+                    
+                    BufferedReader br=new BufferedReader(new InputStreamReader(process.getInputStream()));//getting the output
+                    String coutput;
+                    if(sec>=gotsec)
+                    {
+                        getoutput.setText("TLE");
+
+                        return;
+                    }
+                    while((coutput=br.readLine())!=null)
+                    {
+                        if(sec>=gotsec)
+                        {
+                            getoutput.setText("TLE");
+                            
+                            return;
+                        }
+                        getoutput.setText(coutput);
+                        System.out.println(coutput);
+                    }
+                    
+                } catch (IOException ex) {
+//                Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
+System.out.println("Exception : "+ex);
+                }
+                
+                try {
+                    if( process.getErrorStream().read() != -1 )
+                    {
+                        exit=1;
+                        getoutput.setText("file cant be compiled " +process.getErrorStream());
+                        return;
+                    }
+                } catch (IOException ex) {
+                    System.out.println("Exception : "+ex);
+                }
+                //file is compile and runnable a file is created
+                exit=1;
+                
+            }*/
+        
+    }
+    void download(){
+    String[] S = new String[6];
+    
+        try {
+            for (int i = 0; i < 6; i++) {
+            System.out.println(S[i] = in.readLine());}
+             PreparedStatement pst;
+            ResultSet rs;
+            System.out.println("reached here");
+            String sql = "INSERT INTO problemscf (ID,name,statement,input,output,tags) VALUES (?,?,?,?,?,?) ";
+            pst = con.prepareStatement(sql);
+            System.out.println("reached here");
+
+            pst.setString(1, S[0]);
+            pst.setString(2, S[1]);
+            pst.setString(3, S[2]);
+            pst.setString(4, S[3]);
+            pst.setString(5, S[4]);
+            pst.setString(6, S[5]);
+            int j = pst.executeUpdate();
+
+            if (j >= 1) {
+                System.out.println("problem updated successfully");
+                out.println("1");
+            } else {
+                System.out.println("problem update unsuccessful");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(HandleClient.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(HandleClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            }
+    
+    
      void register() {
         String[] s = new String[6];
         int i;

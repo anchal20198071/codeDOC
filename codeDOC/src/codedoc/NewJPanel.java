@@ -38,8 +38,8 @@ import javax.swing.text.JTextComponent;
  */
 public class NewJPanel extends javax.swing.JPanel {
     public String ClientIDToShare;
-    PrintWriter out;
-    BufferedReader in;
+    PrintWriter out ,outglobal;
+    BufferedReader in ,inglobal;
     int k = 0;
     int l= 1;
     private Document model;
@@ -53,6 +53,7 @@ public class NewJPanel extends javax.swing.JPanel {
      */
 
 static Boolean firstword=true;
+Socket socglobal;
     int exit=0;
     int sec=0;
     public static String path=null;
@@ -78,6 +79,10 @@ static Boolean firstword=true;
             soc = new Socket("localhost", 9886);
             out=new PrintWriter(soc.getOutputStream(),true);
             in = new BufferedReader(new InputStreamReader(soc.getInputStream()));
+            
+            socglobal = new Socket("localhost", 9886);
+            outglobal=new PrintWriter(socglobal.getOutputStream(),true);
+            inglobal = new BufferedReader(new InputStreamReader(socglobal.getInputStream()));
             
         }
          catch (Exception ex)
@@ -197,6 +202,7 @@ static Boolean firstword=true;
         jScrollPane7 = new javax.swing.JScrollPane();
         getoutput = new javax.swing.JTextArea();
         timer = new javax.swing.JTextField();
+        globalcompilebutton = new javax.swing.JButton();
         jScrollPane5 = new javax.swing.JScrollPane();
         typeMessg = new javax.swing.JTextArea();
         privateChat = new javax.swing.JButton();
@@ -209,6 +215,7 @@ static Boolean firstword=true;
         lineTable = new javax.swing.JTable();
         searchTextField = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(102, 102, 0));
 
@@ -248,7 +255,7 @@ static Boolean firstword=true;
                 .addComponent(languageSelector, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(autoComplete, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(596, 596, 596)
+                .addGap(608, 608, 608)
                 .addComponent(press)
                 .addGap(18, 18, 18)
                 .addComponent(release)
@@ -417,39 +424,47 @@ static Boolean firstword=true;
             }
         });
 
+        globalcompilebutton.setText("Global Compile & Run");
+        globalcompilebutton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                globalcompilebuttonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(117, 117, 117)
+                .addGap(29, 29, 29)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(38, 38, 38)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(compileAndRun1))
+                        .addGap(35, 35, 35)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(compileAndRun1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(globalcompilebutton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(45, 45, 45)
+                        .addGap(72, 72, 72)
                         .addComponent(timer, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(95, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(compileAndRun1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(timer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(34, 34, 34))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(compileAndRun1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(globalcompilebutton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(timer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(3, 3, 3))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -520,6 +535,13 @@ static Boolean firstword=true;
             }
         });
 
+        jButton3.setText("ONLINE");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -545,6 +567,10 @@ static Boolean firstword=true;
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(privateChat)))
                 .addGap(48, 48, 48))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(405, 405, 405)
+                .addComponent(jButton3)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createSequentialGroup()
@@ -558,7 +584,9 @@ static Boolean firstword=true;
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(94, Short.MAX_VALUE)
+                .addGap(56, 56, 56)
+                .addComponent(jButton3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -581,8 +609,8 @@ static Boolean firstword=true;
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(37, 37, 37)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(213, Short.MAX_VALUE)))
@@ -790,8 +818,9 @@ static Boolean firstword=true;
 
             ProcessBuilder processBuilder = new ProcessBuilder();
             Process process=null;
+            
             if (isWindows) {
-                processBuilder.command("cmd.exe", "/c", "gcc",FILE_LOCATION1);
+                processBuilder.command("cmd.exe","/c", "gcc",FILE_LOCATION1);
             } else {
                 processBuilder.command("sh", "-c", "ls");
             }
@@ -823,7 +852,7 @@ static Boolean firstword=true;
             }
 
             if (isWindows) {
-                processBuilder.command("cmd.exe", "/c", "a");
+                processBuilder.command("cmd.exe", "/c","a");
             } else {
                 processBuilder.command("sh", "-c", "ls");
             }
@@ -859,6 +888,7 @@ static Boolean firstword=true;
 //                setTitle(filename);
                 fileWriter.close();
             } catch (IOException e) {
+                exit=1;
                 System.out.println("file not found");
             }
             //created a file successfully in the folder where project is cloned
@@ -876,12 +906,12 @@ static Boolean firstword=true;
 
             try {
                 process = processBuilder.start();
-                BufferedReader br=new BufferedReader(new InputStreamReader(process.getInputStream()));//getting the output
+                /*BufferedReader br=new BufferedReader(new InputStreamReader(process.getInputStream()));//getting the output
                 String coutput;
                 while((coutput=br.readLine())!=null)
                 {
                     System.out.println(coutput);
-                }
+                }*/
 
             } catch (IOException ex) {
                 System.out.println("file not found");
@@ -907,6 +937,8 @@ static Boolean firstword=true;
                 process = processBuilder.start();
                 OutputStream os=process.getOutputStream();
                 PrintStream ps = new PrintStream(os);//if we want to send some input
+                ps.println(getinput.getText());
+                ps.flush();
                 BufferedReader br=new BufferedReader(new InputStreamReader(process.getInputStream()));//getting the output
                 String coutput;
                 while((coutput=br.readLine())!=null)
@@ -1267,6 +1299,68 @@ static Boolean firstword=true;
         }
     }//GEN-LAST:event_compiletextboxCaretUpdate
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void globalcompilebuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_globalcompilebuttonActionPerformed
+        // TODO add your handling code here:
+        
+            
+outglobal.println("global compile");
+
+        exit=0;
+        String a = languageSelector.getSelectedItem().toString();
+        //get the preffered language from user
+        outglobal.println(a);
+        
+        int gotsec=Integer.valueOf(timer.getText());
+
+        /*Thread th8;
+        th8= new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                sec=0;
+                while(sec<gotsec && exit==0)
+                {
+                    try {
+                        Thread.sleep(1000);
+                        sec++;
+                        timer.setText(Integer.toString(sec));
+                    } catch (InterruptedException ex) {
+                        System.out.println("Exception : "+ex);
+                    }
+                } 
+                if(gotsec<=sec)
+                {
+                    getoutput.setText("TLE");
+                    return;
+                } 
+
+            }
+        }
+        );
+        th8.start();*/
+        
+        
+    try {
+        String code=compiletextbox.getText();
+        code=code.replaceAll("\n", "~");
+        outglobal.println(code);
+        String input=getinput.getText();
+        input=input.replaceAll("\n", "~");
+        outglobal.println(input);
+        String output=inglobal.readLine();
+        output.replaceAll("~","\n");
+        getoutput.setText(output);
+    } catch (IOException ex) {
+        java.util.logging.Logger.getLogger(NewJPanel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    }
+        
+        
+    }//GEN-LAST:event_globalcompilebuttonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Open;
@@ -1277,8 +1371,10 @@ static Boolean firstword=true;
     private javax.swing.JButton editDoc;
     private javax.swing.JTextArea getinput;
     private javax.swing.JTextArea getoutput;
+    private javax.swing.JButton globalcompilebutton;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JPanel jPanel1;

@@ -47,7 +47,9 @@ public class CodeDoc extends javax.swing.JFrame {
         jtp.addTab("", null);
         jtp.setTabComponentAt(0, button);
         PrivateChatPanel pc= new PrivateChatPanel();
+        CodeforcePanel pc1=new CodeforcePanel();
         jtp.addTab("Chat", pc);
+        jtp.addTab("codeforce",pc1);
         jtp.addTab("CodeDoc", new NewJPanel());
         this.add(jtp);
         
