@@ -52,6 +52,8 @@ public class NewJPanel extends javax.swing.JPanel {
     public Socket soc;
     public String code="";
     boolean startCollab= false;
+    
+    String tabName;
     /**
      * Creates new form CodeDoc
      */
@@ -73,7 +75,8 @@ static Boolean firstword=true;
     MyTrie trieobj=new MyTrie();
     String x="";
     //constructor intialising socket ,in, out objects and running thread for accepting input for group chat and collaboratory
-    public NewJPanel() {
+    public NewJPanel(String tabName) {
+        this.tabName= tabName;
         trieobj.initialwords();
       
         try
