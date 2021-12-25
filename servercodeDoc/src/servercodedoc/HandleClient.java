@@ -109,6 +109,10 @@ public class HandleClient implements Runnable {
                 System.out.println("Unshare Key Pressed");
                 unshare();
             }
+            else if(choice.equals("Release")){
+                System.out.println("Release Key Pressed");
+                release();
+            }
             else if(choice.equals("Share Button Clicked")){
                 System.out.println("share button clicked");
                 try {
@@ -406,9 +410,9 @@ public class HandleClient implements Runnable {
         String collabCode= in.readLine();
         String combinedText = in.readLine();
         
-        for (PrintWriter entry : ServercodeDoc.pair.get(collabCode)){
+        for (ClientTabIdentification entry : ServercodeDoc.pair.get(collabCode)){
             System.out.println("Sending m");
-            entry.println(combinedText);
+            entry.out.println(combinedText);
         }
             
     }
@@ -418,7 +422,7 @@ public class HandleClient implements Runnable {
         String newCode = adminEmail + getAlphaNumericString(5);
         System.out.println("Admin code generated: "+newCode);
         ServercodeDoc.pair.put(newCode, new HashSet<>());
-        ServercodeDoc.pair.get(newCode).add(out);
+        ServercodeDoc.pair.get(newCode).add(new ClientTabIdentification(out, adminEmail));
         
         ServercodeDoc.collabAdmin.put(newCode, out);
         
@@ -427,10 +431,36 @@ public class HandleClient implements Runnable {
         System.out.println("Sent the code to the admin client");
     }
     
-    void unshare() throws IOException{
+    void unshare() throws IOException, Exception{
         String code= in.readLine();
-        ServercodeDoc.pair.get(code).remove(out);
-        if(ServercodeDoc.pair.get(code).size() == 1 || ServercodeDoc.pair.get(code).size() == 0){
+        String id= in.readLine();
+        
+        for(ClientTabIdentification entry: ServercodeDoc.pair.get(code)){
+            if(entry.clientId.equals(id)){
+                entry.out.println(EncryptDecrypt.encrypt("Removed")); //iska case handle krna hai  client side
+                ServercodeDoc.pair.get(code).remove(entry);
+            }
+        }
+        
+//        ServercodeDoc.pair.get(code).remove(out);
+//        if(ServercodeDoc.pair.get(code).size() == 1 || ServercodeDoc.pair.get(code).size() == 0){
+//            ServercodeDoc.pair.remove(code);
+//        }
+    }
+    void release() throws IOException, Exception{
+        String code= in.readLine();
+        String id= in.readLine();
+        
+        for(ClientTabIdentification entry: ServercodeDoc.pair.get(code)){
+            if(entry.out.equals(out)){
+                //send notification to admin
+                ServercodeDoc.collabAdmin.get(code).println(EncryptDecrypt.encrypt("Released")); //Encrypt-decrypt
+                ServercodeDoc.collabAdmin.get(code).println(EncryptDecrypt.encrypt(id));
+                ServercodeDoc.pair.get(code).remove(entry);
+            }
+        }
+        
+        if(ServercodeDoc.pair.get(code).size() == 0){
             ServercodeDoc.pair.remove(code);
         }
     }
@@ -440,11 +470,11 @@ public class HandleClient implements Runnable {
         
         //PERMISSION ALERT
         String requestEmail = in.readLine();
-        String message= "COLLAB PERMISSION ALERT"+"User "+requestEmail+" wants to Join Your Collaboratory!";
+        String message= "COLLAB PERMISSION ALERT"+"User "+requestEmail+" wants to Join Your Collaboratory! \nPlease Verify!!";
         message= EncryptDecrypt.encrypt(message);
         ServercodeDoc.requestList.put(out, code);
         ServercodeDoc.collabAdmin.get(code).println(message); //send request to the collab admin
-        
+        ServercodeDoc.collabAdmin.get(code).println(EncryptDecrypt.encrypt(requestEmail));
 //        System.out.println("Join collab code received at server: "+code);
 //        ServercodeDoc.pair.get(code).add(out);
     }
@@ -452,13 +482,14 @@ public class HandleClient implements Runnable {
     void verifyRequest() throws Exception{
         String status= in.readLine();
         String code= in.readLine();
+        String client= in.readLine();
         
         for (Map.Entry<PrintWriter,String> entry : ServercodeDoc.requestList.entrySet()){
             if(entry.getValue().equals(code)){
                 if(status.equals("1")){
                     entry.getKey().println(EncryptDecrypt.encrypt("COLLAB VERIFICATION ALERT1"));
                     System.out.println("Join collab code received at server: "+code);
-                    ServercodeDoc.pair.get(code).add(entry.getKey());
+                    ServercodeDoc.pair.get(code).add(new ClientTabIdentification(entry.getKey(), client));
                 }
                 else{
                      entry.getKey().println(EncryptDecrypt.encrypt("COLLAB VERIFICATION ALERT0"));
@@ -504,12 +535,12 @@ public class HandleClient implements Runnable {
             String mssg; 
             mssg= in.readLine();
             
-            for (PrintWriter entry : ServercodeDoc.pair.get(collabCode)){
+            for (ClientTabIdentification entry : ServercodeDoc.pair.get(collabCode)){
            
                 //if(entry.getValue() == 1){
                     String codedMessage = "*chatArea*"+EncryptDecrypt.decrypt(mssg);
                     codedMessage= EncryptDecrypt.encrypt(codedMessage);
-                    entry.println(codedMessage);
+                    entry.out.println(codedMessage);
                 //}
             }
         } catch (IOException ex) {
