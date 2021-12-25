@@ -6,7 +6,9 @@
 package codedoc;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.Window;
+import static java.awt.event.KeyEvent.VK_SPACE;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
@@ -22,8 +24,11 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.Caret;
@@ -48,6 +53,10 @@ public class NewJPanel extends javax.swing.JPanel {
     boolean codeArea= false;
     boolean chatArea= false;
     public Socket soc;
+    public String code="";
+    boolean startCollab= false;
+    private DefaultListModel mod;
+    boolean update= true;
     /**
      * Creates new form CodeDoc
      */
@@ -72,7 +81,7 @@ Socket socglobal;
     //constructor intialising socket ,in, out objects and running thread for accepting input for group chat and collaboratory
     public NewJPanel() {
         trieobj.initialwords();
-      
+        
         try
         { 
             
@@ -88,6 +97,16 @@ Socket socglobal;
          catch (Exception ex)
         {System.out.println("Exception : " + ex);}
         initComponents();
+        
+        System.out.println(1);
+        menu.add(panel);
+        System.out.println(2);
+        mod= new DefaultListModel();
+        System.out.println(3);
+        list.setModel(mod);
+        System.out.println(4);
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        System.out.println(5);
         
         Thread serverResponse = new Thread(new Runnable() {
             @Override
@@ -110,13 +129,22 @@ Socket socglobal;
                             typeMessg.setText("");
                             
                         }
-                        else if(k == 1){
+                        else if(k == 1 && startCollab == true){
+                            
                             compiletextbox.setText(text);
+                            
                             if(sender == true){
                                 int len= compiletextbox.getText().length();
                                 compiletextbox.setCaretPosition(len);
                                 sender= false;
                             }
+                        }
+                        else{
+                            code= text;
+                            startCollab = true;
+                            new displayCollabCode(code).show();
+                            //System.out.println("Code aa gya idhar, and Code : "+code);
+                            //JOptionPane.showMessageDialog(null, "Your Collaboration Key is: "+code);
                         }
                             
                         }
@@ -176,12 +204,15 @@ Socket socglobal;
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        panel = new javax.swing.JPanel();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        list = new javax.swing.JList<>();
+        menu = new javax.swing.JPopupMenu();
         jPanel3 = new javax.swing.JPanel();
         languageSelector = new javax.swing.JComboBox<>();
         autoComplete = new javax.swing.JCheckBox();
         press = new javax.swing.JButton();
         release = new javax.swing.JButton();
-        logout = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
         compiletextbox = new javax.swing.JTextArea();
@@ -195,6 +226,7 @@ Socket socglobal;
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         Open = new javax.swing.JButton();
+        fontSettings = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         getinput = new javax.swing.JTextArea();
@@ -207,15 +239,33 @@ Socket socglobal;
         typeMessg = new javax.swing.JTextArea();
         privateChat = new javax.swing.JButton();
         sendMessage = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        output = new javax.swing.JTextArea();
         jScrollPane4 = new javax.swing.JScrollPane();
         chatSection = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         lineTable = new javax.swing.JTable();
         searchTextField = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        joinCollab = new javax.swing.JButton();
+
+        list.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listMouseClicked(evt);
+            }
+        });
+        jScrollPane8.setViewportView(list);
+
+        javax.swing.GroupLayout panelLayout = new javax.swing.GroupLayout(panel);
+        panel.setLayout(panelLayout);
+        panelLayout.setHorizontalGroup(
+            panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
+        );
+        panelLayout.setVerticalGroup(
+            panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+        );
+
+        menu.setFocusable(false);
 
         setBackground(new java.awt.Color(102, 102, 0));
 
@@ -225,7 +275,7 @@ Socket socglobal;
 
         autoComplete.setText("Autocomplete");
 
-        press.setText("Press");
+        press.setText("Start Collaboration");
         press.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 pressActionPerformed(evt);
@@ -233,16 +283,10 @@ Socket socglobal;
         });
 
         release.setText("Release");
+        release.setEnabled(false);
         release.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 releaseActionPerformed(evt);
-            }
-        });
-
-        logout.setText("Logout");
-        logout.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                logoutActionPerformed(evt);
             }
         });
 
@@ -255,12 +299,10 @@ Socket socglobal;
                 .addComponent(languageSelector, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(autoComplete, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(608, 608, 608)
+                .addGap(324, 324, 324)
                 .addComponent(press)
-                .addGap(18, 18, 18)
+                .addGap(290, 290, 290)
                 .addComponent(release)
-                .addGap(18, 18, 18)
-                .addComponent(logout)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -271,8 +313,7 @@ Socket socglobal;
                     .addComponent(languageSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(autoComplete)
                     .addComponent(press)
-                    .addComponent(release)
-                    .addComponent(logout))
+                    .addComponent(release))
                 .addContainerGap())
         );
 
@@ -288,6 +329,9 @@ Socket socglobal;
         compiletextbox.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 compiletextboxKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                compiletextboxKeyReleased(evt);
             }
         });
         jScrollPane6.setViewportView(compiletextbox);
@@ -361,6 +405,13 @@ Socket socglobal;
             }
         });
 
+        fontSettings.setText("Font");
+        fontSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fontSettingsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -376,7 +427,9 @@ Socket socglobal;
                 .addComponent(saveDoc)
                 .addGap(18, 18, 18)
                 .addComponent(Open)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 230, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(fontSettings)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 159, Short.MAX_VALUE)
                 .addComponent(shareButton)
                 .addGap(18, 18, 18)
                 .addComponent(jButton2)
@@ -399,7 +452,8 @@ Socket socglobal;
                     .addComponent(jButton2)
                     .addComponent(jButton4)
                     .addComponent(jButton5)
-                    .addComponent(Open))
+                    .addComponent(Open)
+                    .addComponent(fontSettings))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -486,11 +540,6 @@ Socket socglobal;
             }
         });
 
-        output.setEditable(false);
-        output.setColumns(20);
-        output.setRows(5);
-        jScrollPane1.setViewportView(output);
-
         chatSection.setEditable(false);
         chatSection.setColumns(20);
         chatSection.setRows(5);
@@ -535,10 +584,10 @@ Socket socglobal;
             }
         });
 
-        jButton3.setText("ONLINE");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        joinCollab.setText("Join Collab");
+        joinCollab.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                joinCollabActionPerformed(evt);
             }
         });
 
@@ -549,44 +598,40 @@ Socket socglobal;
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36))
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(joinCollab)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(36, 36, 36)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(sendMessage)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(privateChat)))
                 .addGap(48, 48, 48))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(405, 405, 405)
-                .addComponent(jButton3)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createSequentialGroup()
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE))
-                .addGroup(layout.createSequentialGroup()
                     .addGap(58, 58, 58)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(56, 56, 56)
-                .addComponent(jButton3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                .addContainerGap(57, Short.MAX_VALUE)
+                .addComponent(joinCollab)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -602,9 +647,7 @@ Socket socglobal;
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(sendMessage)
-                            .addComponent(privateChat))
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(privateChat))))
                 .addGap(99, 99, 99))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -690,26 +733,32 @@ Socket socglobal;
             caret.moveDot(pos);
         }
     }
+    
     // to start collaborating 
     private void pressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pressActionPerformed
 
         out.println("Share Button Clicked");
+        out.println(LoginWindow.userId);
         l= 0;
         k = 1;
-
+        
+        press.setEnabled(false);
+        joinCollab.setEnabled(false);
+        release.setEnabled(true);
     }//GEN-LAST:event_pressActionPerformed
 //to end collaborating
     private void releaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_releaseActionPerformed
         // TODO add your handling code here:
         k= 0;
+        startCollab= false;
+        System.out.println("Unshare key button pressed");
         out.println("Unshare");
+        out.println(code);
+        
+        release.setEnabled(false);
+        press.setEnabled(true);
+        joinCollab.setEnabled(true);
     }//GEN-LAST:event_releaseActionPerformed
-
-    private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
-        // TODO add your handling code here:
-        out.println("logout");
-        this.setVisible(false);
-    }//GEN-LAST:event_logoutActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
@@ -1119,7 +1168,7 @@ Socket socglobal;
         if(messg.equals("")){
             JOptionPane.showMessageDialog(null, "Please Type a Message");
         }
-        else{
+        else if(messg!= null){
             String mailId= JOptionPane.showInputDialog("Type email ID of person:");
             out.println(mailId);
 
@@ -1164,6 +1213,7 @@ Socket socglobal;
             chatSection.setCaretPosition(length);
 
             out.println("Send Message");
+            out.println(code);
             try {
                 
                 out.println(EncryptDecrypt.encrypt(LoginWindow.userId +" : "+messg));
@@ -1196,18 +1246,14 @@ Socket socglobal;
     }//GEN-LAST:event_compiletextboxKeyPressed
 // collaboration ,highlight and recommender 
     private void compiletextboxCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_compiletextboxCaretUpdate
-
+        System.out.println("Inside compiletextboxCaretUpdate");
         // TODO add your handling code here:
-        removeHighlight(compiletextbox);
-
-        displayLine(compiletextbox.getLineCount()); //For displaying line count
-
-        // TODO add your handling code here:
-        if(k == 1 && l== 0 && sender == false){
+        if(k == 1 && l== 0 && sender == false && update== true){
             sender= true;
             out.println("Key Pressed");
+            out.println(code);
             String text = compiletextbox.getText();
-
+            System.out.println("text sending to server : "+text);
             text = text.replaceAll("\n", "~");
             try {
                 out.println(EncryptDecrypt.encrypt(text));
@@ -1217,9 +1263,211 @@ Socket socglobal;
 
         }
         
-        output.setText("");
+
+        removeHighlight(compiletextbox);
+
+//        displayLine(compiletextbox.getLineCount()); //For displaying line count
+
+//        output.setText("");
+//        currpos=compiletextbox.getCaretPosition();
+//        System.out.println("it is "+currpos +" "+prevpos);
+//
+//        output.setText("");
+//        currpos=compiletextbox.getCaretPosition();
+//        //System.out.println("it is"+currpos +prevpos);
+//
+//        if(prevpos-currpos==1)
+//        {
+//            flag=1;
+//            prevpos=prevpos-1;
+//        }
+//        else if(prevpos-currpos>1)
+//        {
+//            MyTrie.currnode=trieobj;
+//        }
+//        else
+//        {
+//            prevpos=currpos;
+//            flag=0;
+//        }
+//        String s=compiletextbox.getText();
+//        int l=s.length();
+//        char ch='a';
+//        
+//        if(l!=0)
+//        ch=s.charAt(l-1);
+//        else
+//        return;
+//
+//        if(((ch>='a' && ch<='z' )|| (ch>='A'&&ch<='Z')) &&flag==0 )
+//        {
+//            
+//            x=x+ch;
+//            Map <String , Integer> arr=new HashMap<>();
+//
+//            arr=trieobj.searcher(ch ,trieobj);
+//            firstword=false;
+//            if(arr==null)
+//            return;
+//            
+//            //output.setText("");
+//            mod.removeAllElements();
+//            menu.setVisible(false);
+//            int cnt= 0;
+//            
+//            for (Map.Entry mapElement : arr.entrySet())
+//            {
+//                //output.setText(output.getText()+(String)mapElement.getKey() +" ");
+//                mod.addElement((String)mapElement.getKey());
+//                cnt++;
+//            }
+//            
+//            //if(cnt != 0){
+//                int x= 0, y=0;
+//                try{
+//                    Point p= compiletextbox.getCaret().getMagicCaretPosition();
+//                    y= p.y; x= p.x;               //txt.getHeight();
+//                    System.out.println("x: "+x+" y: "+y);
+//                }
+//                catch(Exception e){
+//                    System.out.println("EXCEPTION THROWN");
+//                }
+//                finally{
+//                    menu.show(compiletextbox, x, y+19);
+//                }
+//            //}
+//
+//        }
+//        else if(flag==1 )//backspace is pushed
+//        {
+//
+//            //System.out.println("here");
+//
+//           // System.out.println("here");
+//
+//            Map <String , Integer> arr = new HashMap <>();
+//
+//            if(x.length()>0)
+//            x=x.substring(0, x.length() - 1);
+//
+//            if(MyTrie.currnode!=null && MyTrie.currnode.parent!=null)
+//            {
+//                MyTrie.currnode=MyTrie.currnode.parent.parent;
+//
+//                arr =trieobj.searcher(ch,trieobj);
+//                //output.setText("");
+//                mod.removeAllElements();
+//                menu.setVisible(false);
+//            }
+//            if(arr==null)
+//            return;
+//            
+//            int cnt = 0;
+//            for (Map.Entry mapElement : arr.entrySet())
+//            {
+//
+//                //output.setText(output.getText()+(String)mapElement.getKey() +" ");
+//                mod.addElement((String)mapElement.getKey());
+//                cnt++;
+//            }
+//            //if(cnt != 0){
+//                Point p = null;
+//                try{
+//                    p= compiletextbox.getCaret().getMagicCaretPosition();
+//                    System.out.println("P VALA LINE EXECUTED");
+//                }
+//                catch(Exception e){
+//                    System.out.println("EXCEPTION THROWN");
+//                }
+//                finally{
+//                    int y= p.y, x= p.x;               //txt.getHeight();
+//                    System.out.println("x: "+x+" y: "+y);
+//                    menu.show(compiletextbox, x, y+19);
+//                }
+//                
+//            //}
+//        }
+//        else //if we took the word from table it shouldnt be inserted only currnode should be
+//        //made equal to trie obj,its is a newqord if it is after a digit enter or first word
+//        {
+//            if(!(x==""))
+//            {
+//                //System.out.println("called");
+//            trieobj.inserter(x);
+//            }
+//            x="";
+//            firstword=true;
+//            MyTrie.currnode=trieobj;
+//        }
+    }//GEN-LAST:event_compiletextboxCaretUpdate
+
+    private void joinCollabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinCollabActionPerformed
+        
+        code = JOptionPane.showInputDialog("Please Enter Collaboration Key:");
+        if(code != null){
+            k= 1;
+            l= 0;
+            startCollab= true;
+            out.println("Join Collaboration");
+            out.println(code);
+
+            joinCollab.setEnabled(false);
+            press.setEnabled(false);
+            release.setEnabled(true);
+        }
+    }//GEN-LAST:event_joinCollabActionPerformed
+
+    private void listMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listMouseClicked
+        //System.out.println("bit clicked");
+        String valSelected = list.getSelectedValue();
+        //System.out.println("mouse clicked: "+valSelected);
+        menu.setVisible(false);
+        
+        String data= compiletextbox.getText();
+        data= data.replaceAll("\n", "~");
+        int y= compiletextbox.getCaretPosition();
+        String right= data.substring(y);
+        
+        y= y-1;
+        while(y >= 0 && data.charAt(y) != ' ' && data.charAt(y) != '~' && Character.isLetter(data.charAt(y))){
+            y--;
+        }
+        
+        String left= "";
+        if(y>= 0) left= data.substring(0, y+1);
+        
+        //System.out.println("Printing info");
+        //System.out.println(left);
+        //System.out.println(right);
+        
+        data= left+valSelected+right;
+        //System.out.println("data: "+data);
+        data= data.replaceAll("~", "\n");
+        System.out.println("data is "+data);
+        
+        update= false;
+        compiletextbox.setText(data);
+        update= true;
+        
+            //System.out.println("moving caret position");
+          compiletextbox.setCaretPosition(compiletextbox.getText().length());
+//            System.out.println("moved caret position");
+        
+    }//GEN-LAST:event_listMouseClicked
+
+    
+    private void compiletextboxKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_compiletextboxKeyReleased
+       
+        //if(evt.getKeyCode() != VK_SPACE) {
+        mod.removeAllElements();
+        menu.setVisible(false);
+        currpos=compiletextbox.getCaretPosition();
+        System.out.println("it is "+currpos +" "+prevpos);
+
+        
         currpos=compiletextbox.getCaretPosition();
         //System.out.println("it is"+currpos +prevpos);
+
         if(prevpos-currpos==1)
         {
             flag=1;
@@ -1254,17 +1502,28 @@ Socket socglobal;
             if(arr==null)
             return;
             
-            output.setText("");
+            //output.setText("");
+//            mod.removeAllElements();
+//            menu.setVisible(false);
+            int cnt= 0;
+            
             for (Map.Entry mapElement : arr.entrySet())
             {
-
-                output.setText(output.getText()+(String)mapElement.getKey() +" ");
+                //output.setText(output.getText()+(String)mapElement.getKey() +" ");
+                mod.addElement((String)mapElement.getKey());
+                cnt++;
             }
+            
+            Point p= compiletextbox.getCaret().getMagicCaretPosition();
+            int y= p.y, x= p.x;               //txt.getHeight();
+            System.out.println("x: "+x+" y: "+y);
 
+            menu.show(compiletextbox, x, y+19);
+               
         }
         else if(flag==1 )//backspace is pushed
         {
-           // System.out.println("here");
+           
             Map <String , Integer> arr = new HashMap <>();
 
             if(x.length()>0)
@@ -1275,15 +1534,30 @@ Socket socglobal;
                 MyTrie.currnode=MyTrie.currnode.parent.parent;
 
                 arr =trieobj.searcher(ch,trieobj);
-                output.setText("");
+                //output.setText("");
+                
             }
             if(arr==null)
             return;
+            
+//            mod.removeAllElements();
+//            menu.setVisible(false);
+            
+            int cnt = 0;
             for (Map.Entry mapElement : arr.entrySet())
             {
 
-                output.setText(output.getText()+(String)mapElement.getKey() +" ");
+                //output.setText(output.getText()+(String)mapElement.getKey() +" ");
+                mod.addElement((String)mapElement.getKey());
+                cnt++;
             }
+            
+            Point p= compiletextbox.getCaret().getMagicCaretPosition();
+           
+            int y= p.y, x= p.x;               //txt.getHeight();
+            System.out.println("x: "+x+" y: "+y);
+            menu.show(compiletextbox, x, y+19);
+              
         }
         else //if we took the word from table it shouldnt be inserted only currnode should be
         //made equal to trie obj,its is a newqord if it is after a digit enter or first word
@@ -1297,11 +1571,16 @@ Socket socglobal;
             firstword=true;
             MyTrie.currnode=trieobj;
         }
-    }//GEN-LAST:event_compiletextboxCaretUpdate
+        
+        //}
+        
+    }//GEN-LAST:event_compiletextboxKeyReleased
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    private void fontSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontSettingsActionPerformed
+        FontSettings db= new FontSettings(this);
+        db.show();
+    }//GEN-LAST:event_fontSettingsActionPerformed
+
 
     private void globalcompilebuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_globalcompilebuttonActionPerformed
         // TODO add your handling code here:
@@ -1360,40 +1639,48 @@ outglobal.println("global compile");
         
         
     }//GEN-LAST:event_globalcompilebuttonActionPerformed
-
+public static void main(String args[])
+{
+    JFrame jf;
+    jf=new JFrame();
+    jf.add(new NewJPanel());
+    jf.setVisible(true);
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Open;
     private javax.swing.JCheckBox autoComplete;
     private javax.swing.JTextArea chatSection;
     private javax.swing.JButton compileAndRun1;
-    private javax.swing.JTextArea compiletextbox;
+    public javax.swing.JTextArea compiletextbox;
     private javax.swing.JButton editDoc;
+    private javax.swing.JButton fontSettings;
     private javax.swing.JTextArea getinput;
     private javax.swing.JTextArea getoutput;
     private javax.swing.JButton globalcompilebutton;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JButton joinCollab;
     private javax.swing.JComboBox<String> languageSelector;
     private javax.swing.JTable lineTable;
-    private javax.swing.JButton logout;
+    private javax.swing.JList<String> list;
+    private javax.swing.JPopupMenu menu;
     private javax.swing.JButton newDoc;
-    private javax.swing.JTextArea output;
+    private javax.swing.JPanel panel;
     private javax.swing.JButton press;
     private javax.swing.JButton privateChat;
     private javax.swing.JButton release;

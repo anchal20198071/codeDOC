@@ -13,6 +13,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -31,7 +32,7 @@ BufferedReader in;
 public static ArrayList <HandleClient> clients = new ArrayList<>();
 private ExecutorService pool= Executors.newFixedThreadPool(20);
 Connection con =myc.getConn();
-public static HashMap<PrintWriter, Integer > pair= new HashMap<>();
+public static HashMap<String, HashSet<PrintWriter> > pair= new HashMap<>();
 public static HashMap<String, OnlineUser > userStatus= new HashMap<>();
 
 
