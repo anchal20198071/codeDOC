@@ -221,6 +221,7 @@ static Boolean firstword=true;
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         Open = new javax.swing.JButton();
+        fontSettings = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         getinput = new javax.swing.JTextArea();
@@ -400,6 +401,13 @@ static Boolean firstword=true;
             }
         });
 
+        fontSettings.setText("Font");
+        fontSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fontSettingsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -415,7 +423,9 @@ static Boolean firstword=true;
                 .addComponent(saveDoc)
                 .addGap(18, 18, 18)
                 .addComponent(Open)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 230, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(fontSettings)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 159, Short.MAX_VALUE)
                 .addComponent(shareButton)
                 .addGap(18, 18, 18)
                 .addComponent(jButton2)
@@ -438,7 +448,8 @@ static Boolean firstword=true;
                     .addComponent(jButton2)
                     .addComponent(jButton4)
                     .addComponent(jButton5)
-                    .addComponent(Open))
+                    .addComponent(Open)
+                    .addComponent(fontSettings))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -612,7 +623,7 @@ static Boolean firstword=true;
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(55, Short.MAX_VALUE)
+                .addContainerGap(57, Short.MAX_VALUE)
                 .addComponent(joinCollab)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1557,14 +1568,20 @@ static Boolean firstword=true;
         
     }//GEN-LAST:event_compiletextboxKeyReleased
 
+    private void fontSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontSettingsActionPerformed
+        FontSettings db= new FontSettings(this);
+        db.show();
+    }//GEN-LAST:event_fontSettingsActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Open;
     private javax.swing.JCheckBox autoComplete;
     private javax.swing.JTextArea chatSection;
     private javax.swing.JButton compileAndRun1;
-    private javax.swing.JTextArea compiletextbox;
+    public javax.swing.JTextArea compiletextbox;
     private javax.swing.JButton editDoc;
+    private javax.swing.JButton fontSettings;
     private javax.swing.JTextArea getinput;
     private javax.swing.JTextArea getoutput;
     private javax.swing.JButton jButton1;

@@ -25,6 +25,8 @@ import javax.swing.text.Document;
  *
  * @author lenovo
  */
+
+//NEW ONE
 public class CodeDoc extends javax.swing.JFrame {
     PrintWriter out;
     BufferedReader in;
