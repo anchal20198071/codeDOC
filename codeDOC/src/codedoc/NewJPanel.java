@@ -71,7 +71,7 @@ Socket socglobal;
      private static final String FILE_LOCATION3 ="Desktop\\december\\codeDOC\\codeDOC\\arya.cpp";
      
      private static final String FILE_LOCATION4 ="Desktop\\december\\codeDOC\\codeDOC\\arya.java";
-     
+     int flag1=1;
     /**
      * Creates new form NewJPanel
      */static int currpos=0;
@@ -113,7 +113,7 @@ Socket socglobal;
             public void run() {
                 try {
                     while(true){
-                        String combinedText = in.readLine();
+                        String combinedText = in.readLine(); // read by all in collab
                         try {
                             combinedText= EncryptDecrypt.decrypt(combinedText);
                         } catch (Exception ex) {
@@ -129,17 +129,26 @@ Socket socglobal;
                             typeMessg.setText("");
                             
                         }
-                        else if(k == 1 && startCollab == true){
-                            
+                        else if(k == 1 && startCollab == true )//startcollab is the admin
+                        {
+                            if(sender==false)
+                            {
+                                int i=compiletextbox.getCaretPosition();
+                                 flag1=0;
+                                System.out.println("updating textarea");
                             compiletextbox.setText(text);
                             
+                            compiletextbox.setCaretPosition(i);
+                            flag1=1;
+                            
+                            }
                             if(sender == true){
                                 int len= compiletextbox.getText().length();
                                 compiletextbox.setCaretPosition(len);
                                 sender= false;
                             }
                         }
-                        else{
+                        else{//for collab creation to receive code when created
                             code= text;
                             startCollab = true;
                             new displayCollabCode(code).show();
@@ -1248,15 +1257,17 @@ Socket socglobal;
     private void compiletextboxCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_compiletextboxCaretUpdate
         System.out.println("Inside compiletextboxCaretUpdate");
         // TODO add your handling code here:
-        if(k == 1 && l== 0 && sender == false && update== true){
+        if(k == 1  && sender == false && update== true && flag1==1)//k=1 joined collab ,sender is false initailly becomes true after ,sync with autocomplete
+        {
+            System.out.println("sending to server");
             sender= true;
             out.println("Key Pressed");
-            out.println(code);
+            out.println(code);//collab code
             String text = compiletextbox.getText();
             System.out.println("text sending to server : "+text);
             text = text.replaceAll("\n", "~");
             try {
-                out.println(EncryptDecrypt.encrypt(text));
+                out.println(EncryptDecrypt.encrypt(text));//sent to server side
             } catch (Exception ex) {
                 System.out.println("Exception in encrypting text Area content : "+ex);
             }
@@ -1268,137 +1279,7 @@ Socket socglobal;
 
 //        displayLine(compiletextbox.getLineCount()); //For displaying line count
 
-//        output.setText("");
-//        currpos=compiletextbox.getCaretPosition();
-//        System.out.println("it is "+currpos +" "+prevpos);
-//
-//        output.setText("");
-//        currpos=compiletextbox.getCaretPosition();
-//        //System.out.println("it is"+currpos +prevpos);
-//
-//        if(prevpos-currpos==1)
-//        {
-//            flag=1;
-//            prevpos=prevpos-1;
-//        }
-//        else if(prevpos-currpos>1)
-//        {
-//            MyTrie.currnode=trieobj;
-//        }
-//        else
-//        {
-//            prevpos=currpos;
-//            flag=0;
-//        }
-//        String s=compiletextbox.getText();
-//        int l=s.length();
-//        char ch='a';
-//        
-//        if(l!=0)
-//        ch=s.charAt(l-1);
-//        else
-//        return;
-//
-//        if(((ch>='a' && ch<='z' )|| (ch>='A'&&ch<='Z')) &&flag==0 )
-//        {
-//            
-//            x=x+ch;
-//            Map <String , Integer> arr=new HashMap<>();
-//
-//            arr=trieobj.searcher(ch ,trieobj);
-//            firstword=false;
-//            if(arr==null)
-//            return;
-//            
-//            //output.setText("");
-//            mod.removeAllElements();
-//            menu.setVisible(false);
-//            int cnt= 0;
-//            
-//            for (Map.Entry mapElement : arr.entrySet())
-//            {
-//                //output.setText(output.getText()+(String)mapElement.getKey() +" ");
-//                mod.addElement((String)mapElement.getKey());
-//                cnt++;
-//            }
-//            
-//            //if(cnt != 0){
-//                int x= 0, y=0;
-//                try{
-//                    Point p= compiletextbox.getCaret().getMagicCaretPosition();
-//                    y= p.y; x= p.x;               //txt.getHeight();
-//                    System.out.println("x: "+x+" y: "+y);
-//                }
-//                catch(Exception e){
-//                    System.out.println("EXCEPTION THROWN");
-//                }
-//                finally{
-//                    menu.show(compiletextbox, x, y+19);
-//                }
-//            //}
-//
-//        }
-//        else if(flag==1 )//backspace is pushed
-//        {
-//
-//            //System.out.println("here");
-//
-//           // System.out.println("here");
-//
-//            Map <String , Integer> arr = new HashMap <>();
-//
-//            if(x.length()>0)
-//            x=x.substring(0, x.length() - 1);
-//
-//            if(MyTrie.currnode!=null && MyTrie.currnode.parent!=null)
-//            {
-//                MyTrie.currnode=MyTrie.currnode.parent.parent;
-//
-//                arr =trieobj.searcher(ch,trieobj);
-//                //output.setText("");
-//                mod.removeAllElements();
-//                menu.setVisible(false);
-//            }
-//            if(arr==null)
-//            return;
-//            
-//            int cnt = 0;
-//            for (Map.Entry mapElement : arr.entrySet())
-//            {
-//
-//                //output.setText(output.getText()+(String)mapElement.getKey() +" ");
-//                mod.addElement((String)mapElement.getKey());
-//                cnt++;
-//            }
-//            //if(cnt != 0){
-//                Point p = null;
-//                try{
-//                    p= compiletextbox.getCaret().getMagicCaretPosition();
-//                    System.out.println("P VALA LINE EXECUTED");
-//                }
-//                catch(Exception e){
-//                    System.out.println("EXCEPTION THROWN");
-//                }
-//                finally{
-//                    int y= p.y, x= p.x;               //txt.getHeight();
-//                    System.out.println("x: "+x+" y: "+y);
-//                    menu.show(compiletextbox, x, y+19);
-//                }
-//                
-//            //}
-//        }
-//        else //if we took the word from table it shouldnt be inserted only currnode should be
-//        //made equal to trie obj,its is a newqord if it is after a digit enter or first word
-//        {
-//            if(!(x==""))
-//            {
-//                //System.out.println("called");
-//            trieobj.inserter(x);
-//            }
-//            x="";
-//            firstword=true;
-//            MyTrie.currnode=trieobj;
-//        }
+
     }//GEN-LAST:event_compiletextboxCaretUpdate
 
     private void joinCollabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinCollabActionPerformed
