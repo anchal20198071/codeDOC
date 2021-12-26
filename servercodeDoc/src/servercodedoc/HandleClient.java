@@ -124,6 +124,10 @@ private static final String FILE_LOCATION1 ="Desktop\\december\\codeDOC\\codeDOC
                 System.out.println("Unshare Key Pressed");
                 unshare();
             }
+            else if(choice.equals("Release")){
+                System.out.println("Release Key Pressed");
+                release();
+            }
             else if(choice.equals("Share Button Clicked")){
                 System.out.println("share Key Pressed");
                 try {
@@ -135,6 +139,10 @@ private static final String FILE_LOCATION1 ="Desktop\\december\\codeDOC\\codeDOC
             else if(choice.equals("Join Collaboration")){
                 System.out.println("Join Collaboration");
                 joinCollaboration();
+            }
+            else if(choice.equals("Request Verification")){
+                System.out.println("Request Verification");
+                verifyRequest();
             }
             else if(choice.equals("Send Message")){
                 System.out.println("Send Message");
@@ -159,6 +167,8 @@ private static final String FILE_LOCATION1 ="Desktop\\december\\codeDOC\\codeDOC
             }
 
         } catch (IOException ex) {
+            Logger.getLogger(HandleClient.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(HandleClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -892,9 +902,9 @@ System.out.println("Exception : "+ex);
         String collabCode= in.readLine();
         String combinedText = in.readLine();
         
-        for (PrintWriter entry : ServercodeDoc.pair.get(collabCode)){
+        for (ClientTabIdentification entry : ServercodeDoc.pair.get(collabCode)){
             System.out.println("Sending m");
-            entry.println(combinedText);
+            entry.out.println(combinedText);
         }
             
     }
@@ -904,25 +914,37 @@ System.out.println("Exception : "+ex);
         String newCode = adminEmail + getAlphaNumericString(5);
         System.out.println("Admin code generated: "+newCode);
         ServercodeDoc.pair.put(newCode, new HashSet<>());
-        ServercodeDoc.pair.get(newCode).add(out);
+        ServercodeDoc.pair.get(newCode).add(new ClientTabIdentification(out, adminEmail));
+        
+        ServercodeDoc.collabAdmin.put(newCode, out);
         
         //server sends this code to the user to collaborate with others
         out.println(EncryptDecrypt.encrypt(newCode));
         System.out.println("Sent the code to the admin client");
     }
     
-    void unshare() throws IOException{
+    void unshare() throws IOException, Exception{
         String code= in.readLine();
-        ServercodeDoc.pair.get(code).remove(out);
-        if(ServercodeDoc.pair.get(code).size() == 1 || ServercodeDoc.pair.get(code).size() == 0){
-            ServercodeDoc.pair.remove(code);
+        String id= in.readLine();
+        
+        for(ClientTabIdentification entry: ServercodeDoc.pair.get(code)){
+            if(entry.clientId.equals(id)){
+                entry.out.println(EncryptDecrypt.encrypt("Removed")); //iska case handle krna hai  client side
+                ServercodeDoc.pair.get(code).remove(entry);
+            }
         }
     }
     
-    void joinCollaboration() throws IOException{
+    void joinCollaboration() throws IOException, Exception{
         String code= in.readLine();
-        System.out.println("Join collab code received at server: "+code);
-        ServercodeDoc.pair.get(code).add(out);
+        
+        //PERMISSION ALERT
+        String requestEmail = in.readLine();
+        String message= "COLLAB PERMISSION ALERT"+"User "+requestEmail+" wants to Join Your Collaboratory! \nPlease Verify!!";
+        message= EncryptDecrypt.encrypt(message);
+        ServercodeDoc.requestList.put(out, code);
+        ServercodeDoc.collabAdmin.get(code).println(message); //send request to the collab admin
+        ServercodeDoc.collabAdmin.get(code).println(EncryptDecrypt.encrypt(requestEmail));
     }
     
     static String getAlphaNumericString(int n)
@@ -958,12 +980,12 @@ System.out.println("Exception : "+ex);
             String mssg; 
             mssg= in.readLine();
             
-            for (PrintWriter entry : ServercodeDoc.pair.get(collabCode)){
+            for (ClientTabIdentification entry : ServercodeDoc.pair.get(collabCode)){
            
                 //if(entry.getValue() == 1){
                     String codedMessage = "*chatArea*"+EncryptDecrypt.decrypt(mssg);
                     codedMessage= EncryptDecrypt.encrypt(codedMessage);
-                    entry.println(codedMessage);
+                    entry.out.println(codedMessage);
                 //}
             }
         } catch (IOException ex) {
@@ -996,6 +1018,46 @@ System.out.println("Exception : "+ex);
                     }
             }
         }
+        
+    }
+    
+    void release() throws IOException, Exception{
+        String code= in.readLine();
+        String id= in.readLine();
+        
+        for(ClientTabIdentification entry: ServercodeDoc.pair.get(code)){
+            if(entry.out.equals(out)){
+                //send notification to admin
+                ServercodeDoc.collabAdmin.get(code).println(EncryptDecrypt.encrypt("Released")); //Encrypt-decrypt
+                ServercodeDoc.collabAdmin.get(code).println(EncryptDecrypt.encrypt(id));
+                ServercodeDoc.pair.get(code).remove(entry);
+            }
+        }
+        
+        if(ServercodeDoc.pair.get(code).size() == 0){
+            ServercodeDoc.pair.remove(code);
+        }
+    }
+    
+    void verifyRequest() throws Exception{
+        String status= in.readLine();
+        String code= in.readLine();
+        String client= in.readLine();
+        
+        for (Map.Entry<PrintWriter,String> entry : ServercodeDoc.requestList.entrySet()){
+            if(entry.getValue().equals(code)){
+                if(status.equals("1")){
+                    entry.getKey().println(EncryptDecrypt.encrypt("COLLAB VERIFICATION ALERT1"));
+                    System.out.println("Join collab code received at server: "+code);
+                    ServercodeDoc.pair.get(code).add(new ClientTabIdentification(entry.getKey(), client));
+                }
+                else{
+                     entry.getKey().println(EncryptDecrypt.encrypt("COLLAB VERIFICATION ALERT0"));
+                }
+                
+                ServercodeDoc.requestList.remove(entry.getKey());
+            }
+        } 
         
     }
     

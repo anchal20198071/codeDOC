@@ -28,11 +28,13 @@ import javax.swing.text.Document;
 
 //NEW ONE
 public class CodeDoc extends javax.swing.JFrame {
+    int tabCount = 1;
     PrintWriter out;
     BufferedReader in;
     private Document model;
     private transient Caret caret;
     PrivateChatPanel pc;
+    String tabName="";
     /**
      * Creates new form CodeDoc
      */
@@ -55,8 +57,11 @@ public class CodeDoc extends javax.swing.JFrame {
 
         jtp.addTab("Chat", pc);
         jtp.addTab("codeforce",pc1);
-        jtp.addTab("CodeDoc", new NewJPanel());
+        
+        tabName = "Tab "+Integer.toString(tabCount);
+        jtp.addTab(tabName, new NewJPanel(tabName));
         this.add(jtp);
+        tabCount++;
         
         Thread privateChatThread = new Thread(new Runnable() {
             @Override
@@ -178,11 +183,10 @@ public class CodeDoc extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonActionPerformed
-        //String tabName= JOptionPane.showInputDialog("Enter Tab Name :");
-        //if(tabName != null){
-            jtp.addTab("New Tab", new NewJPanel());
-            this.add(jtp);
-        //}
+        tabName = "Tab "+Integer.toString(tabCount);
+        jtp.addTab(tabName, new NewJPanel(tabName));
+        this.add(jtp);
+        tabCount++;
     }//GEN-LAST:event_buttonActionPerformed
 
     private void jtpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtpMouseClicked

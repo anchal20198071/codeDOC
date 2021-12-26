@@ -28,6 +28,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
+import static javax.swing.JOptionPane.YES_OPTION;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
@@ -60,9 +61,10 @@ public class NewJPanel extends javax.swing.JPanel {
     /**
      * Creates new form CodeDoc
      */
-
-static Boolean firstword=true;
-Socket socglobal;
+    String tabName;
+    DefaultListModel mod1;
+    static Boolean firstword=true;
+    Socket socglobal;
     int exit=0;
     int sec=0;
     public static String path=null;
@@ -79,7 +81,8 @@ Socket socglobal;
     MyTrie trieobj=new MyTrie();
     String x="";
     //constructor intialising socket ,in, out objects and running thread for accepting input for group chat and collaboratory
-    public NewJPanel() {
+    public NewJPanel(String tabName) {
+        this.tabName= tabName;
         trieobj.initialwords();
         
         try
@@ -97,6 +100,11 @@ Socket socglobal;
          catch (Exception ex)
         {System.out.println("Exception : " + ex);}
         initComponents();
+        
+        //for showing list
+        collabMenu.add(collabPanel);
+        mod1= new DefaultListModel();
+        collabList.setModel(mod1);
         
         System.out.println(1);
         menu.add(panel);
@@ -121,8 +129,55 @@ Socket socglobal;
                         }
                         
                         String text= combinedText.replaceAll("~", "\n");
-
-                        if(text.length() > 10 && text.substring(0, 10).equals("*chatArea*")){
+                        System.out.println("Combined text: "+ combinedText);
+                        
+                        if(combinedText.equals("Removed")){
+                            release.setEnabled(false);
+                            press.setEnabled(true);
+                            joinCollab.setEnabled(true);
+                        }
+                        else if(combinedText.equals("Released")){
+                            String clientId= EncryptDecrypt.decrypt(in.readLine());
+                            System.out.println("Client with id: "+clientId+" has released from collab");
+                            mod1.removeElement(clientId);
+                        }
+                        else if(text.length() > 25 && text.substring(0, 25).equals("COLLAB VERIFICATION ALERT")){
+                            System.out.println("Verfication Received");
+                            text= text.substring(25);
+                            if(text.equals("1")){
+                                JOptionPane.showMessageDialog(null, "Collaboratory Joined!");
+                                
+                            }
+                            else{
+                                JOptionPane.showMessageDialog(null, "Admin Rejected Your request");
+                                press.setEnabled(true);
+                                joinCollab.setEnabled(true);
+                                release.setEnabled(false);
+                            }
+                        }
+                        else if(text.length() > 23 && text.substring(0, 23).equals("COLLAB PERMISSION ALERT")){
+                            String client= EncryptDecrypt.decrypt(in.readLine());
+                            System.out.println("client asking for permission: "+client);
+                            System.out.println("Asking for permission");
+                            
+                            text= text.substring(23);
+                            int res= JOptionPane.showConfirmDialog(null, text);
+        
+                            out.println("Request Verification");
+                            if(res == YES_OPTION){                              
+                                out.println("1");
+                                System.out.println("yes pressed");
+                                mod1.addElement(client);
+                            }
+                            else{                               
+                                out.println("0");
+                                System.out.println("No pressed");
+                            }
+                            out.println(code);
+                            out.println(client);
+                        }
+                        
+                        else if(text.length() > 10 && text.substring(0, 10).equals("*chatArea*")){
                             String code= text.substring(0, 10);
                             text= text.substring(10);
                             chatSection.append(text+"\n");
@@ -137,8 +192,9 @@ Socket socglobal;
                                  flag1=0;
                                 System.out.println("updating textarea");
                             compiletextbox.setText(text);
-                            
-                            compiletextbox.setCaretPosition(i);
+                            if(i> text.length()-1)
+                                compiletextbox.setCaretPosition(text.length());
+                            else compiletextbox.setCaretPosition(i);
                             flag1=1;
                             
                             }
@@ -160,7 +216,9 @@ Socket socglobal;
                     }
                  catch (IOException ex) {
                     System.out.println("Exception thrown : +"+ex);
-                  }
+                  } catch (Exception ex) {
+                    java.util.logging.Logger.getLogger(NewJPanel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                }
                 }
             });
             serverResponse.start();
@@ -217,6 +275,10 @@ Socket socglobal;
         jScrollPane8 = new javax.swing.JScrollPane();
         list = new javax.swing.JList<>();
         menu = new javax.swing.JPopupMenu();
+        collabPanel = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        collabList = new javax.swing.JList<>();
+        collabMenu = new javax.swing.JPopupMenu();
         jPanel3 = new javax.swing.JPanel();
         languageSelector = new javax.swing.JComboBox<>();
         autoComplete = new javax.swing.JCheckBox();
@@ -236,6 +298,7 @@ Socket socglobal;
         jButton5 = new javax.swing.JButton();
         Open = new javax.swing.JButton();
         fontSettings = new javax.swing.JButton();
+        collaborationList = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         getinput = new javax.swing.JTextArea();
@@ -275,6 +338,24 @@ Socket socglobal;
         );
 
         menu.setFocusable(false);
+
+        collabList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                collabListMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(collabList);
+
+        javax.swing.GroupLayout collabPanelLayout = new javax.swing.GroupLayout(collabPanel);
+        collabPanel.setLayout(collabPanelLayout);
+        collabPanelLayout.setHorizontalGroup(
+            collabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
+        );
+        collabPanelLayout.setVerticalGroup(
+            collabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
+        );
 
         setBackground(new java.awt.Color(102, 102, 0));
 
@@ -421,6 +502,13 @@ Socket socglobal;
             }
         });
 
+        collaborationList.setText("See List of Collaborated Users");
+        collaborationList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                collaborationListActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -446,7 +534,9 @@ Socket socglobal;
                 .addComponent(jButton4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton5)
-                .addGap(525, 525, 525))
+                .addGap(97, 97, 97)
+                .addComponent(collaborationList, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(245, 245, 245))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -462,7 +552,8 @@ Socket socglobal;
                     .addComponent(jButton4)
                     .addComponent(jButton5)
                     .addComponent(Open)
-                    .addComponent(fontSettings))
+                    .addComponent(fontSettings)
+                    .addComponent(collaborationList))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -747,7 +838,7 @@ Socket socglobal;
     private void pressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pressActionPerformed
 
         out.println("Share Button Clicked");
-        out.println(LoginWindow.userId);
+        out.println(LoginWindow.userId+" - "+tabName);
         l= 0;
         k = 1;
         
@@ -761,8 +852,9 @@ Socket socglobal;
         k= 0;
         startCollab= false;
         System.out.println("Unshare key button pressed");
-        out.println("Unshare");
+        out.println("Release");
         out.println(code);
+        out.println(LoginWindow.userId+" - "+tabName);
         
         release.setEnabled(false);
         press.setEnabled(true);
@@ -1291,6 +1383,7 @@ Socket socglobal;
             startCollab= true;
             out.println("Join Collaboration");
             out.println(code);
+            out.println(LoginWindow.userId+" - "+tabName);
 
             joinCollab.setEnabled(false);
             press.setEnabled(false);
@@ -1520,18 +1613,46 @@ outglobal.println("global compile");
         
         
     }//GEN-LAST:event_globalcompilebuttonActionPerformed
-public static void main(String args[])
-{
-    JFrame jf;
-    jf=new JFrame();
-    jf.add(new NewJPanel());
-    jf.setVisible(true);
-}
+
+    private void collabListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_collabListMouseClicked
+        if(SwingUtilities.isRightMouseButton(evt)){
+            String st= collabList.getSelectedValue();
+            int it= collabList.getSelectedIndex();
+            
+            int val= JOptionPane.showConfirmDialog(null, "Remove user : "+st);
+            if(val == YES_OPTION){
+                mod1.removeElementAt(it);
+                out.println("Unshare");
+                out.println(code);
+                out.println(st);
+                System.out.println("Hurrah");
+            }
+            
+        }
+    }//GEN-LAST:event_collabListMouseClicked
+
+    private void collaborationListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_collaborationListActionPerformed
+        if(collabMenu.isVisible()){
+            collabMenu.setVisible(false);
+        }
+        else collabMenu.show(collaborationList, 0, collaborationList.getHeight());
+    }//GEN-LAST:event_collaborationListActionPerformed
+//public static void main(String args[])
+//{
+//    JFrame jf;
+//    jf=new JFrame();
+//    jf.add(new NewJPanel());
+//    jf.setVisible(true);
+//}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Open;
     private javax.swing.JCheckBox autoComplete;
     private javax.swing.JTextArea chatSection;
+    private javax.swing.JList<String> collabList;
+    private javax.swing.JPopupMenu collabMenu;
+    private javax.swing.JPanel collabPanel;
+    private javax.swing.JButton collaborationList;
     private javax.swing.JButton compileAndRun1;
     public javax.swing.JTextArea compiletextbox;
     private javax.swing.JButton editDoc;
@@ -1547,6 +1668,7 @@ public static void main(String args[])
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
