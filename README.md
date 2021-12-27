@@ -28,21 +28,28 @@
 - Backend : Java Socket Programming, Java OOP Concepts
 - Database : MySQL
 - Jars Used : 
-      1. JCanlender Jar
-      2. MySQL connector jar
-      3. Gson Library
-      4. Json Library
+1. JCanlender Jar
+2. MySQL connector jar
+3. Gson Library (Api Parsing)
+4. JSoup Library (HTML Scraping)
+5. bridj jar (Audio Communication)
+6. slf4j-api jar (Audio Communication)
+7. webcam-capture jar (Audio Communication)
 
 ### TEAM: Untangled in Threads
 #### Team Members:
-- Arya Pandey (20195007, Mechanical)
+- Arya Pandey (20193043, Mechanical)
 - Asmita Yadav (20195007, ECE)
 - Anchal Yadav (20198071, IT)
 
-## Getting Started:
+## Instructions to Run:
 - Project Installation and Running it
 1. Firstly Install Java(any version) , Netbeans IDE and MySQL database.
 2. Clone the project via https://github.com/anchal20198071/codeDOC and open both the project(ServercodeDoc, codeDOC) in netbeans.
 3. Add all the required Jars - JCanlender Jar, MySQL connector jar, Gson Library, Json Library.
 4. Configure your Mysql database username and password in file Mysqlconnect.java in ServercodeDoc Project.
-5. Now first run ServercodeDoc Project then run codeDOC project by clicking on Run Project icon on the top.
+5. The IP of the server in the client side can be set in RegisterWindow.java, LoginWindow.java, CodeDocTab.java of codeDOC package.
+6. Now first run ServercodeDoc Project then run codeDOC project by clicking on Run Project icon on the top.
+
+## ScreenShots
+<img src="https://user-images.githubusercontent.com/59894659/147441808-1c54faa2-f27f-4721-a306-c87b037a279d.png">
