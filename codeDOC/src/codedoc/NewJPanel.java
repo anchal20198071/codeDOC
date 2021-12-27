@@ -293,6 +293,7 @@ public class NewJPanel extends javax.swing.JPanel {
         autoComplete = new javax.swing.JCheckBox();
         press = new javax.swing.JButton();
         release = new javax.swing.JButton();
+        darkMode = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
         compiletextbox = new javax.swing.JTextArea();
@@ -301,8 +302,6 @@ public class NewJPanel extends javax.swing.JPanel {
         newDoc = new javax.swing.JButton();
         editDoc = new javax.swing.JButton();
         saveDoc = new javax.swing.JButton();
-        shareButton = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         Open = new javax.swing.JButton();
@@ -366,9 +365,9 @@ public class NewJPanel extends javax.swing.JPanel {
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
         );
 
-        setBackground(new java.awt.Color(102, 102, 0));
+        setBackground(new java.awt.Color(171, 230, 242));
 
-        jPanel3.setBackground(new java.awt.Color(212, 239, 242));
+        jPanel3.setBackground(new java.awt.Color(0, 102, 102));
 
         languageSelector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "C", "C++", "Java", "Python" }));
 
@@ -389,6 +388,13 @@ public class NewJPanel extends javax.swing.JPanel {
             }
         });
 
+        darkMode.setText("Dark Mode");
+        darkMode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                darkModeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -398,22 +404,25 @@ public class NewJPanel extends javax.swing.JPanel {
                 .addComponent(languageSelector, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(autoComplete, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(324, 324, 324)
+                .addGap(329, 329, 329)
                 .addComponent(press)
-                .addGap(290, 290, 290)
-                .addComponent(release)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(225, 225, 225)
+                .addComponent(release, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(88, 88, 88)
+                .addComponent(darkMode)
+                .addContainerGap(251, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(languageSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(autoComplete)
                     .addComponent(press)
-                    .addComponent(release))
-                .addContainerGap())
+                    .addComponent(release)
+                    .addComponent(darkMode))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));
@@ -446,11 +455,11 @@ public class NewJPanel extends javax.swing.JPanel {
             .addComponent(jScrollPane6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
         );
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 204));
+        jPanel1.setBackground(new java.awt.Color(0, 51, 102));
 
-        jTextField1.setBackground(new java.awt.Color(255, 255, 204));
+        jTextField1.setBackground(new java.awt.Color(204, 255, 255));
         jTextField1.setFont(new java.awt.Font("Cambria", 1, 18)); // NOI18N
-        jTextField1.setText("CodeDOC");
+        jTextField1.setText(" CodeDOC");
         jTextField1.setBorder(null);
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -476,20 +485,6 @@ public class NewJPanel extends javax.swing.JPanel {
         saveDoc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveDocActionPerformed(evt);
-            }
-        });
-
-        shareButton.setText("Share");
-        shareButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shareButtonActionPerformed(evt);
-            }
-        });
-
-        jButton2.setText("Chat");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
             }
         });
 
@@ -535,11 +530,7 @@ public class NewJPanel extends javax.swing.JPanel {
                 .addComponent(Open)
                 .addGap(18, 18, 18)
                 .addComponent(fontSettings)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 159, Short.MAX_VALUE)
-                .addComponent(shareButton)
-                .addGap(18, 18, 18)
-                .addComponent(jButton2)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton5)
@@ -556,8 +547,6 @@ public class NewJPanel extends javax.swing.JPanel {
                     .addComponent(newDoc)
                     .addComponent(editDoc)
                     .addComponent(saveDoc)
-                    .addComponent(shareButton)
-                    .addComponent(jButton2)
                     .addComponent(jButton4)
                     .addComponent(jButton5)
                     .addComponent(Open)
@@ -565,6 +554,8 @@ public class NewJPanel extends javax.swing.JPanel {
                     .addComponent(collaborationList))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        jPanel6.setBackground(new java.awt.Color(0, 102, 102));
 
         getinput.setColumns(20);
         getinput.setRows(5);
@@ -711,12 +702,9 @@ public class NewJPanel extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(joinCollab)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(36, 36, 36)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -727,6 +715,10 @@ public class NewJPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(privateChat)))
                 .addGap(48, 48, 48))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(joinCollab, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(579, 579, 579))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createSequentialGroup()
@@ -748,24 +740,25 @@ public class NewJPanel extends javax.swing.JPanel {
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(14, 14, 14)
-                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(99, 99, 99))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(sendMessage)
-                            .addComponent(privateChat))))
-                .addGap(99, 99, 99))
+                            .addComponent(privateChat))
+                        .addGap(143, 143, 143))))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(37, 37, 37)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(33, 33, 33)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(213, Short.MAX_VALUE)))
+                    .addContainerGap(215, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
     
@@ -910,14 +903,6 @@ public class NewJPanel extends javax.swing.JPanel {
         }
 
     }//GEN-LAST:event_saveDocActionPerformed
-
-    private void shareButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shareButtonActionPerformed
-
-    }//GEN-LAST:event_shareButtonActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
 // opens dialogue box to see saved files
     private void OpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpenActionPerformed
 
@@ -1652,11 +1637,64 @@ outglobal.println("global compile");
         }
         else collabMenu.show(collaborationList, 0, collaborationList.getHeight());
     }//GEN-LAST:event_collaborationListActionPerformed
+
+    private void darkModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_darkModeActionPerformed
+        if(darkMode.isSelected()){
+            this.setBackground(new java.awt.Color(51,51,51));
+            jPanel3.setBackground(new java.awt.Color(153,153,153));
+            jPanel2.setBackground(new java.awt.Color(153,153,153));
+            jPanel1.setBackground(new java.awt.Color(102,102,102));
+            jPanel6.setBackground(new java.awt.Color(204,204,204));
+            jTextField1.setBackground(new java.awt.Color(51,51,51));
+            compiletextbox.setBackground(new java.awt.Color(102,102,102));
+            getinput.setBackground(new java.awt.Color(102,102,102));
+            getoutput.setBackground(new java.awt.Color(102,102,102));
+            timer.setBackground(new java.awt.Color(102,102,102));
+            typeMessg.setBackground(new java.awt.Color(153,153,153));
+            chatSection.setBackground(new java.awt.Color(102,102,102));
+            lineTable.setBackground(new java.awt.Color(204,204,204));
+            
+            //[255,255,255]
+            compiletextbox.setForeground(new java.awt.Color(255,255,255));
+            getinput.setForeground(new java.awt.Color(255,255,255));
+            getoutput.setForeground(new java.awt.Color(255,255,255));
+            timer.setForeground(new java.awt.Color(255,255,255));
+            typeMessg.setForeground(new java.awt.Color(255,255,255));
+            chatSection.setForeground(new java.awt.Color(255,255,255));
+            lineTable.setForeground(new java.awt.Color(255,255,255));
+            jTextField1.setForeground(new java.awt.Color(255,255,255));
+        }
+        else{
+            this.setBackground(new java.awt.Color(171,230,242));
+            jPanel3.setBackground(new java.awt.Color(0,102,102));
+            jPanel2.setBackground(new java.awt.Color(153,153,153));
+            jPanel1.setBackground(new java.awt.Color(0,51,102));
+            jPanel6.setBackground(new java.awt.Color(0,102,102));
+            jTextField1.setBackground(new java.awt.Color(204,255,255));
+            compiletextbox.setBackground(new java.awt.Color(255,255,255));
+            getinput.setBackground(new java.awt.Color(255,255,255));
+            getoutput.setBackground(new java.awt.Color(255,255,255));
+            timer.setBackground(new java.awt.Color(255,255,255));
+            typeMessg.setBackground(new java.awt.Color(255,255,255));
+            chatSection.setBackground(new java.awt.Color(255,255,255));
+            lineTable.setBackground(new java.awt.Color(255,255,255));
+            
+            //[255,255,255]
+            compiletextbox.setForeground(new java.awt.Color(0,0,0));
+            getinput.setForeground(new java.awt.Color(0,0,0));
+            getoutput.setForeground(new java.awt.Color(0,0,0));
+            timer.setForeground(new java.awt.Color(0,0,0));
+            typeMessg.setForeground(new java.awt.Color(0,0,0));
+            chatSection.setForeground(new java.awt.Color(0,0,0));
+            lineTable.setForeground(new java.awt.Color(0,0,0));
+            jTextField1.setForeground(new java.awt.Color(0,0,0));
+        }
+    }//GEN-LAST:event_darkModeActionPerformed
 //public static void main(String args[])
 //{
 //    JFrame jf;
 //    jf=new JFrame();
-//    jf.add(new NewJPanel());
+//    jf.add(new NewJPanel("s"));
 //    jf.setVisible(true);
 //}
 
@@ -1670,13 +1708,13 @@ outglobal.println("global compile");
     private javax.swing.JButton collaborationList;
     private javax.swing.JButton compileAndRun1;
     public javax.swing.JTextArea compiletextbox;
+    private javax.swing.JCheckBox darkMode;
     private javax.swing.JButton editDoc;
     private javax.swing.JButton fontSettings;
     private javax.swing.JTextArea getinput;
     private javax.swing.JTextArea getoutput;
     private javax.swing.JButton globalcompilebutton;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JPanel jPanel1;
@@ -1705,7 +1743,6 @@ outglobal.println("global compile");
     private javax.swing.JButton saveDoc;
     private javax.swing.JTextField searchTextField;
     private javax.swing.JButton sendMessage;
-    private javax.swing.JButton shareButton;
     private javax.swing.JTextField timer;
     private javax.swing.JTextArea typeMessg;
     // End of variables declaration//GEN-END:variables
