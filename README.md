@@ -28,10 +28,10 @@
 - Backend : Java Socket Programming, Java OOP Concepts
 - Database : MySQL
 - Jars Used : 
-      - JCanlender Jar
-      - MySQL connector jar
-      - Gson Library
-      - Json Library
+      1. JCanlender Jar
+      2. MySQL connector jar
+      3. Gson Library
+      4. Json Library
 
 ### TEAM: Untangled in Threads
 #### Team Members:
