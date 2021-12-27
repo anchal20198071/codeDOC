@@ -303,7 +303,6 @@ public class NewJPanel extends javax.swing.JPanel {
         saveDoc = new javax.swing.JButton();
         shareButton = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         Open = new javax.swing.JButton();
         fontSettings = new javax.swing.JButton();
@@ -493,8 +492,6 @@ public class NewJPanel extends javax.swing.JPanel {
             }
         });
 
-        jButton4.setText("Audio Call");
-
         jButton5.setText("Video Call");
 
         Open.setText("Open");
@@ -539,9 +536,7 @@ public class NewJPanel extends javax.swing.JPanel {
                 .addComponent(shareButton)
                 .addGap(18, 18, 18)
                 .addComponent(jButton2)
-                .addGap(18, 18, 18)
-                .addComponent(jButton4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(107, 107, 107)
                 .addComponent(jButton5)
                 .addGap(97, 97, 97)
                 .addComponent(collaborationList, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -558,7 +553,6 @@ public class NewJPanel extends javax.swing.JPanel {
                     .addComponent(saveDoc)
                     .addComponent(shareButton)
                     .addComponent(jButton2)
-                    .addComponent(jButton4)
                     .addComponent(jButton5)
                     .addComponent(Open)
                     .addComponent(fontSettings)
@@ -1677,7 +1671,6 @@ outglobal.println("global compile");
     private javax.swing.JButton globalcompilebutton;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

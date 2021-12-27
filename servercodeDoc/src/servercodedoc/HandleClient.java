@@ -5,6 +5,7 @@
  */
 package servercodedoc;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -14,7 +15,12 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.math.BigInteger;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.Date;
@@ -38,20 +44,22 @@ public class HandleClient implements Runnable {
     PreparedStatement p;
     StringBuilder sb = new StringBuilder();
     Connection con;
-private static final String FILE_LOCATION1 ="Desktop\\december\\codeDOC\\codeDOC\\arya.c";    
-     private static final String FILE_LOCATION2 ="Desktop\\december\\codeDOC\\codeDOC\\arya.py";
-     private static final String FILE_LOCATION3 ="Desktop\\december\\codeDOC\\codeDOC\\arya.cpp";
-     
-     private static final String FILE_LOCATION4 ="Desktop\\december\\codeDOC\\codeDOC\\arya.java";
+    private String receiverEmail;
+    private static final String FILE_LOCATION1 ="Desktop\\december\\codeDOC\\codeDOC\\arya.c";    
+    private static final String FILE_LOCATION2 ="Desktop\\december\\codeDOC\\codeDOC\\arya.py";
+    private static final String FILE_LOCATION3 ="Desktop\\december\\codeDOC\\codeDOC\\arya.cpp";
+    DatagramSocket serverSocket; 
+    private static final String FILE_LOCATION4 ="Desktop\\december\\codeDOC\\codeDOC\\arya.java";
     static String userEmail="";
-
+     
     private int noOfUsers = 0;
 
     
     //constructor for clienthandle class
-    public HandleClient(Socket clientSocket, Connection conclient) throws IOException {
+    public HandleClient(Socket clientSocket, Connection conclient,DatagramSocket serverSocket) throws IOException {
         con = conclient;
         this.client = clientSocket;
+        this.serverSocket=serverSocket;
         out = new PrintWriter(this.client.getOutputStream(), true);
         //out should get stored in an static array
         in = new BufferedReader(new InputStreamReader(this.client.getInputStream()));
@@ -164,6 +172,17 @@ private static final String FILE_LOCATION1 ="Desktop\\december\\codeDOC\\codeDOC
                     System.out.println("Server side exception in sending Private Message: "+ex);
                 }
             }
+            else if(choice.equals("Audio_Call"))
+            {
+                System.out.println("Initiating Audio Call");
+                audioCall();
+            }
+            else if(choice.equals("Intiate Audio Call"))
+            {
+                System.out.println("Initiating Audio Call Response");
+                startAudioCall();
+            }
+           
             }
 
         } catch (IOException ex) {
@@ -697,7 +716,7 @@ System.out.println("Exception : "+ex);
                 s[i] = in.readLine();
                 //System.out.println();
             }
-
+            String getPortNo=in.readLine(); 
             PreparedStatement pst;
             ResultSet rs;
             String sql = "select * from registration where email=? and password=? ";
@@ -712,7 +731,7 @@ System.out.println("Exception : "+ex);
             if (rs.next()) {
 //                JOptionPane.showMessageDialog(null, "Username and Password are correct..");
                 email= s[0];
-                ServercodeDoc.userStatus.put(email, new OnlineUser(out, 1));
+                ServercodeDoc.userStatus.put(email, new OnlineUser(out, 1,getPortNo));
                 out.println(1);
             } else {
                 JOptionPane.showMessageDialog(null, "Username and Password are Incorrect..."
@@ -726,7 +745,7 @@ System.out.println("Exception : "+ex);
     }
     
     void logout(){
-        ServercodeDoc.userStatus.put(email, new OnlineUser(out, 0));
+        ServercodeDoc.userStatus.put(email, new OnlineUser(out, 0,"a"));
     }
 
     void previousCode()
@@ -1087,6 +1106,88 @@ System.out.println("Exception : "+ex);
             System.out.println(e);
         }
         return "";
+    }
+
+     private void audioCall() throws IOException, Exception {
+        receiverEmail = in.readLine();
+        
+        if(!ServercodeDoc.userStatus.containsKey(receiverEmail)){
+            JOptionPane.showMessageDialog(null, "User is currently OFFLINE!!");
+        }
+        else
+        {
+            ServercodeDoc.userStatus.get(receiverEmail).out.println(EncryptDecrypt.encrypt("Audio_call"));
+            ServercodeDoc.userStatus.get(receiverEmail).out.println
+        (EncryptDecrypt.encrypt("User "+email+" ,wants to start audio call "));
+            ServercodeDoc.userStatus.get(receiverEmail).out.println(email);                
+        }
+        
+    }
+
+    private void startAudioCall() throws Exception {
+        String response=in.readLine();
+        receiverEmail=in.readLine();
+        if(response.equals("0"))
+        {
+            ServercodeDoc.userStatus.get(receiverEmail).out.println(EncryptDecrypt.encrypt("End Call"));
+        }
+        else
+        {
+            ServercodeDoc.userStatus.get(receiverEmail).out.println(EncryptDecrypt.encrypt("Start Call"));
+            String port=ServercodeDoc.userStatus.get(receiverEmail).port;
+            System.out.println("fun--"+port);
+            new audioServer(port).start();            
+        }
+    }
+    
+    //Thread for audio calling
+    class audioServer extends Thread{    
+    InetAddress addr; 
+    DatagramPacket receivePacket;
+    String port;
+    audioServer(String port)
+    {
+        this.port=port;
+    }
+    @Override
+    public void run() {
+        System.out.println("Audio Server started at port:"+50005);        
+        //Getting port no. of receiver
+        System.out.println(receiverEmail);        
+        
+        //Receiving data
+         byte[] receiveData = new byte[4096];         
+         receivePacket = new DatagramPacket(receiveData, receiveData.length);
+         ByteArrayInputStream baiss = new ByteArrayInputStream(receivePacket.getData());
+        
+         //Sending data  
+        try {
+                      
+            addr = InetAddress.getByName("127.0.0.1");
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(HandleClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+             
+        
+        DatagramPacket sendPacket;
+        byte[] data = new byte[4096];     
+               
+        
+        while (true)
+        {             
+                try {
+                //receive datagram packet
+                serverSocket.receive(receivePacket);            
+                data=receivePacket.getData();
+                //send received datagram packet
+                sendPacket = new DatagramPacket (data,data.length,addr,Integer.parseInt(port));//Integer.parseInt(port)
+                serverSocket.send(sendPacket);
+                } catch (IOException ex) {
+                Logger.getLogger(HandleClient.class.getName()).log(Level.SEVERE, null, ex);
+                }                      
+       }
+     }
+    
     }
   
 }

@@ -3,7 +3,11 @@ package codedoc;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.DatagramSocket;
 import java.net.Socket;
+import java.net.SocketException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -15,6 +19,8 @@ public class LoginWindow extends javax.swing.JFrame {
     
     
     public static Socket soc;
+    public static  DatagramSocket socket;
+    public static int remotePort = 0;
 
     public CodeDoc home ;
 
@@ -235,11 +241,25 @@ public class LoginWindow extends javax.swing.JFrame {
                 String[] s = {email, pass};
                 
                 PrintWriter out = new PrintWriter(soc.getOutputStream(), true);
+                
+                //Sending data gram port no.
+               // out.println("Datagram_port_no");
+                try {
+                socket = new DatagramSocket();
+                } catch (SocketException ex) {
+                Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                remotePort = socket.getLocalPort(); 
+                //out.println(Integer.toString(remotePort));
+                
+                
                 out.println("16");
 
                 for (int i = 0; i < 2; i++) {
                     out.println(s[i]);
                 }
+                out.println(Integer.toString(remotePort));
+                
                 BufferedReader in = new BufferedReader(new InputStreamReader(soc.getInputStream()));
                 int serverResponse = Integer.parseInt(in.readLine());
 

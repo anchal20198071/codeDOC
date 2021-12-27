@@ -9,11 +9,13 @@ import java.sql.Connection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -28,6 +30,7 @@ ServerSocket ss;
 Socket soc;
 PrintWriter out;
 BufferedReader in;
+DatagramSocket serverSocket;
 //create string email gets at the time of login
 public static ArrayList <HandleClient> clients = new ArrayList<>();
 private ExecutorService pool= Executors.newFixedThreadPool(20);
@@ -37,7 +40,7 @@ public static HashMap<String, HashSet<ClientTabIdentification> > pair= new HashM
 public static HashMap<String, OnlineUser > userStatus= new HashMap<>();
 public static HashMap<String, PrintWriter> collabAdmin= new HashMap<>();
 public static HashMap<PrintWriter, String> requestList= new HashMap<>();
-
+public static Map<String, String> audioPorts= new HashMap<String,String>();
 
   public static void main(String[] args) 
  {
@@ -49,13 +52,13 @@ public static HashMap<PrintWriter, String> requestList= new HashMap<>();
     try 
     {
         ss = new ServerSocket(9886); 
-        
+        serverSocket = new DatagramSocket(50005);
         while(true)
         {
             soc= ss.accept(); 
             System.out.println("connection established");
 
-            HandleClient clientThread= new HandleClient(soc,con);
+            HandleClient clientThread= new HandleClient(soc,con,serverSocket);
          
             clients.add(clientThread);
             pool.execute(clientThread); 
