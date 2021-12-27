@@ -186,6 +186,14 @@ public class NewJPanel extends javax.swing.JPanel {
                         }
                         else if(k == 1 && startCollab == true )//startcollab is the admin
                         {
+                            String name=in.readLine();
+                            //receive tab key
+                            String x=in.readLine();
+                            String y=in.readLine();
+                            //map with key string and value pair of xand y
+                            
+                            //put list with above x y and name;
+                            System.out.println("name is"+name+"x is"+x+"y is"+y);
                             if(sender==false)
                             {
                                 int i=compiletextbox.getCaretPosition();
@@ -199,8 +207,9 @@ public class NewJPanel extends javax.swing.JPanel {
                             
                             }
                             if(sender == true){
-                                int len= compiletextbox.getText().length();
-                                compiletextbox.setCaretPosition(len);
+                                
+//                                int len= compiletextbox.getText().length();
+//                                compiletextbox.setCaretPosition(len);
                                 sender= false;
                             }
                         }
@@ -1355,6 +1364,12 @@ public class NewJPanel extends javax.swing.JPanel {
             sender= true;
             out.println("Key Pressed");
             out.println(code);//collab code
+            Point p= compiletextbox.getCaret().getMagicCaretPosition();
+            int y= p.y, x= p.x;               //txt.getHeight();
+            System.out.println("x: "+x+" y: "+y);
+            out.println(LoginWindow.name);//take from +tab key also send
+            out.println(Integer.toString(x));
+            out.println(Integer.toString(y));
             String text = compiletextbox.getText();
             System.out.println("text sending to server : "+text);
             text = text.replaceAll("\n", "~");

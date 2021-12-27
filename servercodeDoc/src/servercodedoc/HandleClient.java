@@ -900,11 +900,23 @@ System.out.println("Exception : "+ex);
 
     void editTextArea() throws IOException{
         String collabCode= in.readLine();
-        String combinedText = in.readLine();
         
+        String x,y;
+        String name= in.readLine();
+        //receive tab key
+//        x=Integer.parseInt(in.readLine());
+//        y=Integer.parseInt(in.readLine());
+        x=in.readLine();
+        y=in.readLine();
+        String combinedText = in.readLine();
         for (ClientTabIdentification entry : ServercodeDoc.pair.get(collabCode)){
             System.out.println("Sending m");
             entry.out.println(combinedText);
+            entry.out.println(name);
+            //send tab key
+            entry.out.println(x);
+            entry.out.println(y);
+            
         }
             
     }

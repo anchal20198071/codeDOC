@@ -20,7 +20,7 @@ import java.util.logging.Logger;
         }
         try {
 
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/codedoc","root","user");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/codedoc","root","root");
 
         } catch (SQLException ex) {
             Logger.getLogger(Mysqlconnect.class.getName()).log(Level.SEVERE, null, ex);

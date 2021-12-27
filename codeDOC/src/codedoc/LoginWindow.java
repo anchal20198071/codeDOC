@@ -18,7 +18,7 @@ public class LoginWindow extends javax.swing.JFrame {
 
     public CodeDoc home ;
 
-
+    static String name;
     static String userId;
 
     /**
@@ -221,6 +221,7 @@ public class LoginWindow extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String email = jTextFieldEmailId.getText();
         String pass = jPasswordFieldPass.getText();
+        name=email.substring(0,4);
         if (email.trim().equals("Enter Email Id") || email.trim().equals("")
                 || pass.trim().equals("Enter Password") || pass.trim().equals("")) {
             JOptionPane.showMessageDialog(null, "All Fields are compulsory to fill.. Kindly "
