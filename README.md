@@ -52,4 +52,46 @@
 6. Now first run ServercodeDoc Project then run codeDOC project by clicking on Run Project icon on the top.
 
 ## ScreenShots
-<img src="https://user-images.githubusercontent.com/59894659/147441808-1c54faa2-f27f-4721-a306-c87b037a279d.png">
+- Login Window
+<img src="https://user-images.githubusercontent.com/59894659/147474630-55752678-e36d-4ecb-908e-8378c7343017.png">
+
+- CodeDoc Interface
+<img src="https://user-images.githubusercontent.com/59894659/147474807-485d6508-5bc9-486b-8a0b-e3705238ebdf.png">
+
+- Saving code
+<img src="https://user-images.githubusercontent.com/59894659/147474994-7c911a15-2c3d-4ba7-adce-1a77f5c707db.png">
+
+- Opening a Saved file
+<img src="https://user-images.githubusercontent.com/59894659/147475095-a02d011c-9d0f-44b3-a648-1b869e19f7c0.png">
+
+- Changing Font Settings
+<img src="https://user-images.githubusercontent.com/59894659/147475172-663d94fa-cb0a-4147-8fcb-127436996d5c.png">
+<img src="https://user-images.githubusercontent.com/59894659/147475269-50db7043-cbf3-416b-bf5f-fc29a77de09c.png">
+
+- Switch to Dark Mode
+<img src="https://user-images.githubusercontent.com/59894659/147475378-8cc71852-fdf6-4034-99c6-bba1b7edd402.png">
+
+- Multiple Tab For each Session
+<img src="https://user-images.githubusercontent.com/59894659/147475475-ed984600-4f7d-4123-a9f1-5d5403ecbe18.png">
+
+- Search for Specific tag Questions of Codeforces
+<img src="https://user-images.githubusercontent.com/59894659/147475556-1df32761-4e9a-4e04-9a45-49c3c991957c.png">
+
+- Collaborate with other users via collaboration key
+<img src="https://user-images.githubusercontent.com/59894659/147475670-cd916312-25a5-47db-8051-3e2e13544ab1.png">
+
+- Use the Collaboration key and Join the collaboration corresponding to that collaboration key
+<img src="https://user-images.githubusercontent.com/59894659/147475769-59da2870-1c67-4b46-a3c1-0daf22acf291.png">
+
+- Autocomplete Feature
+<img src="https://user-images.githubusercontent.com/59894659/147475872-874f718c-d6a5-4098-9f1f-9d913d6c612b.png">
+
+- Search and Highlight Feature
+<img src="https://user-images.githubusercontent.com/59894659/147475949-89560962-7c97-4e7d-a6cd-31a7c0de607f.png">
+
+- Chat with users in that Collaboration
+<img src="https://user-images.githubusercontent.com/59894659/147476040-748dd882-a4c8-4448-9c0a-4601421f2287.png">
+
+- Chat Privately with other users by their UserID
+<img src="https://user-images.githubusercontent.com/59894659/147476237-a187f511-2622-402f-bbe5-4c7ebf08aa7a.png">
+<img src="https://user-images.githubusercontent.com/59894659/147476367-a7b0ff79-9a6e-422a-97bd-bc160ed2a901.png">
