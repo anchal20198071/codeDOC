@@ -5,6 +5,7 @@
  */
 package servercodedoc;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -14,7 +15,11 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.math.BigInteger;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.Date;
@@ -38,6 +43,8 @@ public class HandleClient implements Runnable {
     PreparedStatement p;
     StringBuilder sb = new StringBuilder();
     Connection con;
+    private String receiverEmail;
+    DatagramSocket serverSocket;
 private static final String FILE_LOCATION1 ="Desktop\\december\\codeDOC\\codeDOC\\arya.c";    
      private static final String FILE_LOCATION2 ="Desktop\\december\\codeDOC\\codeDOC\\arya.py";
      private static final String FILE_LOCATION3 ="Desktop\\december\\codeDOC\\codeDOC\\arya.cpp";
@@ -49,14 +56,13 @@ private static final String FILE_LOCATION1 ="Desktop\\december\\codeDOC\\codeDOC
 
     
     //constructor for clienthandle class
-    public HandleClient(Socket clientSocket, Connection conclient) throws IOException {
+    public HandleClient(Socket clientSocket, Connection conclient,DatagramSocket serverSocket) throws IOException {
         con = conclient;
         this.client = clientSocket;
+        this.serverSocket=serverSocket;
         out = new PrintWriter(this.client.getOutputStream(), true);
-        //out should get stored in an static array
         in = new BufferedReader(new InputStreamReader(this.client.getInputStream()));
         
-        //ServercodeDoc.outArrayList.add(out);
     }
 
     @Override
@@ -163,6 +169,16 @@ private static final String FILE_LOCATION1 ="Desktop\\december\\codeDOC\\codeDOC
                 } catch (Exception ex) {
                     System.out.println("Server side exception in sending Private Message: "+ex);
                 }
+            }
+            else if(choice.equals("Audio_Call"))
+            {
+                System.out.println("Initiating Audio Call");
+                audioCall();
+            }
+            else if(choice.equals("Intiate Audio Call"))
+            {
+                System.out.println("Initiating Audio Call Response");
+                startAudioCall();
             }
             }
 
@@ -517,11 +533,7 @@ private static final String FILE_LOCATION1 ="Desktop\\december\\codeDOC\\codeDOC
                     {
                         System.out.println("compiled5");
                 
-                        /*if(sec>=gotsec)
-                        {
-                            getoutput.setText("TLE");
-                            return;
-                        }*/
+                       
                         
                         coutput=coutput+coutput1;
                         
@@ -541,82 +553,7 @@ private static final String FILE_LOCATION1 ="Desktop\\december\\codeDOC\\codeDOC
             Logger.getLogger(HandleClient.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        
-        
-            /*if(a.equalsIgnoreCase("python")){
-                try {
-                    String filename = "arya.py";
-                    FileWriter fileWriter=new FileWriter(filename);
-                    fileWriter.write(compiletextbox.getText());
-//                setTitle(filename);
-fileWriter.close();
-                } catch (IOException e) {
-                    exit=1;
-                    System.out.println("file not found");
-                }
-                //created a file successfully in the folder where project is cloned
-                boolean isWindows = System.getProperty("os.name")
-                        .toLowerCase().startsWith("windows");
                 
-                ProcessBuilder processBuilder = new ProcessBuilder();
-                Process process=null;
-                if (isWindows) {
-                    processBuilder.command("cmd.exe", "/c", "py",FILE_LOCATION2);
-                } else {
-                    processBuilder.command("sh", "-c", "ls");
-                }
-                processBuilder.directory(new File(System.getProperty("user.home")));
-                
-                try {
-                    process = processBuilder.start();
-                    OutputStream os=process.getOutputStream();
-                    PrintStream ps = new PrintStream(os);//if we want to send some input
-                    
-                    ps.println(getinput.getText());
-                    ps.flush();
-                    
-                    System.out.println("here");
-                    
-                    BufferedReader br=new BufferedReader(new InputStreamReader(process.getInputStream()));//getting the output
-                    String coutput;
-                    if(sec>=gotsec)
-                    {
-                        getoutput.setText("TLE");
-
-                        return;
-                    }
-                    while((coutput=br.readLine())!=null)
-                    {
-                        if(sec>=gotsec)
-                        {
-                            getoutput.setText("TLE");
-                            
-                            return;
-                        }
-                        getoutput.setText(coutput);
-                        System.out.println(coutput);
-                    }
-                    
-                } catch (IOException ex) {
-//                Logger.getLogger(CodeDoc.class.getName()).log(Level.SEVERE, null, ex);
-System.out.println("Exception : "+ex);
-                }
-                
-                try {
-                    if( process.getErrorStream().read() != -1 )
-                    {
-                        exit=1;
-                        getoutput.setText("file cant be compiled " +process.getErrorStream());
-                        return;
-                    }
-                } catch (IOException ex) {
-                    System.out.println("Exception : "+ex);
-                }
-                //file is compile and runnable a file is created
-                exit=1;
-                
-            }*/
-        
     }
     void download(){
     String[] S = new String[6];
@@ -697,7 +634,8 @@ System.out.println("Exception : "+ex);
                 s[i] = in.readLine();
                 //System.out.println();
             }
-
+            String getPortNo=in.readLine();
+            
             PreparedStatement pst;
             ResultSet rs;
             String sql = "select * from registration where email=? and password=? ";
@@ -712,7 +650,7 @@ System.out.println("Exception : "+ex);
             if (rs.next()) {
 //                JOptionPane.showMessageDialog(null, "Username and Password are correct..");
                 email= s[0];
-                ServercodeDoc.userStatus.put(email, new OnlineUser(out, 1));
+                ServercodeDoc.userStatus.put(email, new OnlineUser(out, 1,getPortNo));
                 out.println(1);
             } else {
                 JOptionPane.showMessageDialog(null, "Username and Password are Incorrect..."
@@ -726,7 +664,7 @@ System.out.println("Exception : "+ex);
     }
     
     void logout(){
-        ServercodeDoc.userStatus.put(email, new OnlineUser(out, 0));
+        ServercodeDoc.userStatus.put(email, new OnlineUser(out, 0,"a"));
     }
 
     void previousCode()
@@ -994,11 +932,11 @@ System.out.println("Exception : "+ex);
             
             for (ClientTabIdentification entry : ServercodeDoc.pair.get(collabCode)){
            
-                //if(entry.getValue() == 1){
+                
                     String codedMessage = "*chatArea*"+EncryptDecrypt.decrypt(mssg);
                     codedMessage= EncryptDecrypt.encrypt(codedMessage);
                     entry.out.println(codedMessage);
-                //}
+             
             }
         } catch (IOException ex) {
             System.out.println("Exception: "+ex);
@@ -1024,9 +962,7 @@ System.out.println("Exception : "+ex);
                         break;
                     }
                     else if(entry.getKey().equals(arr[0]) && entry.getValue().k == 1){
-                        entry.getValue().out.println(arr[1]); //but yaha apne out se nhi send krega, it will use login ka out
-                        //out.println(arr[1]);
-                        JOptionPane.showMessageDialog(null, "Message Sent!");
+                        entry.getValue().out.println(arr[1]);                         
                     }
             }
         }
@@ -1087,6 +1023,86 @@ System.out.println("Exception : "+ex);
             System.out.println(e);
         }
         return "";
+    }
+
+      private void audioCall() throws IOException, Exception {
+        receiverEmail = in.readLine();
+        
+        if(!ServercodeDoc.userStatus.containsKey(receiverEmail)){
+            JOptionPane.showMessageDialog(null, "User is currently OFFLINE!!");
+        }
+        else
+        {
+            ServercodeDoc.userStatus.get(receiverEmail).out.println(EncryptDecrypt.encrypt("Audio_call"));
+            ServercodeDoc.userStatus.get(receiverEmail).out.println
+        (EncryptDecrypt.encrypt("User "+email+" ,wants to start audio call "));
+            ServercodeDoc.userStatus.get(receiverEmail).out.println(email);                
+        }
+        
+    }
+    private void startAudioCall() throws Exception {
+        String response=in.readLine();
+        receiverEmail=in.readLine();
+        if(response.equals("0"))
+        {
+            ServercodeDoc.userStatus.get(receiverEmail).out.println(EncryptDecrypt.encrypt("End Call"));
+        }
+        else
+        {
+            ServercodeDoc.userStatus.get(receiverEmail).out.println(EncryptDecrypt.encrypt("Start Call"));
+            String port=ServercodeDoc.userStatus.get(receiverEmail).port;
+            new audioServer(port).start();            
+        }
+    }
+    
+    //Thread for audio calling
+    class audioServer extends Thread{    
+    InetAddress addr; 
+    DatagramPacket receivePacket;
+    String port;
+    audioServer(String port)
+    {
+        this.port=port;
+    }
+    @Override
+    public void run() {
+        System.out.println("Audio Server started at port:"+50005);        
+        //Getting port no. of receiver
+        System.out.println(receiverEmail);        
+        
+        //Receiving data
+         byte[] receiveData = new byte[4096];         
+         receivePacket = new DatagramPacket(receiveData, receiveData.length);
+         ByteArrayInputStream baiss = new ByteArrayInputStream(receivePacket.getData());
+        
+         //Sending data  
+        try {
+                      
+            addr = InetAddress.getByName("127.0.0.1");
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(HandleClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+             
+        
+        DatagramPacket sendPacket;
+        byte[] data = new byte[4096];     
+               
+        
+        while (true)
+        {             
+                try {
+                //receive datagram packet
+                serverSocket.receive(receivePacket);            
+                data=receivePacket.getData();
+                //send received datagram packet
+                sendPacket = new DatagramPacket (data,data.length,addr,Integer.parseInt(port));//Integer.parseInt(port)
+                serverSocket.send(sendPacket);
+                } catch (IOException ex) {
+                Logger.getLogger(HandleClient.class.getName()).log(Level.SEVERE, null, ex);
+                }                      
+       }
+     }
+    
     }
   
 }

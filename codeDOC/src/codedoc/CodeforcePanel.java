@@ -75,7 +75,7 @@ BufferedReader in;
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "trees", "sorting", "binary seaarch", "greedy", "dfs and similar", "data structures", "divide and conquer", "graphs", "number theory", "shortest paths", "implementation", "dsu", "two pointers", "brute force", "dp", "math" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "trees", "sorting", "binary search", "greedy", "dfs and similar", "data structures", "divide and conquer", "graphs", "number theory", "shortest paths", "implementation", "dsu", "two pointers", "brute force", "dp", "math" }));
 
         jButton1.setText("SEARCH");
         jButton1.addActionListener(new java.awt.event.ActionListener() {

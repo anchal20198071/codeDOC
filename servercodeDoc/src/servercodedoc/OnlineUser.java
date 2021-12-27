@@ -14,8 +14,10 @@ import java.io.PrintWriter;
 public class OnlineUser {
     PrintWriter out;
     int k;
-    public OnlineUser(PrintWriter out, int k){
+    String port;
+    public OnlineUser(PrintWriter out, int k,String port){
         this.out= out;
         this.k= k;
+        this.port=port;
     }
 }

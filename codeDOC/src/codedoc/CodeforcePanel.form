@@ -130,7 +130,7 @@
           <StringArray count="16">
             <StringItem index="0" value="trees"/>
             <StringItem index="1" value="sorting"/>
-            <StringItem index="2" value="binary seaarch"/>
+            <StringItem index="2" value="binary search"/>
             <StringItem index="3" value="greedy"/>
             <StringItem index="4" value="dfs and similar"/>
             <StringItem index="5" value="data structures"/>

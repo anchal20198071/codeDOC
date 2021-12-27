@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.YES_OPTION;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.text.Caret;
@@ -71,15 +72,47 @@ public class CodeDoc extends javax.swing.JFrame {
                         String combinedText = in.readLine();
                         System.out.println("Received");
                         try {
-                            combinedText= EncryptDecrypt.decrypt(combinedText)+"\n";
+                            combinedText= EncryptDecrypt.decrypt(combinedText);
                         } catch (Exception ex) {
                             JOptionPane.showMessageDialog(null, "Exception in Decryption: "+ex);
                         }
                         
+                        if(combinedText.equals("Audio_call"))
+                        {
+                            String msg=EncryptDecrypt.decrypt(in.readLine());
+                            String receiverEmail=in.readLine();
+                            int response=JOptionPane.showConfirmDialog(null, msg);
+                            out.println("Intiate Audio Call");
+                            if(response==YES_OPTION)
+                            {
+                                out.println("1");
+                                out.println(receiverEmail);
+                                new audio().setVisible(true);                                
+                            }
+                            else
+                            {
+                                out.println("0");
+                                out.println(receiverEmail);
+                            }
+                        }
+                        else if(combinedText.equals("End Call"))
+                        {
+                            JOptionPane.showMessageDialog(null, "Call Rejected");
+                        }
+                        else if(combinedText.equals("Start Call"))
+                        {
+                            JOptionPane.showMessageDialog(null, "Call Accepted");
+                            new audio().setVisible(true);
+                        } 
+                        
+                        else
+                        {
+                        combinedText= combinedText+"\n";     
                         String text= combinedText.replaceAll("~", "\n");
                         int len= pc.ta().getText().length();
                         pc.ta().setCaretPosition(len);
-                        pc.ta().append(text);
+                        pc.ta().append(text);}
+                        
                     }
                 }
                 catch (Exception ex) {
@@ -134,6 +167,8 @@ public class CodeDoc extends javax.swing.JFrame {
         button = new javax.swing.JButton();
         jtp = new javax.swing.JTabbedPane();
         jButton1 = new javax.swing.JButton();
+        audioCall = new javax.swing.JButton();
+        videoCall = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -157,6 +192,15 @@ public class CodeDoc extends javax.swing.JFrame {
             }
         });
 
+        audioCall.setText("Audio Call");
+        audioCall.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                audioCallActionPerformed(evt);
+            }
+        });
+
+        videoCall.setText("Video Call");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -165,7 +209,11 @@ public class CodeDoc extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(button)
-                .addGap(347, 347, 347)
+                .addGap(167, 167, 167)
+                .addComponent(audioCall)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(videoCall)
+                .addGap(28, 28, 28)
                 .addComponent(jButton1)
                 .addGap(80, 80, 80))
         );
@@ -174,7 +222,9 @@ public class CodeDoc extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(button)
-                    .addComponent(jButton1))
+                    .addComponent(jButton1)
+                    .addComponent(audioCall)
+                    .addComponent(videoCall))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jtp, javax.swing.GroupLayout.DEFAULT_SIZE, 803, Short.MAX_VALUE))
         );
@@ -213,6 +263,12 @@ public class CodeDoc extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void audioCallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_audioCallActionPerformed
+        out.println("Audio_Call");
+        String receiverEmail= JOptionPane.showInputDialog("Type email ID of the call receiver:");        
+        out.println(receiverEmail);
+    }//GEN-LAST:event_audioCallActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -249,8 +305,10 @@ public class CodeDoc extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton audioCall;
     private javax.swing.JButton button;
     private javax.swing.JButton jButton1;
     private javax.swing.JTabbedPane jtp;
+    private javax.swing.JButton videoCall;
     // End of variables declaration//GEN-END:variables
 }

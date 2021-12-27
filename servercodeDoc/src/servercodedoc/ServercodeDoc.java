@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ ServerSocket ss;
 Socket soc;
 PrintWriter out;
 BufferedReader in;
+DatagramSocket serverSocket;
 //create string email gets at the time of login
 public static ArrayList <HandleClient> clients = new ArrayList<>();
 private ExecutorService pool= Executors.newFixedThreadPool(20);
@@ -49,13 +51,13 @@ public static HashMap<PrintWriter, String> requestList= new HashMap<>();
     try 
     {
         ss = new ServerSocket(9886); 
-        
+        serverSocket = new DatagramSocket(50005);
         while(true)
         {
             soc= ss.accept(); 
             System.out.println("connection established");
 
-            HandleClient clientThread= new HandleClient(soc,con);
+            HandleClient clientThread= new HandleClient(soc,con,serverSocket);
          
             clients.add(clientThread);
             pool.execute(clientThread); 

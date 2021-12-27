@@ -302,8 +302,6 @@ public class NewJPanel extends javax.swing.JPanel {
         newDoc = new javax.swing.JButton();
         editDoc = new javax.swing.JButton();
         saveDoc = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
         Open = new javax.swing.JButton();
         fontSettings = new javax.swing.JButton();
         collaborationList = new javax.swing.JButton();
@@ -488,10 +486,6 @@ public class NewJPanel extends javax.swing.JPanel {
             }
         });
 
-        jButton4.setText("Audio Call");
-
-        jButton5.setText("Video Call");
-
         Open.setText("Open");
         Open.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -531,10 +525,6 @@ public class NewJPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(fontSettings)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton5)
-                .addGap(97, 97, 97)
                 .addComponent(collaborationList, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(245, 245, 245))
         );
@@ -547,8 +537,6 @@ public class NewJPanel extends javax.swing.JPanel {
                     .addComponent(newDoc)
                     .addComponent(editDoc)
                     .addComponent(saveDoc)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5)
                     .addComponent(Open)
                     .addComponent(fontSettings)
                     .addComponent(collaborationList))
@@ -1281,19 +1269,9 @@ public class NewJPanel extends javax.swing.JPanel {
 
     public void highLightingFeature(String lastWord,int startIndex,int endIndex)
     {
-        //if(m.get(lastWord)==1)
-       // compiletextbox.setForeground(Color.red);
         compiletextbox.select(startIndex, startIndex);       
     }
-    
-//    public void setPrentComponent(){
-//        Object o = getParent();
-//        MainClass mc;
-//        if(o != null && o instanceof MainClass)
-//            mc = (MainClass)o;
-//
-//        mc.setTitle(lbl.getText());            
-//    }
+ 
     
     // send a message to a group in collaboration
     private void sendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendMessageActionPerformed
@@ -1312,7 +1290,7 @@ public class NewJPanel extends javax.swing.JPanel {
             try {
                 
                 out.println(EncryptDecrypt.encrypt(LoginWindow.userId +" : "+messg));
-                //out.println(messg);
+               
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Exception in Encryption: "+ex);
             }
@@ -1369,8 +1347,14 @@ public class NewJPanel extends javax.swing.JPanel {
 
         removeHighlight(compiletextbox);
 
-//        displayLine(compiletextbox.getLineCount()); //For displaying line count
-
+        try
+        {
+         displayLine(compiletextbox.getLineCount()); //For displaying line count
+        }
+        catch(Exception e)
+        {
+            System.out.println("");
+        }
 
     }//GEN-LAST:event_compiletextboxCaretUpdate
 
@@ -1715,8 +1699,6 @@ outglobal.println("global compile");
     private javax.swing.JTextArea getoutput;
     private javax.swing.JButton globalcompilebutton;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
