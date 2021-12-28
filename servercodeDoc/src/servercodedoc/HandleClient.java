@@ -11,6 +11,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -18,6 +20,7 @@ import java.math.BigInteger;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
@@ -33,6 +36,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 public class HandleClient implements Runnable {
@@ -179,6 +183,16 @@ private static final String FILE_LOCATION1 ="Desktop\\december\\codeDOC\\codeDOC
             {
                 System.out.println("Initiating Audio Call Response");
                 startAudioCall();
+            }
+            else if(choice.equals("Video_Call"))
+            {
+                System.out.println("Initiating Video Call");
+                videoCall();
+            }
+            else if(choice.equals("Intiate Video Call"))
+            {
+                System.out.println("Initiating Video Call Response");
+                startVideoCall();
             }
             }
 
@@ -1054,6 +1068,36 @@ private static final String FILE_LOCATION1 ="Desktop\\december\\codeDOC\\codeDOC
             new audioServer(port).start();            
         }
     }
+
+    private void videoCall() throws IOException, Exception {
+        receiverEmail = in.readLine();
+          if(!ServercodeDoc.userStatus.containsKey(receiverEmail)){
+            JOptionPane.showMessageDialog(null, "User is currently OFFLINE!!");
+        }
+        else
+        {
+            ServercodeDoc.userStatus.get(receiverEmail).out.println(EncryptDecrypt.encrypt("Video_call"));
+            ServercodeDoc.userStatus.get(receiverEmail).out.println
+        (EncryptDecrypt.encrypt("User "+email+" ,wants to start video call "));
+            ServercodeDoc.userStatus.get(receiverEmail).out.println(email);                
+        }
+    }
+
+    private void startVideoCall() throws IOException, Exception {
+        String response=in.readLine();
+        receiverEmail=in.readLine();
+        if(response.equals("0"))
+        {
+            ServercodeDoc.userStatus.get(receiverEmail).out.println(EncryptDecrypt.encrypt("End Video Call"));
+        }  
+        else
+        {
+            //Start video server first
+            new VideoFeed().start();
+            ServercodeDoc.userStatus.get(receiverEmail).out.println(EncryptDecrypt.encrypt("Start Video Call"));
+            ServercodeDoc.userStatus.get(email).out.println(EncryptDecrypt.encrypt("Server_Video_call_started"));    
+        }
+    }
     
     //Thread for audio calling
     class audioServer extends Thread{    
@@ -1104,5 +1148,61 @@ private static final String FILE_LOCATION1 ="Desktop\\december\\codeDOC\\codeDOC
      }
     
     }
+     //thread to take images continously from the camera and create vidoe
+     class VideoFeed extends Thread{
+        ServerSocket serverVideo,serverVideoSender;
+        ImageIcon ic;      
+        ObjectOutputStream outImg;
+        ObjectInputStream inImg;
+        Socket sv,svS;
+         @Override
+        public void run()
+        {   
+           
+           
+            try {
+                serverVideo = new ServerSocket(7800);
+                serverVideoSender = new ServerSocket(7600);
+            } catch (IOException ex) {
+                Logger.getLogger(HandleClient.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+           System.out.println("wait....");
+        
+            try {
+                sv = serverVideo.accept();
+                svS=serverVideoSender.accept();
+            } catch (IOException ex) {
+                Logger.getLogger(HandleClient.class.getName()).log(Level.SEVERE, null, ex);
+            }
+           System.out.println("connect.... Video Server started at port 7800");
+            try {
+                inImg =new ObjectInputStream(sv.getInputStream());
+            } catch (IOException ex) {
+                Logger.getLogger(HandleClient.class.getName()).log(Level.SEVERE, null, ex);
+            }
+           
+            try {
+                outImg = new ObjectOutputStream(svS.getOutputStream());
+            } catch (IOException ex) {
+                Logger.getLogger(HandleClient.class.getName()).log(Level.SEVERE, null, ex);
+            }
+           while(true)
+            {
+                try {
+                    ic=(ImageIcon)inImg.readObject();
+                    outImg.writeObject(ic);                   
+                    out.flush();
+                } catch (IOException ex) {
+                    Logger.getLogger(HandleClient.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(HandleClient.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                          
+            }
+            }
+            
+        }
+       
   
 }

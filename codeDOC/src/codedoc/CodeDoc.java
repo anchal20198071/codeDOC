@@ -104,7 +104,37 @@ public class CodeDoc extends javax.swing.JFrame {
                             JOptionPane.showMessageDialog(null, "Call Accepted");
                             new audio().setVisible(true);
                         } 
-                        
+                        else if(combinedText.equals("Video_call"))
+                        {
+                            String msg=EncryptDecrypt.decrypt(in.readLine());
+                            String receiverEmail=in.readLine();
+                            int response=JOptionPane.showConfirmDialog(null, msg);
+                            out.println("Intiate Video Call");
+                            if(response==YES_OPTION)
+                            {
+                                out.println("1");
+                                out.println(receiverEmail);                             
+                            }
+                            else
+                            {
+                                out.println("0");
+                                out.println(receiverEmail);
+                            }
+                        }
+                        else if(combinedText.equals("End Video Call"))
+                        {
+                            JOptionPane.showMessageDialog(null, "Call Rejected");
+                        }
+                        else if(combinedText.equals("Start Video Call"))
+                        {
+                            //**Bhejna start krdo
+                            new clientSender().setVisible(true);
+                        } 
+                        else if(combinedText.equals("Server_Video_call_started"))
+                        {
+                            //**Lena start kro
+                            new clientReceiver().setVisible(true);
+                        }
                         else
                         {
                         combinedText= combinedText+"\n";     
@@ -200,6 +230,11 @@ public class CodeDoc extends javax.swing.JFrame {
         });
 
         videoCall.setText("Video Call");
+        videoCall.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                videoCallActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -268,6 +303,12 @@ public class CodeDoc extends javax.swing.JFrame {
         String receiverEmail= JOptionPane.showInputDialog("Type email ID of the call receiver:");        
         out.println(receiverEmail);
     }//GEN-LAST:event_audioCallActionPerformed
+
+    private void videoCallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_videoCallActionPerformed
+        out.println("Video_Call");
+        String receiverEmail= JOptionPane.showInputDialog("Type email ID of the call receiver:");        
+        out.println(receiverEmail);
+    }//GEN-LAST:event_videoCallActionPerformed
 
     /**
      * @param args the command line arguments
