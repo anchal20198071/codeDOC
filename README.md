@@ -1,4 +1,4 @@
-# codeDOC - A Code Collaboration Platform, where multiple users can code simultaneously while experiencing some extra features too.
+# codeDOC - A Code Collaboration Coding Platform
 
 #### Github repo URL : https://github.com/anchal20198071/codeDOC
 #### Demo Video: https://youtu.be/ziCGJQ6lB4c
