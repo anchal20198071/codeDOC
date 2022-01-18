@@ -24,7 +24,7 @@
 6. Multiple tabs for each session.
 
 ## Extra Feature Added
-- Users can search and download questions from codeforces.
+- Users can search and download questions of codeforces.
 
 ## Tech Stack
 - Frontend Desing : Java Swing
